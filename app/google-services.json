@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "432554237351",
+    "firebase_url": "https://advogado-responde-31cfa.firebaseio.com",
+    "project_id": "advogado-responde-31cfa",
+    "storage_bucket": "advogado-responde-31cfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432554237351:android:79db8ec4816e065a",
+        "android_client_info": {
+          "package_name": "com.braumsolutions.advogadoresponde"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432554237351-ci3rpo7lot5ajjeam99ccun1etnu12nm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.braumsolutions.advogadoresponde",
+            "certificate_hash": "f2fc18c4ea4facb42fc97187c8ce0144a355277c"
+          }
+        },
+        {
+          "client_id": "432554237351-rkb5gcro9pq78fucu7hgei5ep6p05k2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV3ayK-heKqUeVyUhR8WUNXn1SsefSF9c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432554237351-rkb5gcro9pq78fucu7hgei5ep6p05k2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
