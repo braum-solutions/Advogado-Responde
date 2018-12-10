@@ -1,5 +1,7 @@
 package com.braumsolutions.advogadoresponde.View;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +21,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private LinearLayout mDotLayout;
     private ViewPager viewPager;
-    private Button btnLawyer, btnClient, btnHaveAccount;
+    private Button btnCreateAcc, btnHaveAccount, btnPrivacyPolicy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +34,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void setTypeface() {
-        btnLawyer.setTypeface(TypefaceLight(getApplicationContext()));
-        btnClient.setTypeface(TypefaceLight(getApplicationContext()));
+        btnCreateAcc.setTypeface(TypefaceLight(getApplicationContext()));
+        btnPrivacyPolicy.setTypeface(TypefaceLight(getApplicationContext()));
         btnHaveAccount.setTypeface(TypefaceBold(getApplicationContext()));
     }
 
     private void castWidgets() {
         viewPager = findViewById(R.id.viewPager);
         mDotLayout = findViewById(R.id.dots);
-        btnLawyer = findViewById(R.id.btnLawyer);
-        btnClient = findViewById(R.id.btnClient);
+        btnCreateAcc = findViewById(R.id.btnCreateAcc);
         btnHaveAccount = findViewById(R.id.btnHaveAccount);
-        findViewById(R.id.btnLawyer).setOnClickListener(this);
-        findViewById(R.id.btnClient).setOnClickListener(this);
+        btnPrivacyPolicy = findViewById(R.id.btnPrivacyPolice);
+        findViewById(R.id.btnCreateAcc).setOnClickListener(this);
         findViewById(R.id.btnHaveAccount).setOnClickListener(this);
+        findViewById(R.id.btnPrivacyPolice).setOnClickListener(this);
 
-        btnClient.setShadowLayer(5, 0, 0, Color.BLACK);
-        btnLawyer.setShadowLayer(5, 0, 0, Color.BLACK);
+        btnCreateAcc.setShadowLayer(5, 0, 0, Color.BLACK);
         btnHaveAccount.setShadowLayer(5, 0, 0, Color.BLACK);
+        btnPrivacyPolicy.setShadowLayer(5, 0, 0, Color.BLACK);
 
         SliderAdapter sliderAdapter = new SliderAdapter(this);
         viewPager.setAdapter(sliderAdapter);
@@ -60,11 +62,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnClient:
-                break;
-            case R.id.btnLawyer:
+            case R.id.btnCreateAcc:
+                Intent intCreate = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intCreate);
                 break;
             case R.id.btnHaveAccount:
+                Intent intHave = new Intent(getApplicationContext(), SignInActivity.class);
+                startActivity(intHave);
+                break;
+            case R.id.btnPrivacyPolice:
+                Intent intPrivacy = new Intent(getApplicationContext(), PrivacyPoliceActivity.class);
+                startActivity(intPrivacy);
                 break;
         }
     }
@@ -89,7 +97,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
 
         @Override
         public void onPageSelected(int position) {
@@ -97,7 +106,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         @Override
-        public void onPageScrollStateChanged(int state) {}
+        public void onPageScrollStateChanged(int state) {
+        }
     };
 
 }

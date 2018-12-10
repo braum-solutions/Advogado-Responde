@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Advogado Responde</string>
+    <string name="glad_you_back">Que bom que você voltou</string>
+    <string name="continu">Continuar</string>
+    <string name="fill_email">Preencha seu Email</string>
+    <string name="add_valid_email">Insira um E-mail válido</string>
+    <string name="revocer_pass_msg">Enviamos um email para você recuperar sua senha do aplicativo. Caso nao ache o email enviado em sua caixa de mensagem procure na caixa de Spam</string>
+    <string name="fill_password">Preecha sua senha</string>
+    <string name="welcome_back">Bem vindo de volta</string>
+    <string name="signin_to_continue">Faça o login para continuar</string>
+    <string name="email">Email</string>
+    <string name="password">Senha</string>
+    <string name="forgot_password">Esqueceu sua senha?</string>
+    <string name="login">Entrar</string>
+    <string name="create_acc">Crie sua conta agora mesmo</string>
+    <string name="have_acc">Você já tem uma conta?</string>
+    <string name="police_privacy_msg">Ao se cadastrar você concorda com nossa policitca de privacidade, clique aqui para acessar</string>
+    <string name="confirm_password">Confirme sua senha</string>
+    <string name="register">Cadastrar</string>
+    <string name="password_longer">Sua senha deve ter mais de 6 caracteres</string>
+    <string name="password_not_equals">Senhas não são iguais</string>
+    <string name="welcome_signup">Estamos felizes por você estar se juntando à nossa equipe, aproveite ao máximo nosso aplicativo!</string>
+    <string name="email_already_been_used">Este E-mail já está sendo usado</string>
 </resources>
