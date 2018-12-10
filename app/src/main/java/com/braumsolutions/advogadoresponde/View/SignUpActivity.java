@@ -209,40 +209,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
 
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-
-                                                        new AwesomeSuccessDialog(SignUpActivity.this)
-                                                                .setTitle(getString(R.string.app_name))
-                                                                .setMessage(R.string.welcome_signup)
-                                                                .setColoredCircle(R.color.colorGreen)
-                                                                .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
-                                                                .setCancelable(false)
-                                                                .setPositiveButtonText(getString(R.string.continu))
-                                                                .setPositiveButtonbackgroundColor(R.color.colorGreen)
-                                                                .setPositiveButtonTextColor(R.color.white)
-                                                                .setPositiveButtonClick(new Closure() {
-                                                                    @Override
-                                                                    public void exec() {
-                                                                        //Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
-                                                                        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                        //startActivity(intent);
-                                                                    }
-                                                                })
-                                                                .show();
-
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    enableFields();
-                                                    SnackError(e.getMessage());
-                                                }
-                                            });
+                                            if (task.isSuccessful()) {
+                                                new AwesomeSuccessDialog(SignUpActivity.this)
+                                                        .setTitle(getString(R.string.app_name))
+                                                        .setMessage(R.string.welcome_signup)
+                                                        .setColoredCircle(R.color.colorGreen)
+                                                        .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
+                                                        .setCancelable(false)
+                                                        .setPositiveButtonText(getString(R.string.continu))
+                                                        .setPositiveButtonbackgroundColor(R.color.colorGreen)
+                                                        .setPositiveButtonTextColor(R.color.white)
+                                                        .setPositiveButtonClick(new Closure() {
+                                                            @Override
+                                                            public void exec() {
+                                                                Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
+                                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                startActivity(intent);
+                                                            }
+                                                        })
+                                                        .show();
+                                            }
 
 
                                         }

@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.PrivacyPoliceActivity"></activity>
+        <activity android:name=".View.ConfirmEmailActivity"></activity>
+        <activity android:name=".View.PrivacyPoliceActivity" />
         <activity android:name=".View.SignInActivity" />
         <activity android:name=".View.SignUpActivity" />
         <activity android:name=".View.LoginActivity" />
