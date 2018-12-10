@@ -6,11 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
@@ -46,7 +50,7 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setSubtitle("Confirmação de Email");
+        getSupportActionBar().setSubtitle(R.string.email_confirmation);
 
         sendEmailVerification();
 
@@ -68,7 +72,7 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         enableFields();
-                                        SnackSuccess("E-mail enviado com sucesso!");
+                                        SnackSuccess(getString(R.string.email_sended));
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -114,6 +118,49 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
             }
         });
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_confirm_email, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_logout:
+                new AwesomeSuccessDialog(ConfirmEmailActivity.this)
+                        .setTitle(R.string.app_name)
+                        .setMessage(R.string.logout_msg)
+                        .setColoredCircle(R.color.colorYellow)
+                        .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
+                        .setCancelable(false)
+                        .setNegativeButtonText(getString(R.string.cancel))
+                        .setNegativeButtonbackgroundColor(R.color.colorYellow)
+                        .setNegativeButtonTextColor(R.color.white)
+                        .setNegativeButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+
+                            }
+                        })
+                        .setPositiveButtonText(getString(R.string.logout))
+                        .setPositiveButtonbackgroundColor(R.color.colorYellow)
+                        .setPositiveButtonTextColor(R.color.white)
+                        .setPositiveButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+                                mAuth.signOut();
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        })
+                        .show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void sendEmailVerification() {
