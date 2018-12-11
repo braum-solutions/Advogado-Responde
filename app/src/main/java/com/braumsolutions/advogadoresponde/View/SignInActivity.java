@@ -212,7 +212,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void castWidgets() {
-        tvWelcome = findViewById(R.id.tvJoinUs);
+        tvWelcome = findViewById(R.id.tvHi);
         tvSignIn = findViewById(R.id.tvSignUp);
         tilEmail = findViewById(R.id.tilEmail);
         tilPassword = findViewById(R.id.tilPassword);

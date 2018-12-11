@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private LinearLayout mDotLayout;
     private ViewPager viewPager;
-    private Button btnCreateAcc, btnHaveAccount, btnPrivacyPolicy;
+    private Button btnCreateAcc, btnHaveAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void setTypeface() {
         btnCreateAcc.setTypeface(TypefaceLight(getApplicationContext()));
-        btnPrivacyPolicy.setTypeface(TypefaceLight(getApplicationContext()));
         btnHaveAccount.setTypeface(TypefaceBold(getApplicationContext()));
     }
 
@@ -44,14 +43,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mDotLayout = findViewById(R.id.dots);
         btnCreateAcc = findViewById(R.id.btnCreateAcc);
         btnHaveAccount = findViewById(R.id.btnHaveAccount);
-        btnPrivacyPolicy = findViewById(R.id.btnPrivacyPolice);
         findViewById(R.id.btnCreateAcc).setOnClickListener(this);
         findViewById(R.id.btnHaveAccount).setOnClickListener(this);
-        findViewById(R.id.btnPrivacyPolice).setOnClickListener(this);
 
         btnCreateAcc.setShadowLayer(5, 0, 0, Color.BLACK);
         btnHaveAccount.setShadowLayer(5, 0, 0, Color.BLACK);
-        btnPrivacyPolicy.setShadowLayer(5, 0, 0, Color.BLACK);
 
         SliderAdapter sliderAdapter = new SliderAdapter(this);
         viewPager.setAdapter(sliderAdapter);
@@ -63,16 +59,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnCreateAcc:
-                Intent intCreate = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(intCreate);
+                Intent intName = new Intent(getApplicationContext(), NameRegisterActivity.class);
+                startActivity(intName);
                 break;
             case R.id.btnHaveAccount:
                 Intent intHave = new Intent(getApplicationContext(), SignInActivity.class);
                 startActivity(intHave);
-                break;
-            case R.id.btnPrivacyPolice:
-                Intent intPrivacy = new Intent(getApplicationContext(), PrivacyPoliceActivity.class);
-                startActivity(intPrivacy);
                 break;
         }
     }

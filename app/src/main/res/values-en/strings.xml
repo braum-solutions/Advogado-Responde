@@ -31,4 +31,16 @@
     <string name="privacy_police">Privacy policy</string>
     <string name="join_our_team">Join our team</string>
     <string name="signup_to_continue">Sign up to continue</string>
+    <string name="hi">Hi,</string>
+    <string name="what_your_name">"What's your name"</string>
+    <string name="interrogation">\?</string>
+    <string name="exclamation">!</string>
+    <string name="name_msg">You must enter your real name. Do not use a third party name.</string>
+    <string name="name">Name</string>
+    <string name="LastName">Last name</string>
+    <string name="fill_name">Enter your name</string>
+    <string name="on_create_acc">By creating your account, you agree to the</string>
+    <string name="and">" and "</string>
+    <string name="terms_services">Service Terms</string>
+    <string name="fill_last_name">Enter your last name</string>
 </resources>

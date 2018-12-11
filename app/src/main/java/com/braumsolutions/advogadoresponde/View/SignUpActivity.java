@@ -27,10 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -39,16 +36,20 @@ import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.validEmail;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvJoinUs, tvSignUp;
+    private TextView tvHi, tvSignUp, tvName;
     private TextInputEditText etEmail, etPassword, etConfirmPassword;
     private TextInputLayout tilEmail, tilPassword, tilConfirmPassword;
     private Button btnSignUp;
     private ProgressBar loading;
     private FirebaseAuth mAuth;
+    private String name, lastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         castWidgets();
         setTypeface();
+        getIntentBundle();
 
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,9 +123,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    private void getIntentBundle() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            name = bundle.getString(NAME);
+            lastName = bundle.getString(LAST_NAME);
+            tvName.setText(name);
+        }
+    }
+
     private void setTypeface() {
         tvSignUp.setTypeface(TypefaceRegular(getApplicationContext()));
-        tvJoinUs.setTypeface(TypefaceBold(getApplicationContext()));
+        tvHi.setTypeface(TypefaceBold(getApplicationContext()));
+        tvName.setTypeface(TypefaceBold(getApplicationContext()));
         etEmail.setTypeface(TypefaceLight(getApplicationContext()));
         etPassword.setTypeface(TypefaceLight(getApplicationContext()));
         etConfirmPassword.setTypeface(TypefaceLight(getApplicationContext()));
@@ -135,7 +147,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void castWidgets() {
         findViewById(R.id.btnSignUp).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
-        tvJoinUs = findViewById(R.id.tvJoinUs);
+        tvHi = findViewById(R.id.tvHi);
+        tvName = findViewById(R.id.tvName);
         tvSignUp = findViewById(R.id.tvSignUp);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -204,7 +217,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 if (task.isSuccessful()) {
                                     DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
                                     HashMap<String, String> user = new HashMap<>();
-                                    user.put(Utils.EMAIL, email);
+                                    user.put(EMAIL, email);
+                                    user.put(NAME, name);
+                                    user.put(LAST_NAME, lastName);
                                     mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

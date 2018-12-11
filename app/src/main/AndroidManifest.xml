@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".View.NameRegisterActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".View.ConfirmEmailActivity"
             android:screenOrientation="portrait" />
@@ -17,7 +20,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.LoginActivity" />
+                android:value=".View.NameRegisterActivity" />
         </activity>
         <activity
             android:name=".View.SignInActivity"

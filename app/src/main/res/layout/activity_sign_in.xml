@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tvJoinUs"
+            android:id="@+id/tvHi"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -41,7 +41,7 @@
             android:text="@string/signin_to_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvJoinUs" />
+            app:layout_constraintTop_toBottomOf="@+id/tvHi" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/tilEmail"
@@ -108,7 +108,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/corner_button_dark"
+            android:background="@drawable/corner_button_blue"
             android:text="@string/login"
             android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"

@@ -30,4 +30,17 @@
     <string name="privacy_police">Política de Privacidade</string>
     <string name="join_our_team">Junte-se ao nosso time</string>
     <string name="signup_to_continue">Cadastre-se para continuar</string>
+    <string name="hi">Oi,</string>
+    <string name="what_your_name">Qual é o seu nome</string>
+    <string name="interrogation">\?</string>
+    <string name="exclamation">!</string>
+    <string name="name_msg">É necessário que você informe seu nome verdadeiro. Não utilize nome de terceiros.</string>
+    <string name="name">Nome</string>
+    <string name="LastName">Sobrenome</string>
+    <string name="fill_name">Digite seu nome</string>
+    <string name="fill_last_name">Digite seu sobrenome</string>
+    <string name="on_create_acc">Ao criar sua conta, você concorda com os</string>
+    <string name="and">e</string>
+    <string name="terms_services">Termos de Serviço</string>
+    <string name="loading">Carregando ...</string>
 </resources>
