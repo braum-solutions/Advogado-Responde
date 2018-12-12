@@ -15,6 +15,11 @@ import com.braumsolutions.advogadoresponde.R;
 
 import java.util.Objects;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
@@ -36,6 +41,7 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
 
         castWidgets();
         setTypeface();
+        setAnimation();
 
         etName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,6 +104,22 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    private void setAnimation() {
+        tvHi.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvName.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvPoint.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvMsg.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tilName.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        tilLastName.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        etName.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        etLastName.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        btnNext.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        tvMsg2.setAnimation(AnimationFadeIn2500(getApplicationContext()));
+        tvTermsServices.setAnimation(AnimationFadeIn2500(getApplicationContext()));
+        tvAnd.setAnimation(AnimationFadeIn2500(getApplicationContext()));
+        tvPrivacyPolice.setAnimation(AnimationFadeIn2500(getApplicationContext()));
+    }
+
     private void setTypeface() {
         tvHi.setTypeface(TypefaceBold(getApplicationContext()));
         tvName.setTypeface(TypefaceBold(getApplicationContext()));
@@ -145,7 +167,7 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
                     tilLastName.setError(getString(R.string.fill_last_name));
                     etLastName.requestFocus();
                 } else {
-                    Intent intentNameLastName = new Intent(getApplicationContext(), TypeRegistrationActivity.class);
+                    Intent intentNameLastName = new Intent(getApplicationContext(), UserImageActivity.class);
                     intentNameLastName.putExtra(NAME, etName.getText().toString().trim());
                     intentNameLastName.putExtra(LAST_NAME, etLastName.getText().toString().trim());
                     startActivity(intentNameLastName);

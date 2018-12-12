@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
@@ -36,7 +37,7 @@ public class LawyerCodeActivity extends AppCompatActivity implements View.OnClic
     private TextInputLayout tilOab;
     private TextInputEditText etOab;
     private Button btnContinue;
-    private String name, lastName, type;
+    private String name, lastName, type, image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class LawyerCodeActivity extends AppCompatActivity implements View.OnClic
             name = bundle.getString(NAME);
             lastName = bundle.getString(LAST_NAME);
             type = bundle.getString(TYPE_REGISTER);
+            image = bundle.getString(IMAGE);
         }
     }
 
@@ -118,6 +120,7 @@ public class LawyerCodeActivity extends AppCompatActivity implements View.OnClic
                     intentLawyer.putExtra(TYPE_REGISTER, type);
                     intentLawyer.putExtra(OAB_UF, uf);
                     intentLawyer.putExtra(OAB_CODE, oab);
+                    intentLawyer.putExtra(IMAGE, image);
                     startActivity(intentLawyer);
                 }
 

@@ -1,6 +1,7 @@
 package com.braumsolutions.advogadoresponde.View;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -24,25 +25,31 @@ import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.validEmail;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnSignUp;
     private ProgressBar loading;
     private FirebaseAuth mAuth;
-    private String name, lastName, type, oabCode, oabUf;
+    private String name, lastName, type, oabCode, oabUf, image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +141,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             type = bundle.getString(TYPE_REGISTER);
             oabCode = bundle.getString(OAB_CODE);
             oabUf = bundle.getString(OAB_UF);
+            image = bundle.getString(IMAGE);
             tvName.setText(name);
         }
     }
@@ -221,39 +229,63 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
-                                    HashMap<String, String> user = new HashMap<>();
-                                    user.put(EMAIL, email);
-                                    user.put(NAME, name);
-                                    user.put(LAST_NAME, lastName);
-                                    user.put(TYPE_REGISTER, type);
-                                    user.put(OAB_CODE, oabCode);
-                                    user.put(OAB_UF, oabUf);
-                                    mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                            if (task.isSuccessful()) {
-                                                new AwesomeSuccessDialog(SignUpActivity.this)
-                                                        .setTitle(getString(R.string.app_name))
-                                                        .setMessage(R.string.welcome_signup)
-                                                        .setColoredCircle(R.color.colorGreen)
-                                                        .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
-                                                        .setCancelable(false)
-                                                        .setPositiveButtonText(getString(R.string.continu))
-                                                        .setPositiveButtonbackgroundColor(R.color.colorGreen)
-                                                        .setPositiveButtonTextColor(R.color.white)
-                                                        .setPositiveButtonClick(new Closure() {
-                                                            @Override
-                                                            public void exec() {
-                                                                Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
-                                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                startActivity(intent);
-                                                            }
-                                                        })
-                                                        .show();
+                                    StorageReference storage = FirebaseUtils.getStorage().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                                    storage.putFile(Uri.parse(image)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                            while (!urlTask.isSuccessful()) ;
+                                            Uri download = urlTask.getResult();
+
+                                            DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                                            HashMap<String, String> user = new HashMap<>();
+                                            user.put(EMAIL, email);
+                                            user.put(NAME, name);
+                                            user.put(LAST_NAME, lastName);
+                                            user.put(TYPE_REGISTER, type);
+                                            user.put(IMAGE, download.toString());
+                                            if (Objects.equals(type, "0")) {
+                                                user.put(OAB_CODE, oabCode);
+                                                user.put(OAB_UF, oabUf);
+                                                user.put(VERIFIED, "false");
                                             }
 
+                                            mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    if (task.isSuccessful()) {
+                                                        new AwesomeSuccessDialog(SignUpActivity.this)
+                                                                .setTitle(getString(R.string.app_name))
+                                                                .setMessage(R.string.welcome_signup)
+                                                                .setColoredCircle(R.color.colorGreen)
+                                                                .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
+                                                                .setCancelable(false)
+                                                                .setPositiveButtonText(getString(R.string.continu))
+                                                                .setPositiveButtonbackgroundColor(R.color.colorGreen)
+                                                                .setPositiveButtonTextColor(R.color.white)
+                                                                .setPositiveButtonClick(new Closure() {
+                                                                    @Override
+                                                                    public void exec() {
+                                                                        Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                })
+                                                                .show();
+                                                    }
+
+
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    enableFields();
+                                                    SnackError(e.getMessage());
+                                                }
+                                            });
 
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -263,6 +295,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             SnackError(e.getMessage());
                                         }
                                     });
+
                                 } else {
                                     enableFields();
                                     try {

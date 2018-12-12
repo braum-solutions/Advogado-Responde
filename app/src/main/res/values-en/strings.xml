@@ -60,4 +60,8 @@
     <string name="oab_code">OAB Code</string>
     <string name="select_uf_oab">Select the UF of your OAB</string>
     <string name="enter_oab">Enter your OAB</string>
+    <string name="how_about_a_picture">How about a photo?</string>
+    <string name="how_about_msg">Choose an image from your gallery so that other users can know who you are.</string>
+    <string name="accept_permission">Please accept the permissions to choose your image</string>
+    <string name="soon">Soon!</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.braumsolutions.advogadoresponde.View;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.braumsolutions.advogadoresponde.R;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
@@ -19,7 +21,7 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
 
     private TextView tvName, tvNameMsg, tvTypeMsg;
     private Button btnLawyer, btnClient;
-    private String name, lastName;
+    private String name, lastName, image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
         if (bundle != null) {
             name = bundle.getString(NAME);
             lastName = bundle.getString(LAST_NAME);
+            image = bundle.getString(IMAGE);
             tvName.setText(name);
         }
     }
@@ -71,6 +74,7 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
                 intentLawyer.putExtra(NAME, name);
                 intentLawyer.putExtra(LAST_NAME, lastName);
                 intentLawyer.putExtra(TYPE_REGISTER, "0");
+                intentLawyer.putExtra(IMAGE, image);
                 startActivity(intentLawyer);
                 break;
             case R.id.btnClient:
@@ -78,6 +82,7 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
                 intentClient.putExtra(NAME, name);
                 intentClient.putExtra(LAST_NAME, lastName);
                 intentClient.putExtra(TYPE_REGISTER, "1");
+                intentClient.putExtra(IMAGE, image);
                 startActivity(intentClient);
                 break;
         }
