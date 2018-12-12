@@ -49,7 +49,7 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 name = etName.getText().toString().trim();
                 lastName = etLastName.getText().toString().trim();
-                if (count == 0 && name == "") {
+                if (count == 0) {
                     tvName.setText(getString(R.string.what_your_name));
                     tvPoint.setText(getString(R.string.interrogation));
                     tvName.setTextColor(getResources().getColor(R.color.colorText));
@@ -78,10 +78,15 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 name = etName.getText().toString().trim();
                 lastName = etLastName.getText().toString().trim();
-
-                tvPoint.setText(getString(R.string.exclamation));
-                tvName.setText(String.format("%s %s", name, lastName));
-                tvName.setTextColor(getResources().getColor(R.color.colorAccent));
+                if (Objects.equals(name, "") && Objects.equals(lastName, "")) {
+                    tvName.setText(getString(R.string.what_your_name));
+                    tvPoint.setText(getString(R.string.interrogation));
+                    tvName.setTextColor(getResources().getColor(R.color.colorText));
+                } else {
+                    tvPoint.setText(getString(R.string.exclamation));
+                    tvName.setText(String.format("%s %s", name, lastName));
+                    tvName.setTextColor(getResources().getColor(R.color.colorAccent));
+                }
 
             }
 
@@ -140,10 +145,10 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
                     tilLastName.setError(getString(R.string.fill_last_name));
                     etLastName.requestFocus();
                 } else {
-                    Intent intCreate = new Intent(getApplicationContext(), SignUpActivity.class);
-                    intCreate.putExtra(NAME, etName.getText().toString().trim());
-                    intCreate.putExtra(LAST_NAME, etLastName.getText().toString().trim());
-                    startActivity(intCreate);
+                    Intent intentNameLastName = new Intent(getApplicationContext(), TypeRegistrationActivity.class);
+                    intentNameLastName.putExtra(NAME, etName.getText().toString().trim());
+                    intentNameLastName.putExtra(LAST_NAME, etLastName.getText().toString().trim());
+                    startActivity(intentNameLastName);
                 }
                 break;
             case R.id.tvTermsServices:

@@ -43,4 +43,21 @@
     <string name="and">" and "</string>
     <string name="terms_services">Service Terms</string>
     <string name="fill_last_name">Enter your last name</string>
+    <string name="loading">Loading …</string>
+    <string name="valid_acc">Account Validation</string>
+    <string name="resend_check">Resend or Check</string>
+    <string name="valid_email_msg">We will send a confirmation link to your email Please confirm your email.\nIf the verification email is not in your inbox, look in the spans.</string>
+    <string name="email_registered">Email Registered:</string>
+    <string name="what_you_are">, What you are?</string>
+    <string name="type_msg">We need to know what kind of person you are so we can follow up with your registration.</string>
+    <string name="im_client">I\'m a customer</string>
+    <string name="im_lawyer">I\'m a lawyer</string>
+    <string name="my_email_incorrect">My email is incorrect.</string>
+    <string name="update">Update</string>
+    <string name="incorrect_email_msg">Are you sure your email is incorrect? If yes, click UPDATE to insert a new email.</string>
+    <string name="enter_oab_code">Enter the code of your OAB</string>
+    <string name="oab_code_msg">Dear user, for you to act as a legitimate lawyer we need you to inform us the code of your OAB. If your code was authenticated by us within a few days you would have received the verification badge that would appear to users.</string>
+    <string name="oab_code">OAB Code</string>
+    <string name="select_uf_oab">Select the UF of your OAB</string>
+    <string name="enter_oab">Enter your OAB</string>
 </resources>

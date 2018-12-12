@@ -42,5 +42,21 @@
     <string name="on_create_acc">Ao criar sua conta, você concorda com os</string>
     <string name="and">e</string>
     <string name="terms_services">Termos de Serviço</string>
-    <string name="loading">Carregando ...</string>
+    <string name="loading">Carregando …</string>
+    <string name="valid_acc">Validação de Conta</string>
+    <string name="resend_check">Reenviar ou Checar</string>
+    <string name="valid_email_msg">Enviamos um link de confirmação para seu email Por favor, confirme seu email.\nCaso o email de confirmação não esteja na caixa de entrada, procura nos spans.</string>
+    <string name="email_registered">Email Cadastrado:</string>
+    <string name="what_you_are">, O que você é?</string>
+    <string name="type_msg">Precisamos saber que tipo de pessoa você é para podermos dar seguimento com o seu cadastro.</string>
+    <string name="im_client">Sou um Cliente</string>
+    <string name="im_lawyer">Sou um Advogado</string>
+    <string name="my_email_incorrect">Meu email esta incorreto</string>
+    <string name="update">Atualizar</string>
+    <string name="incorrect_email_msg">Você tem certeza que seu Email está incorreto? Se sim, clique em ATUALIZAR para você inserir um novo Email.</string>
+    <string name="enter_oab_code">Informe o codigo de seu OAB</string>
+    <string name="oab_code_msg">Caro usuário, para você atuar como um legitimo advogado precisamos que nos informe o código de seu OAB. Se o seu código for autenticado por nos em alguns dias você recebera o selo de verificado que aparecera para os usuários.</string>
+    <string name="oab_code">Código OAB</string>
+    <string name="select_uf_oab">Selecione a UF de seu OAB</string>
+    <string name="enter_oab">Digite seu OAB</string>
 </resources>

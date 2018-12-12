@@ -46,7 +46,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btnCreateAcc).setOnClickListener(this);
         findViewById(R.id.btnHaveAccount).setOnClickListener(this);
 
-        btnCreateAcc.setShadowLayer(5, 0, 0, Color.BLACK);
         btnHaveAccount.setShadowLayer(5, 0, 0, Color.BLACK);
 
         SliderAdapter sliderAdapter = new SliderAdapter(this);

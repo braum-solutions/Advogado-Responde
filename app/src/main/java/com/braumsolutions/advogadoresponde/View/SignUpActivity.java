@@ -39,6 +39,9 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRe
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnSignUp;
     private ProgressBar loading;
     private FirebaseAuth mAuth;
-    private String name, lastName;
+    private String name, lastName, type, oabCode, oabUf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (bundle != null) {
             name = bundle.getString(NAME);
             lastName = bundle.getString(LAST_NAME);
+            type = bundle.getString(TYPE_REGISTER);
+            oabCode = bundle.getString(OAB_CODE);
+            oabUf = bundle.getString(OAB_UF);
             tvName.setText(name);
         }
     }
@@ -220,6 +226,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     user.put(EMAIL, email);
                                     user.put(NAME, name);
                                     user.put(LAST_NAME, lastName);
+                                    user.put(TYPE_REGISTER, type);
+                                    user.put(OAB_CODE, oabCode);
+                                    user.put(OAB_UF, oabUf);
                                     mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

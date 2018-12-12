@@ -32,8 +32,8 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLi
 public class ConfirmEmailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
-    private TextView tvMsg, tvTitle;
-    private Button btnResend;
+    private TextView tvMsg, tvTitle, tvEmail;
+    private Button btnResend, btnIncorrectEmail;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private ProgressBar loading;
@@ -53,6 +53,8 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
         getSupportActionBar().setSubtitle(R.string.email_confirmation);
 
         sendEmailVerification();
+
+        tvEmail.setText(String.format("%s %s", getString(R.string.email_registered), mAuth.getCurrentUser().getEmail()));
 
     }
 
@@ -94,6 +96,33 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
                         SnackError(e.getMessage());
                     }
                 });
+                break;
+            case R.id.btnIncorrectEmail:
+                new AwesomeSuccessDialog(ConfirmEmailActivity.this)
+                        .setTitle(R.string.app_name)
+                        .setMessage(R.string.incorrect_email_msg)
+                        .setColoredCircle(R.color.colorYellow)
+                        .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
+                        .setCancelable(false)
+                        .setNegativeButtonText(getString(R.string.cancel))
+                        .setNegativeButtonbackgroundColor(R.color.colorYellow)
+                        .setNegativeButtonTextColor(R.color.white)
+                        .setNegativeButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+
+                            }
+                        })
+                        .setPositiveButtonText(getString(R.string.update))
+                        .setPositiveButtonbackgroundColor(R.color.colorYellow)
+                        .setPositiveButtonTextColor(R.color.white)
+                        .setPositiveButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+
+                            }
+                        })
+                        .show();
                 break;
         }
     }
@@ -211,17 +240,22 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
 
     private void setTypeface() {
         tvTitle.setTypeface(TypefaceBold(getApplicationContext()));
+        tvEmail.setTypeface(TypefaceBold(getApplicationContext()));
         tvMsg.setTypeface(TypefaceLight(getApplicationContext()));
         btnResend.setTypeface(TypefaceBold(getApplicationContext()));
+        btnIncorrectEmail.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
         toolbar = findViewById(R.id.toolbar);
+        tvEmail = findViewById(R.id.tvEmail);
         btnResend = findViewById(R.id.btnResend);
+        btnIncorrectEmail = findViewById(R.id.btnIncorrectEmail);
         tvMsg = findViewById(R.id.tvMsg);
         tvTitle = findViewById(R.id.tvTitle);
         loading = findViewById(R.id.loading);
         findViewById(R.id.btnResend).setOnClickListener(this);
+        findViewById(R.id.btnIncorrectEmail).setOnClickListener(this);
     }
 
     public void SnackError(String msg) {
