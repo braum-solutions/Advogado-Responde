@@ -50,8 +50,8 @@
     <string name="email_registered">Email Registered:</string>
     <string name="what_you_are">, What you are?</string>
     <string name="type_msg">We need to know what kind of person you are so we can follow up with your registration.</string>
-    <string name="im_client">I\'m a customer</string>
-    <string name="im_lawyer">I\'m a lawyer</string>
+    <string name="im_client">I\'m a Customer</string>
+    <string name="im_lawyer">I\'m a Lawyer</string>
     <string name="my_email_incorrect">My email is incorrect.</string>
     <string name="update">Update</string>
     <string name="incorrect_email_msg">Are you sure your email is incorrect? If yes, click UPDATE to insert a new email.</string>
@@ -61,7 +61,8 @@
     <string name="select_uf_oab">Select the UF of your OAB</string>
     <string name="enter_oab">Enter your OAB</string>
     <string name="how_about_a_picture">How about a photo?</string>
-    <string name="how_about_msg">Choose an image from your gallery so that other users can know who you are.</string>
+    <string name="how_about_msg">Choose an image from your gallery or take a picture of your camera so that other users can know who you are.</string>
     <string name="accept_permission">Please accept the permissions to choose your image</string>
     <string name="soon">Soon!</string>
+    <string name="chose_image_continue">Choose an image to continue</string>
 </resources>

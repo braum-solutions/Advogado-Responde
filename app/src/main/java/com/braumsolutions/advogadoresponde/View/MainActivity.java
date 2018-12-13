@@ -105,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .show();
                 break;
+            case R.id.nav_about:
+                Intent intentAbout = new Intent(getApplicationContext(), AboutActivity.class);
+                startActivity(intentAbout);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

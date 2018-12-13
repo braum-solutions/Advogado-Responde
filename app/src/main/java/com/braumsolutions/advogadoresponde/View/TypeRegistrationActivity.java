@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
@@ -31,6 +35,7 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
         castWidgets();
         setTypeface();
         getIntentBundle();
+        setAnimation();
 
     }
 
@@ -61,6 +66,14 @@ public class TypeRegistrationActivity extends AppCompatActivity implements View.
             image = bundle.getString(IMAGE);
             tvName.setText(name);
         }
+    }
+
+    private void setAnimation() {
+        tvName.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvNameMsg.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvTypeMsg.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        btnClient.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnLawyer.setAnimation(AnimationFadeIn2500(getApplicationContext()));
     }
 
     @Override

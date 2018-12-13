@@ -19,9 +19,15 @@ import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CODE_IMAGE;
@@ -46,6 +52,7 @@ public class UserImageActivity extends AppCompatActivity implements View.OnClick
         castWidgets();
         setTypeface();
         getIntentBundle();
+        setAnimation();
 
     }
 
@@ -59,7 +66,7 @@ public class UserImageActivity extends AppCompatActivity implements View.OnClick
                 if (Build.VERSION.SDK_INT >= 22) {
                     checkAndRequestForPermission();
                 } else {
-                    openGallery();
+                    imagePicker();
                 }
                 break;
             case R.id.btnContinue:
@@ -79,9 +86,12 @@ public class UserImageActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == CODE_IMAGE && data != null) {
-            imageUri = data.getData();
-            ivImage.setImageURI(imageUri);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK && result != null) {
+                imageUri = result.getUri();
+                ivImage.setImageURI(imageUri);
+            }
         }
     }
 
@@ -93,10 +103,19 @@ public class UserImageActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, CODE_IMAGE);
+    private void setAnimation() {
+        tvHowAbout.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvHowAboutMsg.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        ivImage.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnChoseImage.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnContinue.setAnimation(AnimationFadeIn2500(getApplicationContext()));
+    }
+
+    private void imagePicker() {
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1, 1)
+                .start(this);
     }
 
     private void setTypeface() {
@@ -126,7 +145,7 @@ public class UserImageActivity extends AppCompatActivity implements View.OnClick
                 ActivityCompat.requestPermissions(UserImageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_CODE);
             }
         } else {
-            openGallery();
+            imagePicker();
         }
     }
 

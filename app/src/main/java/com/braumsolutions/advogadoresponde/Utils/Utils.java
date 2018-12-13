@@ -1,5 +1,7 @@
 package com.braumsolutions.advogadoresponde.Utils;
 
+import android.os.ParcelUuid;
+
 public class Utils {
 
     public static int REQ_CODE = 1;
@@ -14,5 +16,6 @@ public class Utils {
     public static final String OAB_CODE = "oab_code";
     public static final String OAB_UF = "oab_uf";
     public static final String VERIFIED = "verified";
+    public  static final String BRAUM_SITE = "http://www.braumsolutions.com";
 
 }

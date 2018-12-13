@@ -60,8 +60,14 @@
     <string name="select_uf_oab">Selecione a UF de seu OAB</string>
     <string name="enter_oab">Digite seu OAB</string>
     <string name="how_about_a_picture">Que tal uma foto?</string>
-    <string name="how_about_msg">Escolha uma imagem de sua galeria para que os outros usuários possam saber quem você é.</string>
+    <string name="how_about_msg">Escolha uma imagem de sua galeria ou tire uma foto pela sua câmera para que os outros usuários possam saber quem você é.</string>
     <string name="accept_permission">Por favor, aceite as permissões para escolher sua imagem</string>
     <string name="soon">Em Breve!</string>
     <string name="chose_image_continue">Escolha uma imagem para continuar</string>
+    <string name="about_description">Descrição do aplicativo</string>
+    <string name="contact">Contato</string>
+    <string name="conect_with_us">Conecte-se Conosco</string>
+    <string name="version">Versão</string>
+    <string name="developed">Desenvolvimento</string>
+    <string name="about">Sobre</string>
 </resources>

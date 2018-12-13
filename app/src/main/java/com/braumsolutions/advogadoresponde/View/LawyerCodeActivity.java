@@ -20,6 +20,10 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.Objects;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
@@ -47,6 +51,7 @@ public class LawyerCodeActivity extends AppCompatActivity implements View.OnClic
         castWidgets();
         setTypeface();
         getIntentBundle();
+        setAnimation();
 
         etOab.addTextChangedListener(new TextWatcher() {
             @Override
@@ -67,6 +72,15 @@ public class LawyerCodeActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
+    }
+
+    private void setAnimation() {
+        tvEnterOab.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvEnterOabMsg.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        spUF.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        tilOab.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        etOab.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnContinue.setAnimation(AnimationFadeIn2500(getApplicationContext()));
     }
 
     private void setTypeface() {

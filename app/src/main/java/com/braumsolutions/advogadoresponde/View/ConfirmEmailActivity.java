@@ -32,7 +32,7 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLi
 public class ConfirmEmailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
-    private TextView tvMsg, tvTitle, tvEmail;
+    private TextView tvMsg, tvTitle;
     private Button btnResend, btnIncorrectEmail;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -50,11 +50,9 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setSubtitle(R.string.email_confirmation);
+        getSupportActionBar().setSubtitle(mAuth.getCurrentUser().getEmail());
 
         sendEmailVerification();
-
-        tvEmail.setText(String.format("%s %s", getString(R.string.email_registered), mAuth.getCurrentUser().getEmail()));
 
     }
 
@@ -98,7 +96,8 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
                 });
                 break;
             case R.id.btnIncorrectEmail:
-                new AwesomeSuccessDialog(ConfirmEmailActivity.this)
+                SnackSuccess(getString(R.string.soon));
+                /* new AwesomeSuccessDialog(ConfirmEmailActivity.this)
                         .setTitle(R.string.app_name)
                         .setMessage(R.string.incorrect_email_msg)
                         .setColoredCircle(R.color.colorYellow)
@@ -122,7 +121,7 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
 
                             }
                         })
-                        .show();
+                        .show(); */
                 break;
         }
     }
@@ -240,15 +239,13 @@ public class ConfirmEmailActivity extends AppCompatActivity implements View.OnCl
 
     private void setTypeface() {
         tvTitle.setTypeface(TypefaceBold(getApplicationContext()));
-        tvEmail.setTypeface(TypefaceBold(getApplicationContext()));
         tvMsg.setTypeface(TypefaceLight(getApplicationContext()));
         btnResend.setTypeface(TypefaceBold(getApplicationContext()));
-        btnIncorrectEmail.setTypeface(TypefaceLight(getApplicationContext()));
+        btnIncorrectEmail.setTypeface(TypefaceBold(getApplicationContext()));
     }
 
     private void castWidgets() {
         toolbar = findViewById(R.id.toolbar);
-        tvEmail = findViewById(R.id.tvEmail);
         btnResend = findViewById(R.id.btnResend);
         btnIncorrectEmail = findViewById(R.id.btnIncorrectEmail);
         tvMsg = findViewById(R.id.tvMsg);

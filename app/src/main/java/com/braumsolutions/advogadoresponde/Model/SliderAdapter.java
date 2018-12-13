@@ -25,21 +25,21 @@ public class SliderAdapter extends PagerAdapter {
     }
 
     private String[] slide_text_br = {
-            "TESTE 1",
-            "TESTE 2",
-            "TESTE 3"
+            "FAÇA PERGUNTAS PARA ADVOGADOS ONLINE",
+            "SEM SAIR DE CASA, TUDO EM SEU CELULAR",
+            "ADVOGADOS VERIFICADOS PELO SITE DA OAB"
     };
 
     private String[] slide_text_en = {
-            "TESTE 1",
-            "TESTE 2",
-            "TESTE 3"
+            "MAKE QUESTIONS FOR ONLINE LAWYERS",
+            "WITHOUT LEAVING HOME, EVERYTHING ON YOUR MOBILE PHONE",
+            "ATTORNEYS VERIFIED BY THE OAB SITE"
     };
 
     private String[] slide_text_es = {
-            "TESTE 1",
-            "TESTE 2",
-            "TESTE 3"
+            "HAGA PREGUNTAS PARA ABOGADOS ONLINE",
+            "SIN SALIR DE CASA, TODO EN SU CELULAR",
+            "ADVOGADOS VERIFICADOS POR EL SITIO DE LA OAB"
     };
 
     @Override
