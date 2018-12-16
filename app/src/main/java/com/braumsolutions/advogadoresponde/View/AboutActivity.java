@@ -15,6 +15,7 @@ import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 import static com.braumsolutions.advogadoresponde.Utils.Utils.BRAUM_SITE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.BRAUM_WHATSAPP;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -32,12 +33,18 @@ public class AboutActivity extends AppCompatActivity {
                 .setImage(R.drawable.rsz_arlogo)
                 .setDescription(getString(R.string.about_description))
                 .addGroup(getString(R.string.contact))
-                .addItem(new Element().setTitle("+55 (21) 99692-4687").setIconDrawable(R.drawable.whatsapp))
+                .addItem(new Element().setTitle(getString(R.string.talk_whats)).setIconDrawable(R.drawable.whatsapp).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BRAUM_WHATSAPP));
+                        startActivity(intent);
+                    }
+                }))
                 .addGroup(getString(R.string.conect_with_us))
                 .addEmail("braumsolutions@gmail.com")
                 .addWebsite("http://www.braumsolutions.com")
                 .addFacebook("braumsolutions")
-                .addYoutube("#########")
+                //.addYoutube("#########")
                 .addPlayStore("com.braumsolutions.advogadoresponde")
                 .addInstagram("braumsolutions")
                 .addGroup(getString(R.string.version))

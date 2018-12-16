@@ -8,5 +8,17 @@
     <color name="colorYellow">#FFC107</color>
     <color name="colorGrayLight">#ededed</color>
     <color name="colorText">#757575</color>
+    <color name="colorRed">#F44336</color>
+
+    <color name="colorAddress">#2F7092</color>
+    <color name="colorFollowers">#0D5D98</color>
+    <color name="colorHeadings">#3797CF</color>
+    <color name="colorSolidCircle">#AAFFFFFF</color>
+    <color name="colorCircleBorder">#50FFFFFF</color>
+    <color name="colorGradEnd">#424242</color>
+    <color name="colorGradStart">#6b6b6b</color>
+    <color name="colorFollowersBg">#595858</color>
+    <color name="colorFollowingBg">#444444</color>
+    <color name="colorGrey">#E5E5E5</color>
 
 </resources>

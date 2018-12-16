@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aandroid="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <!-- Lista com todos os carros -->
+        <item
+            android:id="@+id/nav_item_carros_todos"
+            android:checked="true"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="Android" />
+        <!-- Lista com os carros clássicos -->
+        <item
+            android:id="@+id/nav_item_carros_classicos"
+            android:checked="true"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="Android"/>
+        <!-- Lista com os carros esportivos -->
+        <item
+            android:id="@+id/nav_item_carros_esportivos"
+            android:checked="true"
+            aandroid:icon="@drawable/ic_android_black_24dp"
+            android:title="Android"/>
+        <!-- Lista com os carros de luxo -->
+        <item
+            android:id="@+id/nav_item_carros_luxo"
+            android:checked="true"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="Android" />
+        <!-- WebView com informações sobre o livro -->
+        <item
+            android:id="@+id/nav_item_site_livro"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="Android" />
+        <!-- Tela de configurações -->
+        <item
+            android:id="@+id/nav_item_settings"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="Android" />
+    </group>
+</menu>

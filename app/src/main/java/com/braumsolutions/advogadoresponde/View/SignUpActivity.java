@@ -37,6 +37,10 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.validEmail;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
@@ -71,6 +75,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         castWidgets();
         setTypeface();
         getIntentBundle();
+        setAnimation();
 
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,6 +136,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+    }
+
+    private void setAnimation() {
+        tvHi.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvName.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvSignUp.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        tilEmail.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        tilPassword.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        tilConfirmPassword.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnSignUp.setAnimation(AnimationFadeIn2500(getApplicationContext()));
     }
 
     private void getIntentBundle() {

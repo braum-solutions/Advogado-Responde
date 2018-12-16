@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.braumsolutions.advogadoresponde">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -10,8 +11,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".View.AboutActivity"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".View.LawyerProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".View.CostumerProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".View.AboutActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -22,7 +29,7 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".View.UserImageActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".View.LawyerCodeActivity"
             android:screenOrientation="portrait" />

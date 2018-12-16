@@ -27,6 +27,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
+import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
@@ -49,6 +53,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         castWidgets();
         setTypeface();
+        setAnimation();
 
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -198,6 +203,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
         }
+    }
+
+    private void setAnimation() {
+        tvWelcome.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tvSignIn.setAnimation(AnimationFadeIn1000(getApplicationContext()));
+        tilEmail.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        tilPassword.setAnimation(AnimationFadeIn1500(getApplicationContext()));
+        btnLogin.setAnimation(AnimationFadeIn2000(getApplicationContext()));
+        btnForgotPassword.setAnimation(AnimationFadeIn2500(getApplicationContext()));
     }
 
     private void setTypeface() {

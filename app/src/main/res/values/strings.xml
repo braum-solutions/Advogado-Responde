@@ -64,10 +64,20 @@
     <string name="accept_permission">Por favor, aceite as permissões para escolher sua imagem</string>
     <string name="soon">Em Breve!</string>
     <string name="chose_image_continue">Escolha uma imagem para continuar</string>
-    <string name="about_description">Descrição do aplicativo</string>
+    <string name="about_description">O aplicativo advogado responde tem como objetivo conectar pessoas com problemas a advogados especializados na área, com intuito de buscar uma solução.</string>
     <string name="contact">Contato</string>
     <string name="conect_with_us">Conecte-se Conosco</string>
     <string name="version">Versão</string>
     <string name="developed">Desenvolvimento</string>
     <string name="about">Sobre</string>
+    <string name="profile">Perfil</string>
+    <string name="verified">Verificado</string>
+    <string name="not_verified">Não Verificado</string>
+    <string name="profile_pic_updated">Foto de perfil atualizada com sucesso!</string>
+    <string name="answered_questions">Perguntas Respondidas</string>
+    <string name="questions_taken">Perguntas Realizadas</string>
+    <string name="talk_whats">Fale com nós pelo WhatsApp</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

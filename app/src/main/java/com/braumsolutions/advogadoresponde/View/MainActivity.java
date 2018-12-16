@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
+import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -21,6 +22,22 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
+
+import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private Toolbar toolbar;
     private ProgressDialog dialog;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +65,34 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setSubtitle(R.string.main_menu);
+        //getSupportActionBar().setSubtitle(R.string.main_menu);
 
+    }
+
+    private void getuUserData() {
+        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+        databaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                type = dataSnapshot.child(TYPE_REGISTER).getValue(String.class);
+
+                if (Objects.equals(type, "0")) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.flMain, new LawyerFragment()).commit();
+                } else if (Objects.equals(type, "1")){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.flMain, new CostumerFragment()).commit();
+                }
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void castWidgets() {
@@ -109,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentAbout = new Intent(getApplicationContext(), AboutActivity.class);
                 startActivity(intentAbout);
                 break;
+            case R.id.nav_profile:
+                if (Objects.equals(type, "0")) {
+                    Intent intentLawyer = new Intent(getApplicationContext(), LawyerProfileActivity.class);
+                    startActivity(intentLawyer);
+                } else {
+                    Intent intentCostumer = new Intent(getApplicationContext(), CostumerProfileActivity.class);
+                    startActivity(intentCostumer);
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -143,9 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
+                    getuUserData();
                     //checkCompleteProfile();
                 }
 
