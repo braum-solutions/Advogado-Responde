@@ -1,12 +1,16 @@
 package com.braumsolutions.advogadoresponde.View;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,12 +37,14 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.QUESTIONS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
@@ -47,18 +53,17 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class LawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvName, tvEmail, tvCredits, tvCreditsMsg, tvQuestion, tvQuestionMsg, tvOab;
+    private TextView tvName, tvEmail, tvCredits, tvCreditsMsg, tvQuestion, tvQuestionMsg, tvOab, tvPhone;
     private CircleImageView ivImage;
-    private FloatingActionButton fbChangeImage;
     private ImageView ivVerified;
     private FirebaseAuth mAuth;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,36 +78,26 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    private void setTypeface() {
-        tvName.setTypeface(TypefaceLight(getApplicationContext()));
-        tvOab.setTypeface(TypefaceLight(getApplicationContext()));
-        tvCreditsMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestionMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvCredits.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestion.setTypeface(TypefaceLight(getApplicationContext()));
-    }
 
     private void getUserData() {
         DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
-        databaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String image = dataSnapshot.child(IMAGE).getValue(String.class);
                 String name = dataSnapshot.child(NAME).getValue(String.class);
                 String lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
                 String email = dataSnapshot.child(EMAIL).getValue(String.class);
-                String oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
-                String oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
-                String verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+                phone = dataSnapshot.child(PHONE).getValue(String.class);
 
                 tvEmail.setText(email);
                 tvName.setText(String.format("%s %s", name, lastName));
-                tvOab.setText(String.format("OAB: %s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
 
-
-                if (Objects.equals(verified, "true")) {
-                    ivVerified.setVisibility(View.VISIBLE);
+                if (phone == null) {
+                    tvPhone.setText(getString(R.string.change_phone));
+                } else {
+                    tvPhone.setText(phone);
                 }
 
             }
@@ -113,8 +108,30 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+        databaseOab.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
+                String oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
+                String verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+
+                tvOab.setText(String.format("OAB: %s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
+                if (Objects.equals(verified, "true")) {
+                    ivVerified.setVisibility(View.VISIBLE);
+                } else {
+                    ivVerified.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         DatabaseReference databaseCredits = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
-        databaseCredits.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseCredits.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(CREDITS).getValue(String.class) == null) {
@@ -133,7 +150,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         });
 
         DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(QUESTIONS).child(mAuth.getCurrentUser().getUid());
-        databaseQuestions.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseQuestions.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(QUESTIONS).getValue(String.class) == null) {
@@ -151,6 +168,15 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         });
     }
 
+    private void setTypeface() {
+        tvName.setTypeface(TypefaceLight(getApplicationContext()));
+        tvOab.setTypeface(TypefaceLight(getApplicationContext()));
+        tvCreditsMsg.setTypeface(TypefaceLight(getApplicationContext()));
+        tvQuestionMsg.setTypeface(TypefaceLight(getApplicationContext()));
+        tvCredits.setTypeface(TypefaceLight(getApplicationContext()));
+        tvQuestion.setTypeface(TypefaceLight(getApplicationContext()));
+    }
+
     private void castWidgets() {
         tvEmail = findViewById(R.id.tvEmail);
         tvName = findViewById(R.id.tvName);
@@ -161,8 +187,10 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         tvQuestionMsg = findViewById(R.id.tvQuestionsMsg);
         tvOab = findViewById(R.id.tvOab);
         ivVerified = findViewById(R.id.ivVerified);
+        tvPhone = findViewById(R.id.tvPhone);
         findViewById(R.id.btnBack).setOnClickListener(this);
         findViewById(R.id.fbChangeImage).setOnClickListener(this);
+        findViewById(R.id.lvPhone).setOnClickListener(this);
     }
 
     @Override
@@ -177,7 +205,67 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                         .setAspectRatio(1, 1)
                         .start(this);
                 break;
+            case R.id.lvPhone:
+                dialogChangePhone();
+                break;
         }
+    }
+
+    private void dialogChangePhone() {
+        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
+
+        View view = inflater.inflate(R.layout.phone_dialog, null);
+        builder.setTitle(getString(R.string.phone));
+        builder.setMessage(getString(R.string.phone_msg));
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        final TextInputEditText etPhone = view.findViewById(R.id.etPhone);
+
+        etPhone.setText(phone);
+
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                String phone = etPhone.getText().toString().trim();
+                if (phone.equals("")) {
+                    SnackWarning(getString(R.string.fill_phone));
+                } else if (phone.length() < 11) {
+                    SnackWarning(getString(R.string.incomplet_phone));
+                } else {
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                    HashMap<String, Object> phones = new HashMap<>();
+                    phones.put(PHONE, phone);
+                    database.updateChildren(phones).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SnackSuccess(getString(R.string.phone_updated));
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+
+                }
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     @Override
@@ -243,6 +331,16 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
     public void SnackSuccess(String msg) {
         Snackbar.with(LawyerProfileActivity.this, null)
                 .type(Type.SUCCESS)
+                .message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.LEFT)
+                .show();
+    }
+
+    public void SnackWarning(String msg) {
+        Snackbar.with(LawyerProfileActivity.this, null)
+                .type(Type.WARNING)
                 .message(msg)
                 .duration(Duration.LONG)
                 .fillParent(true)

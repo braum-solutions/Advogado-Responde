@@ -77,7 +77,14 @@
     <string name="answered_questions">Perguntas Respondidas</string>
     <string name="questions_taken">Perguntas Realizadas</string>
     <string name="talk_whats">Fale com nós pelo WhatsApp</string>
+    <string name="sign_up_lawyer_crecits">Você está recebendo 70CA (Creditos do aplicativo), por se cadastrar em nosso beta.</string>
+    <string name="phone">Telefone</string>
+    <string name="phone_msg">Este número deve ser o de seu WhatsApp</string>
+    <string name="change_phone">Clique aqui para alterar seu telefone.</string>
+    <string name="save">Salvar</string>
+    <string name="example_phone">Ex: 51999990000</string>
+    <string name="phone_updated">Seu número foi atualizado com sucesso!</string>
+    <string name="incomplet_phone">Seu numero esta incompleto</string>
+    <string name="fill_phone">Você precisa digitar seu numero</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

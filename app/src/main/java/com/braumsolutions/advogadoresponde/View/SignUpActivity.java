@@ -45,10 +45,12 @@ import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.validEmail;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
@@ -63,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnSignUp;
     private ProgressBar loading;
     private FirebaseAuth mAuth;
-    private String name, lastName, type, oabCode, oabUf, image;
+    private String name, lastName, type, oabCode, oabUf, image, msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,37 +263,58 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             user.put(LAST_NAME, lastName);
                                             user.put(TYPE_REGISTER, type);
                                             user.put(IMAGE, download.toString());
-                                            if (Objects.equals(type, "0")) {
-                                                user.put(OAB_CODE, oabCode);
-                                                user.put(OAB_UF, oabUf);
-                                                user.put(VERIFIED, "false");
-                                            }
 
                                             mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
 
                                                     if (task.isSuccessful()) {
-                                                        new AwesomeSuccessDialog(SignUpActivity.this)
-                                                                .setTitle(getString(R.string.app_name))
-                                                                .setMessage(R.string.welcome_signup)
-                                                                .setColoredCircle(R.color.colorGreen)
-                                                                .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
-                                                                .setCancelable(false)
-                                                                .setPositiveButtonText(getString(R.string.continu))
-                                                                .setPositiveButtonbackgroundColor(R.color.colorGreen)
-                                                                .setPositiveButtonTextColor(R.color.white)
-                                                                .setPositiveButtonClick(new Closure() {
-                                                                    @Override
-                                                                    public void exec() {
-                                                                        Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                        startActivity(intent);
-                                                                    }
-                                                                })
-                                                                .show();
-                                                    }
 
+                                                        if (Objects.equals(type, "0")){
+
+                                                            DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+                                                            HashMap<String, String> oab = new HashMap<>();
+                                                            oab.put(OAB_CODE, oabCode);
+                                                            oab.put(OAB_UF, oabUf);
+                                                            oab.put(VERIFIED, "false");
+                                                            databaseOab.setValue(oab).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+
+                                                                        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
+                                                                        HashMap<String, String> credits = new HashMap<>();
+                                                                        credits.put(CREDITS, "70");
+                                                                        database.setValue(credits).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    messageSignUp(String.format("%s\n%s", getString(R.string.welcome_signup), getString(R.string.sign_up_lawyer_crecits)));
+                                                                                }
+                                                                            }
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                enableFields();
+                                                                                SnackError(e.getMessage());
+                                                                            }
+                                                                        });
+
+                                                                    }
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    enableFields();
+                                                                    SnackError(e.getMessage());
+                                                                }
+                                                            });
+
+                                                        }else if (Objects.equals(type, "1")) {
+                                                            messageSignUp(getString(R.string.app_name));
+                                                        }
+
+                                                    }
 
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -338,6 +361,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
 
+    }
+
+    private void messageSignUp(String msg) {
+        new AwesomeSuccessDialog(SignUpActivity.this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage(msg)
+                .setColoredCircle(R.color.colorGreen)
+                .setDialogIconAndColor(R.drawable.ic_dialog_info, R.color.white)
+                .setCancelable(false)
+                .setPositiveButtonText(getString(R.string.continu))
+                .setPositiveButtonbackgroundColor(R.color.colorGreen)
+                .setPositiveButtonTextColor(R.color.white)
+                .setPositiveButtonClick(new Closure() {
+                    @Override
+                    public void exec() {
+                        Intent intent = new Intent(SignUpActivity.this, ConfirmEmailActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .show();
     }
 
     public void SnackError(String msg) {
