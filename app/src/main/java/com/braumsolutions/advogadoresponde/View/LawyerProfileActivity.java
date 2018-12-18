@@ -3,10 +3,10 @@ package com.braumsolutions.advogadoresponde.View;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,7 +37,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.QUESTIONS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.ANSWERS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
@@ -63,7 +62,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
     private CircleImageView ivImage;
     private ImageView ivVerified;
     private FirebaseAuth mAuth;
-    private String phone;
+    private String phone, image, name, lastName, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +77,15 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
 
     }
 
-
     private void getUserData() {
         DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String image = dataSnapshot.child(IMAGE).getValue(String.class);
-                String name = dataSnapshot.child(NAME).getValue(String.class);
-                String lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
-                String email = dataSnapshot.child(EMAIL).getValue(String.class);
+                image = dataSnapshot.child(IMAGE).getValue(String.class);
+                name = dataSnapshot.child(NAME).getValue(String.class);
+                lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                email = mAuth.getCurrentUser().getEmail();
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
 
                 tvEmail.setText(email);
@@ -116,7 +114,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 String oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
                 String verified = dataSnapshot.child(VERIFIED).getValue(String.class);
 
-                tvOab.setText(String.format("OAB: %s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
+                tvOab.setText(String.format("%s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
                 if (Objects.equals(verified, "true")) {
                     ivVerified.setVisibility(View.VISIBLE);
                 } else {
@@ -149,11 +147,11 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(QUESTIONS).child(mAuth.getCurrentUser().getUid());
+        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(ANSWERS).child(mAuth.getCurrentUser().getUid());
         databaseQuestions.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(QUESTIONS).getValue(String.class) == null) {
+                if (dataSnapshot.child(ANSWERS).getValue(String.class) == null) {
                     tvQuestion.setText("0");
                 } else {
                     String credits = dataSnapshot.child(CREDITS).getValue(String.class);
@@ -191,6 +189,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         findViewById(R.id.btnBack).setOnClickListener(this);
         findViewById(R.id.fbChangeImage).setOnClickListener(this);
         findViewById(R.id.lvPhone).setOnClickListener(this);
+        findViewById(R.id.fbName).setOnClickListener(this);
     }
 
     @Override
@@ -206,12 +205,75 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                         .start(this);
                 break;
             case R.id.lvPhone:
-                dialogChangePhone();
+                dialogEditPhone();
+                break;
+            case R.id.fbName:
+                dialogEditName();
                 break;
         }
     }
 
-    private void dialogChangePhone() {
+    private void dialogEditName() {
+        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
+        View view = inflater.inflate(R.layout.name_dialog, null);
+        builder.setTitle(getString(R.string.name_lastname));
+        builder.setMessage(getString(R.string.update_name_last_name));
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        final TextInputEditText etName = view.findViewById(R.id.etName);
+        final TextInputEditText etLastName = view.findViewById(R.id.etLastName);
+
+        etName.setText(name);
+        etLastName.setText(lastName);
+
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name = etName.getText().toString().trim();
+                String lastName = etLastName.getText().toString().trim();
+
+                if (name.equals("")) {
+                    SnackWarning(getString(R.string.fill_name));
+                } else if (lastName.equals("")) {
+                    SnackWarning(getString(R.string.fill_last_name));
+                } else {
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                    HashMap<String, Object> user = new HashMap<>();
+                    user.put(NAME, name);
+                    user.put(LAST_NAME, lastName);
+                    database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SnackSuccess("Nome e sorbrenome atualizados com sucesso!");
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+                }
+
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+    private void dialogEditPhone() {
         LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);

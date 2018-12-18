@@ -31,7 +31,7 @@ public class SliderAdapter extends PagerAdapter {
     };
 
     private String[] slide_text_en = {
-            "MAKE QUESTIONS FOR ONLINE LAWYERS",
+            "MAKE ANSWERS FOR ONLINE LAWYERS",
             "WITHOUT LEAVING HOME, EVERYTHING ON YOUR MOBILE PHONE",
             "ATTORNEYS VERIFIED BY THE OAB SITE"
     };

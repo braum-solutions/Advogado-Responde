@@ -79,7 +79,6 @@
     <string name="questions_taken">Questions Taken</string>
     <string name="talk_whats">Talk to us at WhatsApp</string>
     <string name="sign_up_lawyer_crecits">You are receiving 70CA (Application Credits) for signing up for our beta.</string>
-    <string name="phone">Phone</string>
     <string name="phone_msg">This number should be that of your WhatsApp</string>
     <string name="change_phone">Click here to change your phone.</string>
     <string name="save">Save</string>
@@ -87,4 +86,7 @@
     <string name="phone_updated">Your number was updated successfully!</string>
     <string name="incomplet_phone">Your number is incomplete.</string>
     <string name="fill_phone">You need to enter your number.</string>
+    <string name="phone">Phone</string>
+    <string name="name_lastname">Name and Last Name</string>
+    <string name="update_name_last_name">Update your first and last name</string>
 </resources>
