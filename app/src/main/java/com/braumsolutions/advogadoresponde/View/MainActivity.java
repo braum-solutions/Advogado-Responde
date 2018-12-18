@@ -26,16 +26,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
 
@@ -79,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 if (Objects.equals(type, "0")) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.flMain, new LawyerFragment()).commit();
                 } else if (Objects.equals(type, "1")){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.flMain, new CostumerFragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.flMain, new UserFragment()).commit();
                 }
 
                 if (dialog.isShowing()) {
@@ -158,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentLawyer = new Intent(getApplicationContext(), LawyerProfileActivity.class);
                     startActivity(intentLawyer);
                 } else {
-                    Intent intentCostumer = new Intent(getApplicationContext(), CostumerProfileActivity.class);
+                    Intent intentCostumer = new Intent(getApplicationContext(), UserProfileActivity.class);
                     startActivity(intentCostumer);
                 }
                 break;

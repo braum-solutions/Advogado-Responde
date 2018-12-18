@@ -15,7 +15,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".View.LawyerProfileActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".View.CostumerProfileActivity"
+        <activity android:name=".View.UserProfileActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".View.AboutActivity"

@@ -311,7 +311,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                             });
 
                                                         }else if (Objects.equals(type, "1")) {
-                                                            messageSignUp(getString(R.string.app_name));
+                                                            messageSignUp(getString(R.string.welcome_signup));
                                                         }
 
                                                     }
