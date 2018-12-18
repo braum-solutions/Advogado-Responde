@@ -89,5 +89,9 @@
     <string name="phone">Telefone</string>
     <string name="name_lastname">Nome e Sobrenome</string>
     <string name="update_name_last_name">Atualize seu nome e sobrenome</string>
+    <string name="name_updated_success">Nome e sobrenome atualizados com sucesso!</string>
+    <string name="oab_verified">Seu código oab foi verificado pelos administradores, não é mais possivel muda-lo</string>
+    <string name="edit_oad_msg">Atualize o seu codigo da oab e o uf do código\nApós os administradores verificarem seu codigo nãos era possivel altera-lo</string>
+    <string name="oab_updated">Seu codigo OAB foi atualizado com sucesso!</string>
 
 </resources>

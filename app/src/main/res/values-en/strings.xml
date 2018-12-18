@@ -89,4 +89,8 @@
     <string name="phone">Phone</string>
     <string name="name_lastname">Name and Last Name</string>
     <string name="update_name_last_name">Update your first and last name</string>
+    <string name="name_updated_success">Name and surname updated successfully!</string>
+    <string name="oab_verified">Your oab code has been verified by administrators, it is no longer possible to change it</string>
+    <string name="edit_oad_msg">Update your code from the OAB and uf of the code\nAfter the administrators checked their code it was not possible to change it</string>
+    <string name="oab_updated">Your OAB code has been updated successfully!</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -46,7 +46,6 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.ANSWERS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
@@ -62,7 +61,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
     private CircleImageView ivImage;
     private ImageView ivVerified;
     private FirebaseAuth mAuth;
-    private String phone, image, name, lastName, email;
+    private String phone, image, name, lastName, email, oab, oabUf, verified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,14 +109,14 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         databaseOab.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
-                String oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
-                String verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+                oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
+                oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
+                verified = dataSnapshot.child(VERIFIED).getValue(String.class);
 
                 tvOab.setText(String.format("%s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
                 if (Objects.equals(verified, "true")) {
                     ivVerified.setVisibility(View.VISIBLE);
-                } else {
+                } else if (Objects.equals(verified, "false")) {
                     ivVerified.setVisibility(View.INVISIBLE);
                 }
             }
@@ -189,6 +188,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         findViewById(R.id.btnBack).setOnClickListener(this);
         findViewById(R.id.fbChangeImage).setOnClickListener(this);
         findViewById(R.id.lvPhone).setOnClickListener(this);
+        findViewById(R.id.lvOab).setOnClickListener(this);
         findViewById(R.id.fbName).setOnClickListener(this);
     }
 
@@ -210,7 +210,73 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
             case R.id.fbName:
                 dialogEditName();
                 break;
+            case R.id.lvOab:
+                if (Objects.equals(verified, "false")) {
+                    dialogEditOab();
+                } else {
+                    SnackWarning(getString(R.string.oab_verified));
+                }
+                break;
         }
+    }
+
+    private void dialogEditOab() {
+        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
+        View view = inflater.inflate(R.layout.oab_dialog, null);
+        builder.setTitle(getString(R.string.oab_code));
+        builder.setMessage(getString(R.string.edit_oad_msg));
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        final MaterialSpinner spUf = view.findViewById(R.id.spUF);
+        final TextInputEditText etOab = view.findViewById(R.id.etOab);
+
+        spUf.setItems(UF_ARRAY);
+        spUf.setSelectedIndex(Integer.parseInt(oabUf));
+        etOab.setText(oab);
+
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String oabCode = etOab.getText().toString().trim();
+                String oabUf = String.valueOf(spUf.getSelectedIndex());
+
+                if (oabUf.equals("0")) {
+                    SnackWarning(getString(R.string.select_uf_oab));
+                } else if (oabCode.equals("")) {
+                    SnackWarning(getString(R.string.enter_oab_code));
+                } else {
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+                    HashMap<String, Object> oab = new HashMap<>();
+                    oab.put(OAB_CODE, oabCode);
+                    oab.put(OAB_UF, oabUf);
+                    database.updateChildren(oab).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SnackSuccess(getString(R.string.oab_updated));
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void dialogEditName() {
@@ -247,7 +313,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                SnackSuccess("Nome e sorbrenome atualizados com sucesso!");
+                                SnackSuccess(getString(R.string.name_updated_success));
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
