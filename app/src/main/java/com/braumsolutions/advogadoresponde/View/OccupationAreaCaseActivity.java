@@ -14,12 +14,16 @@ import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.net.URI;
+
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 
 public class OccupationAreaCaseActivity extends AppCompatActivity implements View.OnClickListener {
@@ -58,8 +62,8 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
     }
 
     private void castWidgets() {
-        tvArea = findViewById(R.id.tvArea);
-        tvAreaMsg = findViewById(R.id.tvAreaMsg);
+        tvArea = findViewById(R.id.tvUpload);
+        tvAreaMsg = findViewById(R.id.tvUploadMsg);
         tvMsg = findViewById(R.id.tvMsg);
         spOcuppationArea = findViewById(R.id.spOccupationArea);
         btnNext = findViewById(R.id.btnNext);
@@ -74,13 +78,13 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
                 finish();
                 break;
             case R.id.btnNext:
-                    if (spOcuppationArea.getSelectedIndex() == 0) {
-                        SnackWarning(getString(R.string.select_occupation_area));
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), null);
-                        intent.putExtra(OCCUPATION_AREA, String.valueOf(spOcuppationArea.getSelectedIndex()));
-                        startActivity(intent);
-                    }
+                //if (spOcuppationArea.getSelectedIndex() == 0) {
+                //    SnackWarning(getString(R.string.select_occupation_area));
+                //} else {
+                Intent intent = new Intent(getApplicationContext(), FileCaseActivity.class);
+                intent.putExtra(OCCUPATION_AREA, String.valueOf(spOcuppationArea.getSelectedIndex()));
+                startActivity(intent);
+                //}
                 break;
         }
     }

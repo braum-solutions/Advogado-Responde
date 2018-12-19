@@ -107,5 +107,11 @@
     <string name="msg_occupation">Ao clicar em continuar você estará concordando que ao criar um novo caso, você ficará responsável por tudo que você irá escrever e ira compartilhar com os advogados.</string>
     <string name="chose_area">Escolha uma área</string>
     <string name="select_occupation_area">Selecione uma Área de Atuação</string>
+    <string name="upload_msg">Caso você tenha algum arquivo pdf ou foto que possa ajuda os advogados a entender melhor o seu caso, faça o upload clicando nos botões abaixo, caso não tenha clique em continuar</string>
+    <string name="image">Imagem</string>
+    <string name="pdf" translatable="false">PDF</string>
+    <string name="upload_file">Upload De Arquivo</string>
+    <string name="no_files">Sem arquivos</string>
+    <string name="no_file_msg">Você não escolheu nenhum arquivo, deseja continuar?</string>
 
 </resources>

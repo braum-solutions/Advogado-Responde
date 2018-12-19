@@ -107,4 +107,7 @@
     <string name="msg_occupation">By clicking on continue you will be agreeing that when creating a new case, you will be responsible for everything you will write and will share with lawyers.</string>
     <string name="chose_area">Choose an area</string>
     <string name="select_occupation_area">Select an Area of Practice</string>
+    <string name="upload_msg">If you have a pdf or photo file that can help lawyers better understand your case, please upload them by clicking the buttons below, if you do not click continue</string>
+    <string name="image">Image</string>
+    <string name="upload_file">Upload File</string>
 </resources>
