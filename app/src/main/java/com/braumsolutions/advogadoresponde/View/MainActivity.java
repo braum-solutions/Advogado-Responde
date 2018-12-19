@@ -146,15 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentAbout = new Intent(getApplicationContext(), AboutActivity.class);
                 startActivity(intentAbout);
                 break;
-            case R.id.nav_profile:
-                if (Objects.equals(type, "0")) {
-                    Intent intentLawyer = new Intent(getApplicationContext(), LawyerProfileActivity.class);
-                    startActivity(intentLawyer);
-                } else {
-                    Intent intentCostumer = new Intent(getApplicationContext(), UserProfileActivity.class);
-                    startActivity(intentCostumer);
-                }
-                break;
         }
         return super.onOptionsItemSelected(item);
     }

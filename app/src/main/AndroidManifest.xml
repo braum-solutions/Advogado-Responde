@@ -13,10 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.LawyerProfileActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".View.UserProfileActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".View.ChatActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".View.MainActivity" />
+        </activity>
+        <activity android:name=".View.YourCasesActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".View.MainActivity" />
+        </activity>
+        <activity
+            android:name=".View.NewCaseActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".View.MainActivity" />
+        </activity>
+        <activity
+            android:name=".View.LawyerProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.UserProfileActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".View.AboutActivity"
             android:screenOrientation="portrait">

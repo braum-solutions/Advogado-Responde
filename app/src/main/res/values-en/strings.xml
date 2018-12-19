@@ -93,4 +93,14 @@
     <string name="oab_verified">Your oab code has been verified by administrators, it is no longer possible to change it</string>
     <string name="edit_oad_msg">Update your code from the OAB and uf of the code\nAfter the administrators checked their code it was not possible to change it</string>
     <string name="oab_updated">Your OAB code has been updated successfully!</string>
+    <string name="profile_msg">View and change your data</string>
+    <string name="new_case">New Case</string>
+    <string name="new_case_msg">Add a new case</string>
+    <string name="tell_about_case">Tell us about your case</string>
+    <string name="occupation_Area">Occupation area</string>
+    <string name="your_cases">Your Cases</string>
+    <string name="your_cases_msg">Track your cases</string>
+    <string name="description">Description</string>
+    <string name="chat">Chat</string>
+    <string name="chat_msg">Chat with lawyers</string>
 </resources>

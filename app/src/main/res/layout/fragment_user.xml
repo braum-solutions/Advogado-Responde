@@ -46,7 +46,7 @@
                        app:layout_constraintTop_toTopOf="parent">
 
                        <android.support.v7.widget.CardView
-                           android:id="@+id/btnDomicile"
+                           android:id="@+id/cvNewCase"
                            android:layout_width="160dp"
                            android:layout_height="190dp"
                            android:layout_marginStart="10dp"
@@ -67,14 +67,14 @@
                                    android:layout_height="64dp"
                                    android:background="@drawable/circle"
                                    android:padding="10dp"
-                                   android:src="@drawable/ic_account_balance_white_24dp" />
+                                   android:src="@drawable/law" />
 
                                <TextView
-                                   android:id="@+id/tvDomicile"
+                                   android:id="@+id/tvNewCase"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:layout_marginTop="10dp"
-                                   android:text="Title"
+                                   android:text="@string/new_case"
                                    android:textStyle="bold" />
 
                                <View
@@ -84,19 +84,19 @@
                                    android:background="@color/colorGrayLight" />
 
                                <TextView
-                                   android:id="@+id/tvDomicileMsg"
+                                   android:id="@+id/tvNewCaseMsg"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:gravity="center"
                                    android:padding="5dp"
-                                   android:text="Description"
+                                   android:text="@string/new_case_msg"
                                    android:textColor="@android:color/darker_gray" />
 
                            </LinearLayout>
                        </android.support.v7.widget.CardView>
 
                        <android.support.v7.widget.CardView
-                           android:id="@+id/btnCommercial"
+                           android:id="@+id/cvYourCases"
                            android:layout_width="160dp"
                            android:layout_height="190dp"
                            android:layout_marginStart="5dp"
@@ -117,14 +117,14 @@
                                    android:layout_height="64dp"
                                    android:background="@drawable/circle"
                                    android:padding="10dp"
-                                   android:src="@drawable/ic_account_balance_white_24dp" />
+                                   android:src="@drawable/term" />
 
                                <TextView
-                                   android:id="@+id/tvCommercial"
+                                   android:id="@+id/tvYourCases"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:layout_marginTop="10dp"
-                                   android:text="Title"
+                                   android:text="@string/your_cases"
                                    android:textStyle="bold" />
 
                                <View
@@ -134,12 +134,12 @@
                                    android:background="@color/colorGrayLight" />
 
                                <TextView
-                                   android:id="@+id/tvCommercialMsg"
+                                   android:id="@+id/tvYourCasesMsg"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:gravity="center"
                                    android:padding="5dp"
-                                   android:text="Description"
+                                   android:text="@string/your_cases_msg"
                                    android:textColor="@android:color/darker_gray" />
 
                            </LinearLayout>
@@ -161,7 +161,7 @@
                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                        <android.support.v7.widget.CardView
-                           android:id="@+id/btnIndustrial"
+                           android:id="@+id/cvChat"
                            android:layout_width="160dp"
                            android:layout_height="190dp"
                            android:layout_marginStart="10dp"
@@ -182,14 +182,14 @@
                                    android:layout_height="64dp"
                                    android:background="@drawable/circle"
                                    android:padding="10dp"
-                                   android:src="@drawable/ic_account_balance_white_24dp" />
+                                   android:src="@drawable/chat" />
 
                                <TextView
-                                   android:id="@+id/tvIndustrial"
+                                   android:id="@+id/tvChat"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:layout_marginTop="10dp"
-                                   android:text="Title"
+                                   android:text="@string/chat"
                                    android:textStyle="bold" />
 
                                <View
@@ -199,12 +199,12 @@
                                    android:background="@color/colorGrayLight" />
 
                                <TextView
-                                   android:id="@+id/tvIndustrialMsg"
+                                   android:id="@+id/tvChatMsg"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:gravity="center"
                                    android:padding="5dp"
-                                   android:text="Description"
+                                   android:text="@string/chat_msg"
                                    android:textColor="@android:color/darker_gray" />
 
                            </LinearLayout>
@@ -287,6 +287,7 @@
                            android:foreground="?android:attr/selectableItemBackground">
 
                            <LinearLayout
+                               android:id="@+id/cvProfile"
                                android:layout_width="match_parent"
                                android:layout_height="match_parent"
                                android:gravity="center"
@@ -297,15 +298,14 @@
                                    android:layout_height="64dp"
                                    android:background="@drawable/circle"
                                    android:padding="10dp"
-                                   android:src="@drawable/ic_account_balance_white_24dp" />
-
+                                   android:src="@drawable/avatar" />
 
                                <TextView
-                                   android:id="@+id/tvNotCategory"
+                                   android:id="@+id/tvProfile"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:layout_marginTop="10dp"
-                                   android:text="Title"
+                                   android:text="@string/profile"
                                    android:textStyle="bold" />
 
                                <View
@@ -315,12 +315,12 @@
                                    android:background="@color/colorGrayLight" />
 
                                <TextView
-                                   android:id="@+id/tvNotCategoryMsg"
+                                   android:id="@+id/tvProfileMsg"
                                    android:layout_width="wrap_content"
                                    android:layout_height="wrap_content"
                                    android:gravity="center"
                                    android:padding="5dp"
-                                   android:text="Description"
+                                   android:text="@string/profile_msg"
                                    android:textColor="@android:color/darker_gray" />
 
                            </LinearLayout>

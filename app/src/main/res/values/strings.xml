@@ -93,5 +93,15 @@
     <string name="oab_verified">Seu código oab foi verificado pelos administradores, não é mais possivel muda-lo</string>
     <string name="edit_oad_msg">Atualize o seu codigo da oab e o uf do código\nApós os administradores verificarem seu codigo nãos era possivel altera-lo</string>
     <string name="oab_updated">Seu codigo OAB foi atualizado com sucesso!</string>
+    <string name="profile_msg">Veja e Altere seus dados</string>
+    <string name="new_case">Novo Caso</string>
+    <string name="new_case_msg">Adicione um novo caso</string>
+    <string name="tell_about_case">Conte sobre seu caso</string>
+    <string name="description">Descrição</string>
+    <string name="occupation_Area">Área de atuação</string>
+    <string name="your_cases">Seus Casos</string>
+    <string name="your_cases_msg">Acompanhe seus casos</string>
+    <string name="chat_msg">Bate-papo com advogados</string>
+    <string name="chat">Bate-Papo</string>
 
 </resources>
