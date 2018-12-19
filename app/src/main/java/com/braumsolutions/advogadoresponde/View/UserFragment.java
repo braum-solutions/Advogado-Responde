@@ -4,7 +4,6 @@ package com.braumsolutions.advogadoresponde.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 startActivity(intentProfile);
                 break;
             case R.id.cvNewCase:
-                Intent intentNewCase = new Intent(getContext(), NewCaseActivity.class);
+                Intent intentNewCase = new Intent(getContext(), OccupationAreaCaseActivity.class);
                 startActivity(intentNewCase);
                 break;
             case R.id.cvYourCases:

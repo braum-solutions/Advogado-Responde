@@ -50,7 +50,7 @@
     <string name="email_registered">Email Registered:</string>
     <string name="what_you_are">, What you are?</string>
     <string name="type_msg">We need to know what kind of person you are so we can follow up with your registration.</string>
-    <string name="im_client">I\'m a Customer</string>
+    <string name="im_client">I\'m a User</string>
     <string name="im_lawyer">I\'m a Lawyer</string>
     <string name="my_email_incorrect">My email is incorrect.</string>
     <string name="update">Update</string>
@@ -97,10 +97,14 @@
     <string name="new_case">New Case</string>
     <string name="new_case_msg">Add a new case</string>
     <string name="tell_about_case">Tell us about your case</string>
-    <string name="occupation_Area">Occupation area</string>
+    <string name="occupation_Area">Occupation Area</string>
     <string name="your_cases">Your Cases</string>
     <string name="your_cases_msg">Track your cases</string>
     <string name="description">Description</string>
     <string name="chat">Chat</string>
     <string name="chat_msg">Chat with lawyers</string>
+    <string name="occupation_area_msg">Select the area of action that best fits your case. This will help lawyers better understand your case.</string>
+    <string name="msg_occupation">By clicking on continue you will be agreeing that when creating a new case, you will be responsible for everything you will write and will share with lawyers.</string>
+    <string name="chose_area">Choose an area</string>
+    <string name="select_occupation_area">Select an Area of Practice</string>
 </resources>

@@ -49,7 +49,7 @@
     <string name="email_registered">Email Cadastrado:</string>
     <string name="what_you_are">, O que você é?</string>
     <string name="type_msg">Precisamos saber que tipo de pessoa você é para podermos dar seguimento com o seu cadastro.</string>
-    <string name="im_client">Sou um Cliente</string>
+    <string name="im_client">Sou um Usuário</string>
     <string name="im_lawyer">Sou um Advogado</string>
     <string name="my_email_incorrect">Meu email esta incorreto</string>
     <string name="update">Atualizar</string>
@@ -98,10 +98,14 @@
     <string name="new_case_msg">Adicione um novo caso</string>
     <string name="tell_about_case">Conte sobre seu caso</string>
     <string name="description">Descrição</string>
-    <string name="occupation_Area">Área de atuação</string>
+    <string name="occupation_Area">Área de Atuação</string>
     <string name="your_cases">Seus Casos</string>
     <string name="your_cases_msg">Acompanhe seus casos</string>
     <string name="chat_msg">Bate-papo com advogados</string>
     <string name="chat">Bate-Papo</string>
+    <string name="occupation_area_msg">Selecione a área de atuação, que mais se encaixe no seu caso. Isso ajudará os advogados a entenderem melgor o seu caso.</string>
+    <string name="msg_occupation">Ao clicar em continuar você estará concordando que ao criar um novo caso, você ficará responsável por tudo que você irá escrever e ira compartilhar com os advogados.</string>
+    <string name="chose_area">Escolha uma área</string>
+    <string name="select_occupation_area">Selecione uma Área de Atuação</string>
 
 </resources>

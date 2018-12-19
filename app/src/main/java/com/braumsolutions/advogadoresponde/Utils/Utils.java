@@ -21,6 +21,7 @@ public class Utils {
     public static final String ANSWERS = "asnwers";
     public static final String PHONE = "phone";
     public static final String OAB = "oab";
+    public static final String OCCUPATION_AREA = "occupation_area";
     public static final String BRAUM_WHATSAPP = "http://api.whatsapp.com/send?1=pt_BR&phone=5521996924687";
 
 }
