@@ -56,7 +56,6 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     private ProgressBar loading;
     private String area, uriPdf, uriPicture;
     private FirebaseAuth mAuth;
-    private Boolean pdfUploaded, pictureUploaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
