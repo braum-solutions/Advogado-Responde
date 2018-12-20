@@ -8,7 +8,7 @@ public class Utils {
     public static int CODE_PDF = 2;
     public static final String[] UF_ARRAY = {"UF", "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RO", "RS", "RR", "SC", "SE", "SP", "TO"};
     public static final String EMAIL = "email";
-    public static final String USERS = "user";
+    public static final String USER = "user";
     public static final String NAME = "name";
     public static final String IMAGE = "image";
     public static final String LAST_NAME = "last_name";
@@ -22,7 +22,9 @@ public class Utils {
     public static final String PHONE = "phone";
     public static final String OAB = "oab";
     public static final String PDF = "pdf";
+    public static final String CASES = "cases";
     public static final String PICTURE = "picture";
+    public static final String DESCRIPTION = "description";
     public static final String OCCUPATION_AREA = "occupation_area";
     public static final String BRAUM_WHATSAPP = "http://api.whatsapp.com/send?1=pt_BR&phone=5521996924687";
 

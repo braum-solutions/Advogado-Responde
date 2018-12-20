@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context=".View.FileCaseActivity">
+    tools:context=".View.DescriptionCaseActivity">
 
     <ImageButton
         android:id="@+id/btnBack"
@@ -36,58 +36,40 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:text="@string/msg_occupation"
+            android:text="@string/description_msg"
             android:textAlignment="center"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnComplete" />
 
-        <Button
-            android:id="@+id/btnPdf"
-            android:layout_width="150dp"
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/corner_button_dark"
-            android:text="@string/pdf"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toBottomOf="@+id/tvDecriptionMsg" />
-
-        <Button
-            android:id="@+id/btnPicture"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/corner_button_dark"
-            android:text="@string/image"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/divider2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDecriptionMsg" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/btnComplete"
+            app:layout_constraintEnd_toEndOf="@+id/btnComplete"
+            app:layout_constraintStart_toStartOf="@+id/btnComplete"
+            app:layout_constraintTop_toTopOf="@+id/btnComplete" />
 
         <Button
             android:id="@+id/btnComplete"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/corner_button_blue"
-            android:text="@string/continu"
+            android:text="@string/complete"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnPdf" />
+            app:layout_constraintTop_toBottomOf="@+id/tilDescription" />
 
         <TextView
             android:id="@+id/tvDescription"
@@ -95,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@string/upload_file"
+            android:text="@string/case_description"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -106,23 +88,35 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/upload_msg"
+            android:text="@string/case_description_msg"
             android:textAlignment="center"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="1dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tilDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:hint="@string/description"
+            app:counterEnabled="true"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDecriptionMsg" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDecriptionMsg">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="5" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
     </android.support.constraint.ConstraintLayout>

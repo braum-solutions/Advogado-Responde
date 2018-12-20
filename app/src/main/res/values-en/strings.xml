@@ -76,7 +76,7 @@
     <string name="not_verified">Not verified</string>
     <string name="profile_pic_updated">Profile photo updated successfully!</string>
     <string name="answered_questions">Answered questions</string>
-    <string name="questions_taken">Questions Taken</string>
+    <string name="cases_taken">Cases made</string>
     <string name="talk_whats">Talk to us at WhatsApp</string>
     <string name="sign_up_lawyer_crecits">You are receiving 70CA (Application Credits) for signing up for our beta.</string>
     <string name="phone_msg">This number should be that of your WhatsApp</string>
@@ -110,4 +110,13 @@
     <string name="upload_msg">If you have a pdf or photo file that can help lawyers better understand your case, please upload them by clicking the buttons below, if you do not click continue</string>
     <string name="image">Image</string>
     <string name="upload_file">Upload File</string>
+    <string name="complete">Complete</string>
+    <string name="no_files">No files</string>
+    <string name="no_file_msg">You have not chosen any files, do you want to continue?</string>
+    <string name="case_description">Case Description</string>
+    <string name="case_description_msg">Make a full description of your case so lawyers can have a good understanding of your case and can help resolve your problem.</string>
+    <string name="description_msg">By clicking on complete, you confirm that all data of type pdf, image and text are true.</string>
+    <string name="fill_description">Please write a description of your case</string>
+    <string name="lenght_description">Your description must be longer than 30 characters</string>
+    <string name="case_done_msg">Your case has been successfully saved, soon a lawyer will respond to you to clear your doubts!</string>
 </resources>

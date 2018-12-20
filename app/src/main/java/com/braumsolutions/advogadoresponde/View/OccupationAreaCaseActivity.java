@@ -14,16 +14,12 @@ import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import java.net.URI;
-
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 
 public class OccupationAreaCaseActivity extends AppCompatActivity implements View.OnClickListener {
@@ -62,13 +58,13 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
     }
 
     private void castWidgets() {
-        tvArea = findViewById(R.id.tvUpload);
-        tvAreaMsg = findViewById(R.id.tvUploadMsg);
+        tvArea = findViewById(R.id.tvDescription);
+        tvAreaMsg = findViewById(R.id.tvDecriptionMsg);
         tvMsg = findViewById(R.id.tvMsg);
         spOcuppationArea = findViewById(R.id.spOccupationArea);
-        btnNext = findViewById(R.id.btnNext);
+        btnNext = findViewById(R.id.btnComplete);
         findViewById(R.id.btnBack).setOnClickListener(this);
-        findViewById(R.id.btnNext).setOnClickListener(this);
+        findViewById(R.id.btnComplete).setOnClickListener(this);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
             case R.id.btnBack:
                 finish();
                 break;
-            case R.id.btnNext:
+            case R.id.btnComplete:
                 //if (spOcuppationArea.getSelectedIndex() == 0) {
                 //    SnackWarning(getString(R.string.select_occupation_area));
                 //} else {

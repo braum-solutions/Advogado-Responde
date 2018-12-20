@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
-import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.chootdev.csnackbar.Align;
@@ -19,8 +18,6 @@ import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.net.URI;
 
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
@@ -71,16 +68,16 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void castWidets() {
-        tvUpload = findViewById(R.id.tvUpload);
-        tvUploadMsg = findViewById(R.id.tvUploadMsg);
+        tvUpload = findViewById(R.id.tvDescription);
+        tvUploadMsg = findViewById(R.id.tvDecriptionMsg);
         tvMsg = findViewById(R.id.tvMsg);
-        btnNext = findViewById(R.id.btnNext);
+        btnNext = findViewById(R.id.btnComplete);
         btnPdf = findViewById(R.id.btnPdf);
         btnPicture = findViewById(R.id.btnPicture);
         findViewById(R.id.btnPdf).setOnClickListener(this);
         findViewById(R.id.btnPicture).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
-        findViewById(R.id.btnNext).setOnClickListener(this);
+        findViewById(R.id.btnComplete).setOnClickListener(this);
     }
 
     private void getIntentBundle() {
@@ -91,10 +88,14 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void goNext() {
-        Intent intent = new Intent(getApplicationContext(), null);
+        Intent intent = new Intent(getApplicationContext(), DescriptionCaseActivity.class);
         intent.putExtra(OCCUPATION_AREA, area);
-        intent.putExtra(PDF, uriPdf.toString());
-        intent.putExtra(PICTURE, uriPicture.toString());
+        if (uriPdf != null) {
+            intent.putExtra(PDF, uriPdf.toString());
+        }
+        if (uriPicture != null) {
+            intent.putExtra(PICTURE, uriPicture.toString());
+        }
         startActivity(intent);
     }
 
@@ -107,7 +108,6 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
                 .textAlign(Align.LEFT)
                 .show();
     }
-
 
     @Override
     public void onClick(View v) {
@@ -123,7 +123,7 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
                         .setAspectRatio(1, 1)
                         .start(this);
                 break;
-            case R.id.btnNext:
+            case R.id.btnComplete:
                 if (uriPdf == null && uriPicture == null) {
                     new AwesomeInfoDialog(FileCaseActivity.this)
                             .setTitle(R.string.no_files)
@@ -174,7 +174,6 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
         if (resultCode == RESULT_OK && requestCode == CODE_PDF && data != null) {
             uriPdf = data.getData();
             btnPdf.setBackground(getResources().getDrawable(R.drawable.corner_button_blue));
-            SnackWarning(uriPdf.toString());
         }
     }
 }

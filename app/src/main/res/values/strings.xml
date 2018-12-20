@@ -75,7 +75,7 @@
     <string name="not_verified">Não Verificado</string>
     <string name="profile_pic_updated">Foto de perfil atualizada com sucesso!</string>
     <string name="answered_questions">Perguntas Respondidas</string>
-    <string name="questions_taken">Perguntas Realizadas</string>
+    <string name="cases_taken">Casos Realizados</string>
     <string name="talk_whats">Fale com nós pelo WhatsApp</string>
     <string name="sign_up_lawyer_crecits">Você está recebendo 70CA (Creditos do aplicativo), por se cadastrar em nosso beta.</string>
     <string name="phone_msg">Este número deve ser o de seu WhatsApp</string>
@@ -113,5 +113,12 @@
     <string name="upload_file">Upload De Arquivo</string>
     <string name="no_files">Sem arquivos</string>
     <string name="no_file_msg">Você não escolheu nenhum arquivo, deseja continuar?</string>
+    <string name="case_description">Descrição do Caso</string>
+    <string name="case_description_msg">Faça uma descrição completa de seu caso para que os advogados possam ter um bom entendimento de seu caso e que possam ajudar a resolver o seu problema.</string>
+    <string name="complete">Concluir</string>
+    <string name="description_msg">Ao clicar em completar, você confirma que todos os dados do tipo pdf, imagem e texto são veridicos.</string>
+    <string name="fill_description">Por favor, escreva uma descrição do seu caso</string>
+    <string name="lenght_description">Sua descrição precisa ter mais de 30 caracteres</string>
+    <string name="case_done_msg">Seu caso foi salvo com sucesso, em breve um advogado ira lhe responder para tirar suas duvidas!</string>
 
 </resources>

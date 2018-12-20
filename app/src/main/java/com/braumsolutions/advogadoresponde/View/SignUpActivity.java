@@ -18,7 +18,6 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
-import com.braumsolutions.advogadoresponde.Utils.Utils;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -54,7 +53,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -247,7 +246,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
 
-                                    StorageReference storage = FirebaseUtils.getStorage().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                                    StorageReference storage = FirebaseUtils.getStorage().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                                     storage.putFile(Uri.parse(image)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -256,7 +255,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             while (!urlTask.isSuccessful()) ;
                                             Uri download = urlTask.getResult();
 
-                                            DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                                            DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                                             HashMap<String, String> user = new HashMap<>();
                                             user.put(EMAIL, email);
                                             user.put(NAME, name);

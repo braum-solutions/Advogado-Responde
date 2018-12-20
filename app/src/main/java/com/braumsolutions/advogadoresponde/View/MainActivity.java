@@ -30,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getuUserData() {
-        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
         databaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

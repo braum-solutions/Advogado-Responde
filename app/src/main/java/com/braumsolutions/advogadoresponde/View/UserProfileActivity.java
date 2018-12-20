@@ -42,8 +42,7 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLi
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,7 +65,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getUserData() {
-        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -131,7 +130,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 Uri imageUri = result.getUri();
                 ivImage.setImageURI(imageUri);
 
-                StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                 mStorage.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -140,7 +139,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         while (!urlTask.isSuccessful()) ;
                         Uri download = urlTask.getResult();
 
-                        DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                        DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                         HashMap<String, Object> user = new HashMap<>();
                         user.put(IMAGE, download.toString());
 
@@ -197,7 +196,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 } else if (lastName.equals("")) {
                     SnackWarning(getString(R.string.fill_last_name));
                 } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                     HashMap<String, Object> user = new HashMap<>();
                     user.put(NAME, name);
                     user.put(LAST_NAME, lastName);

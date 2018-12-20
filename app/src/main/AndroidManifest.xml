@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.FileCaseActivity"></activity>
+        <activity android:name=".View.DescriptionCaseActivity"></activity>
+        <activity android:name=".View.FileCaseActivity" />
         <activity
             android:name=".View.OccupationAreaCaseActivity"
             android:screenOrientation="portrait" />

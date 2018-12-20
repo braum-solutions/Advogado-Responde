@@ -52,7 +52,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.USERS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class LawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
@@ -77,7 +77,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
     }
 
     private void getUserData() {
-        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -305,7 +305,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 } else if (lastName.equals("")) {
                     SnackWarning(getString(R.string.fill_last_name));
                 } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                     HashMap<String, Object> user = new HashMap<>();
                     user.put(NAME, name);
                     user.put(LAST_NAME, lastName);
@@ -363,7 +363,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 } else if (phone.length() < 11) {
                     SnackWarning(getString(R.string.incomplet_phone));
                 } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                     HashMap<String, Object> phones = new HashMap<>();
                     phones.put(PHONE, phone);
                     database.updateChildren(phones).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -426,7 +426,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 Uri imageUri = result.getUri();
                 ivImage.setImageURI(imageUri);
 
-                StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                 mStorage.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -435,7 +435,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                         while (!urlTask.isSuccessful()) ;
                         Uri download = urlTask.getResult();
 
-                        DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USERS).child(mAuth.getCurrentUser().getUid());
+                        DatabaseReference mDatabase = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                         HashMap<String, Object> user = new HashMap<>();
                         user.put(IMAGE, download.toString());
 

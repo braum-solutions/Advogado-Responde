@@ -19,7 +19,6 @@ import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationF
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
-import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceRegular;
@@ -149,8 +148,8 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
         tilLastName = findViewById(R.id.tilLastName);
         etName = findViewById(R.id.etName);
         etLastName = findViewById(R.id.etLastName);
-        btnNext = findViewById(R.id.btnNext);
-        findViewById(R.id.btnNext).setOnClickListener(this);
+        btnNext = findViewById(R.id.btnComplete);
+        findViewById(R.id.btnComplete).setOnClickListener(this);
         findViewById(R.id.tvTermsServices).setOnClickListener(this);
         findViewById(R.id.tvPrivacyPolice).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
@@ -159,7 +158,7 @@ public class NameRegisterActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnNext:
+            case R.id.btnComplete:
                 if (Objects.equals(name, "")) {
                     tilName.setError(getString(R.string.fill_name));
                     etName.requestFocus();
