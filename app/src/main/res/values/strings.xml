@@ -120,5 +120,16 @@
     <string name="fill_description">Por favor, escreva uma descrição do seu caso</string>
     <string name="lenght_description">Sua descrição precisa ter mais de 30 caracteres</string>
     <string name="case_done_msg">Seu caso foi salvo com sucesso, em breve um advogado ira lhe responder para tirar suas duvidas!</string>
+    <string name="click_to_see_more">%s … CLIQUE PARA LER MAIS</string>
+    <string name="find_cases">Procurar Casos</string>
+    <string name="find_cases_msg">Encontre casos de usuários</string>
+    <string name="no_verified_acc">Você só poderá ver os casos dos usuários após sua conta for verificada pelos administradores. Aguarde alguns minutos e tente novamente</string>
+    <string name="imagem">Imagem</string>
+    <string name="user">Usuário</string>
+    <string name="details">Detalhes</string>
+    <string name="lawyers_case">Advogados Neste Caso</string>
+    <string name="user_case">Caso do Usuário</string>
+    <string name="click_to_view">Cliquei aqui para visualizar</string>
+    <string name="no_file">Sem Arquivo</string>
 
 </resources>

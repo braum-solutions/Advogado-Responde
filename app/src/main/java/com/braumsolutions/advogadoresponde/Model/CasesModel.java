@@ -2,7 +2,7 @@ package com.braumsolutions.advogadoresponde.Model;
 
 public class CasesModel {
 
-    String description, occupation_area, pdf, picture, user;
+    String description, occupation_area, pdf, picture, user, key;
 
     public CasesModel() {
 
@@ -46,5 +46,13 @@ public class CasesModel {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

@@ -42,6 +42,7 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBo
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PDF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PICTURE;
@@ -279,10 +280,15 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                     newcase.put(USER, mAuth.getCurrentUser().getUid());
                     newcase.put(OCCUPATION_AREA, area);
                     newcase.put(DESCRIPTION, description);
+                    newcase.put(KEY, database.getKey());
                     database.setValue(newcase).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+
+                                if (uriPdf == null && uriPicture == null) {
+                                    dialogDone();
+                                }
 
                                 if (uriPicture != null) {
                                     uploadImage(database);

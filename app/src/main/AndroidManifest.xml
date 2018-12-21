@@ -13,8 +13,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.DescriptionCaseActivity"></activity>
-        <activity android:name=".View.FileCaseActivity" />
+        <activity android:name=".View.OpenCaseActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".View.CasesActivity" />
+        </activity>
+        <activity
+            android:name=".View.CasesActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".View.MainActivity" />
+        </activity>
+        <activity
+            android:name=".View.DescriptionCaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.FileCaseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".View.OccupationAreaCaseActivity"
             android:screenOrientation="portrait" />

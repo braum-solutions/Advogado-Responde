@@ -6,6 +6,7 @@ public class Utils {
 
     public static int REQ_CODE = 1;
     public static int CODE_PDF = 2;
+    public static String[] OCCUPATION_AREA_ARRAY = {"Trabalhista", "Previdenciário", "Outro"};
     public static final String[] UF_ARRAY = {"UF", "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RO", "RS", "RR", "SC", "SE", "SP", "TO"};
     public static final String EMAIL = "email";
     public static final String USER = "user";
@@ -16,13 +17,14 @@ public class Utils {
     public static final String OAB_CODE = "oab_code";
     public static final String OAB_UF = "oab_uf";
     public static final String VERIFIED = "verified";
-    public  static final String BRAUM_SITE = "http://www.braumsolutions.com";
+    public static final String BRAUM_SITE = "http://www.braumsolutions.com";
     public static final String CREDITS = "credits";
     public static final String ANSWERS = "asnwers";
     public static final String PHONE = "phone";
     public static final String OAB = "oab";
     public static final String PDF = "pdf";
     public static final String CASES = "cases";
+    public static final String KEY = "key";
     public static final String PICTURE = "picture";
     public static final String DESCRIPTION = "description";
     public static final String OCCUPATION_AREA = "occupation_area";

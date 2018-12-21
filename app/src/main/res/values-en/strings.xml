@@ -107,7 +107,6 @@
     <string name="msg_occupation">By clicking on continue you will be agreeing that when creating a new case, you will be responsible for everything you will write and will share with lawyers.</string>
     <string name="chose_area">Choose an area</string>
     <string name="select_occupation_area">Select an Area of Practice</string>
-    <string name="upload_msg">If you have a pdf or photo file that can help lawyers better understand your case, please upload them by clicking the buttons below, if you do not click continue</string>
     <string name="image">Image</string>
     <string name="upload_file">Upload File</string>
     <string name="complete">Complete</string>
@@ -119,4 +118,16 @@
     <string name="fill_description">Please write a description of your case</string>
     <string name="lenght_description">Your description must be longer than 30 characters</string>
     <string name="case_done_msg">Your case has been successfully saved, soon a lawyer will respond to you to clear your doubts!</string>
+    <string name="click_to_see_more">%s ... CLICK HERE TO READ MORE</string>
+    <string name="find_cases">Search Cases</string>
+    <string name="find_cases_msg">Find user cases</string>
+    <string name="imagem">Image</string>
+    <string name="user">User</string>
+    <string name="details">Details</string>
+    <string name="lawyers_case">Lawyers In This Case</string>
+    <string name="no_verified_acc">You will only be able to see the users\' cases after your account is verified by the administrators. Wait some minutes and try again</string>
+    <string name="upload_msg">If you have a pdf or photo file that can help lawyers better understand your case, please upload them by clicking the buttons below, if you do not click continue</string>
+    <string name="user_case">User Case</string>
+    <string name="click_to_view">Click here to view</string>
+    <string name="no_file">No FIle</string>
 </resources>
