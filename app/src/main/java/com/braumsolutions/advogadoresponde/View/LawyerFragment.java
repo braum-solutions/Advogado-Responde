@@ -35,7 +35,6 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
     private View view;
     private TextView tvFindCase, tvFindCaseMsg;
     private String verified;
-    private int credits;
     private FirebaseAuth mAuth;
 
     public LawyerFragment() {
@@ -69,22 +68,6 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        DatabaseReference mCredits = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
-        mCredits.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(CREDITS).getValue(String.class) != null) {
-                    credits = Integer.parseInt(dataSnapshot.child(CREDITS).getValue(String.class));
-                } else {
-                    credits = 0;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void setTypeface() {

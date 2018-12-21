@@ -131,5 +131,10 @@
     <string name="user_case">Caso do Usuário</string>
     <string name="click_to_view">Cliquei aqui para visualizar</string>
     <string name="no_file">Sem Arquivo</string>
+    <string name="get_case">Pegar este caso</string>
+    <string name="get_case_msg">Você ira gastar 30CA para pegar este caso!</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="insufficient_ca">CA insuficiente para pegar este caso, por favor, recarregue seus CA e tente novamente</string>
+    <string name="report">Reportar este caso</string>
 
 </resources>

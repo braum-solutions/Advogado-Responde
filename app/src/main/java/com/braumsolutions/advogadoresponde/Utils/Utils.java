@@ -28,6 +28,10 @@ public class Utils {
     public static final String PICTURE = "picture";
     public static final String DESCRIPTION = "description";
     public static final String OCCUPATION_AREA = "occupation_area";
+    public static final int CATCH_CASE_VALUE = 30;
     public static final String BRAUM_WHATSAPP = "http://api.whatsapp.com/send?1=pt_BR&phone=5521996924687";
+    public static final String LAWYER_A = "lawyer_a";
+    public static final String LAWYER_B = "lawyer_b";
+    public static final String LAWYER_C = "lawyer_c";
 
 }
