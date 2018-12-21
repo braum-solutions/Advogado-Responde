@@ -68,7 +68,7 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void castWidets() {
-        tvUpload = findViewById(R.id.tvDescription);
+        tvUpload = findViewById(R.id.tvComment);
         tvUploadMsg = findViewById(R.id.tvDecriptionMsg);
         tvMsg = findViewById(R.id.tvMsg);
         btnNext = findViewById(R.id.btnComplete);

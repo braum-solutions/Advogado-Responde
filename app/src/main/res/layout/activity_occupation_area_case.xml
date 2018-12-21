@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/spOccupationArea" />
 
         <TextView
-            android:id="@+id/tvDescription"
+            android:id="@+id/tvComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -82,7 +82,7 @@
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/tvComment" />
 
 
         <com.jaredrummler.materialspinner.MaterialSpinner

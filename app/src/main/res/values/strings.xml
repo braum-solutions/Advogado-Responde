@@ -97,7 +97,6 @@
     <string name="new_case">Novo Caso</string>
     <string name="new_case_msg">Adicione um novo caso</string>
     <string name="tell_about_case">Conte sobre seu caso</string>
-    <string name="description">Descrição</string>
     <string name="occupation_Area">Área de Atuação</string>
     <string name="your_cases">Seus Casos</string>
     <string name="your_cases_msg">Acompanhe seus casos</string>
@@ -136,5 +135,12 @@
     <string name="ok" translatable="false">OK</string>
     <string name="insufficient_ca">CA insuficiente para pegar este caso, por favor, recarregue seus CA e tente novamente</string>
     <string name="report">Reportar este caso</string>
+    <string name="limit_lawyer">Este caso já chegou no limite de Advogados!</string>
+    <string name="no_comments">Você não tem nenhum comentário neste caso ainda</string>
+    <string name="new_comment">Novo Comentário</string>
+    <string name="comment">Comentar</string>
+    <string name="fill_comment">Para comentar você precisa digitar algo</string>
+    <string name="comment_success">Comentário enviado com sucesso!</string>
+    <string name="description">Descrição</string>
 
 </resources>

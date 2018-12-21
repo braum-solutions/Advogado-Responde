@@ -110,7 +110,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     }
 
     private void castWigets() {
-        tvDescription = findViewById(R.id.tvDescription);
+        tvDescription = findViewById(R.id.tvComment);
         tvDescriptionMsg = findViewById(R.id.tvDecriptionMsg);
         tvMsg = findViewById(R.id.tvMsg);
         etDescription = findViewById(R.id.etDescription);

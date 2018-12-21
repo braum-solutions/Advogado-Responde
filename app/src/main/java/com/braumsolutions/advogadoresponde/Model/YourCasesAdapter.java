@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
 
 public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
@@ -38,7 +37,7 @@ public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
             view = inflater.inflate(R.layout.your_cases_layout, parent, false);
 
             TextView tvArea = view.findViewById(R.id.tvArea);
-            TextView tvDescription = view.findViewById(R.id.tvDescription);
+            TextView tvDescription = view.findViewById(R.id.tvComment);
             TextView tvLawyers = view.findViewById(R.id.tvLawyers);
             TextView tvPicture = view.findViewById(R.id.tvPicture);
             TextView tvPdf = view.findViewById(R.id.tvPdf);

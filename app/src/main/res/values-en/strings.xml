@@ -113,10 +113,10 @@
     <string name="no_files">No files</string>
     <string name="no_file_msg">You have not chosen any files, do you want to continue?</string>
     <string name="case_description">Case Description</string>
-    <string name="case_description_msg">Make a full description of your case so lawyers can have a good understanding of your case and can help resolve your problem.</string>
+    <string name="case_description_msg">Make a full comment of your case so lawyers can have a good understanding of your case and can help resolve your problem.</string>
     <string name="description_msg">By clicking on complete, you confirm that all data of type pdf, image and text are true.</string>
-    <string name="fill_description">Please write a description of your case</string>
-    <string name="lenght_description">Your description must be longer than 30 characters</string>
+    <string name="fill_description">Please write a comment of your case</string>
+    <string name="lenght_description">Your comment must be longer than 30 characters</string>
     <string name="case_done_msg">Your case has been successfully saved, soon a lawyer will respond to you to clear your doubts!</string>
     <string name="click_to_see_more">%s ... CLICK HERE TO READ MORE</string>
     <string name="find_cases">Search Cases</string>
@@ -134,4 +134,10 @@
     <string name="get_case_msg">You will spend 30CA to get this case!</string>
     <string name="insufficient_ca">CA not enough to get this case, please recharge your CA and try again</string>
     <string name="report">Report this case</string>
+    <string name="limit_lawyer">This case has already reached the limit of lawyers!</string>
+    <string name="no_comments">You have no comments on this case yet</string>
+    <string name="new_comment">New Comment</string>
+    <string name="fill_comment">To comment you need to type something</string>
+    <string name="comment_success">Comment sent successfully!</string>
+    <string name="comment">Comment</string>
 </resources>

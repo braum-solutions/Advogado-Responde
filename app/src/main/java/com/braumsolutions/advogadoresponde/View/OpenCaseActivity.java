@@ -1,21 +1,30 @@
 package com.braumsolutions.advogadoresponde.View;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
+import com.braumsolutions.advogadoresponde.Model.CommentAdapter;
+import com.braumsolutions.advogadoresponde.Model.CommentModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
@@ -31,18 +40,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES_COMMENTS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CATCH_CASE_VALUE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.COMMENT;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_A;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_B;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_C;
@@ -54,7 +67,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class OpenCaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg;
+    private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg, tvNoComments;
     private Toolbar toolbar;
     private ProgressDialog dialog;
     private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c;
@@ -62,6 +75,12 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     private Button btnGetCase;
     private FirebaseAuth mAuth;
     private CardView cvComments;
+    private FloatingActionButton fbNewComment;
+    private ArrayAdapter<CommentModel> adapter;
+    private ArrayList<CommentModel> arrayList;
+    private ValueEventListener eventListener;
+    private DatabaseReference mComments;
+    private ListView lvComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +98,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         setTypeface();
         getIntentBundle();
         getCaseData();
+        loadComments();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.user_case);
@@ -92,6 +112,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
         DatabaseReference mCase = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
         mCase.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 description = dataSnapshot.child(DESCRIPTION).getValue(String.class);
@@ -124,8 +145,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 tvLawyerMsg.setText(String.format("%s/3", lawyer));
 
                 if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-                    btnGetCase.setVisibility(View.GONE);
-                    cvComments.setVisibility(View.VISIBLE);
+                    showComponentsComment();
                 }
 
             }
@@ -194,6 +214,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         tvLawyer.setTypeface(TypefaceBold(getApplicationContext()));
         tvLawyerMsg.setTypeface(TypefaceLight(getApplicationContext()));
         btnGetCase.setTypeface(TypefaceLight(getApplicationContext()));
+        tvNoComments.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
@@ -206,13 +227,17 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         tvImageMsg = findViewById(R.id.tvImageMsg);
         tvPdf = findViewById(R.id.tvPdf);
         tvPdfMsg = findViewById(R.id.tvPdfMsg);
-        tvDescription = findViewById(R.id.tvDescription);
+        tvDescription = findViewById(R.id.tvComment);
         tvDescriptionMsg = findViewById(R.id.tvDescriptionMsg);
         btnGetCase = findViewById(R.id.btnGetCase);
         tvLawyer = findViewById(R.id.tvLawyer);
         cvComments = findViewById(R.id.cvComments);
         tvLawyerMsg = findViewById(R.id.tvLawyerMsg);
+        tvNoComments = findViewById(R.id.tvNoComments);
+        fbNewComment = findViewById(R.id.fbNewComment);
+        lvComments = findViewById(R.id.lvComment);
         findViewById(R.id.btnGetCase).setOnClickListener(this);
+        findViewById(R.id.fbNewComment).setOnClickListener(this);
     }
 
     public void SnackError(String msg) {
@@ -225,16 +250,36 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 .show();
     }
 
+    public void SnackWarning(String msg) {
+        Snackbar.with(OpenCaseActivity.this, null)
+                .type(Type.WARNING)
+                .message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.LEFT)
+                .show();
+    }
+
+    public void SnackSuccess(String msg) {
+        Snackbar.with(OpenCaseActivity.this, null)
+                .type(Type.SUCCESS)
+                .message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.LEFT)
+                .show();
+    }
+
     private void addLawyerToCase(String lawyer) {
         DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
         HashMap<String, Object> lawyers = new HashMap<>();
         lawyers.put(lawyer, mAuth.getCurrentUser().getUid());
         database.updateChildren(lawyers).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    btnGetCase.setVisibility(View.GONE);
-                    cvComments.setVisibility(View.VISIBLE);
+                    showComponentsComment();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -244,6 +289,14 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void showComponentsComment() {
+        btnGetCase.setVisibility(View.GONE);
+        cvComments.setVisibility(View.VISIBLE);
+        fbNewComment.setVisibility(View.VISIBLE);
+        lvComments.setVisibility(View.VISIBLE);
     }
 
     private void DiscontCA(int value) {
@@ -258,64 +311,159 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    private void catchCase() {
+        if (lawyer_a != null && lawyer_b != null && lawyer_c != null) {
+            SnackError(getString(R.string.limit_lawyer));
+        } else if (credits > 30) {
+            new AwesomeSuccessDialog(OpenCaseActivity.this)
+                    .setTitle(getString(R.string.get_case))
+                    .setMessage(R.string.get_case_msg)
+                    .setColoredCircle(R.color.colorAccent)
+                    .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
+                    .setCancelable(false)
+                    .setNegativeButtonText(getString(R.string.cancel))
+                    .setNegativeButtonbackgroundColor(R.color.colorAccent)
+                    .setNegativeButtonTextColor(R.color.white)
+                    .setNegativeButtonClick(new Closure() {
+                        @Override
+                        public void exec() {
+
+                        }
+                    })
+                    .setPositiveButtonText(getString(R.string.continu))
+                    .setPositiveButtonbackgroundColor(R.color.colorAccent)
+                    .setPositiveButtonTextColor(R.color.white)
+                    .setPositiveButtonClick(new Closure() {
+                        @Override
+                        public void exec() {
+                            DiscontCA(credits - CATCH_CASE_VALUE);
+                            if (lawyer_a == null) {
+                                addLawyerToCase(LAWYER_A);
+                            } else if (lawyer_b == null) {
+                                addLawyerToCase(LAWYER_B);
+                            } else {
+                                addLawyerToCase(LAWYER_C);
+                            }
+                        }
+                    })
+                    .show();
+        } else {
+            new AwesomeSuccessDialog(OpenCaseActivity.this)
+                    .setTitle(getString(R.string.app_name))
+                    .setMessage(R.string.insufficient_ca)
+                    .setColoredCircle(R.color.colorAccent)
+                    .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
+                    .setCancelable(false)
+                    .setPositiveButtonText(getString(R.string.ok))
+                    .setPositiveButtonbackgroundColor(R.color.colorAccent)
+                    .setPositiveButtonTextColor(R.color.white)
+                    .setPositiveButtonClick(new Closure() {
+                        @Override
+                        public void exec() {
+
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void dialogNewComment() {
+        LayoutInflater inflater = LayoutInflater.from(OpenCaseActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(OpenCaseActivity.this);
+        View view = inflater.inflate(R.layout.new_comment_dialog, null);
+        builder.setTitle(getString(R.string.new_comment));
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        final TextInputEditText etComment = view.findViewById(R.id.etComment);
+        final TextInputLayout tilCOmment = view.findViewById(R.id.tilComment);
+
+        etComment.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCOmment.setTypeface(TypefaceLight(getApplicationContext()));
+
+        builder.setPositiveButton(getString(R.string.description), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                final String comment = etComment.getText().toString().trim();
+                if (Objects.equals(comment, "")) {
+                    SnackWarning(getString(R.string.fill_comment));
+                } else {
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES_COMMENTS).child(key).child(mAuth.getCurrentUser().getUid()).push();
+
+                    HashMap<String, String> comments = new HashMap<>();
+                    comments.put(COMMENT, comment);
+                    comments.put(LAWYER, mAuth.getCurrentUser().getUid());
+
+                    database.setValue(comments).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SnackSuccess(getString(R.string.comment_success));
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+                }
+
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+    private void loadComments() {
+        arrayList = new ArrayList<>();
+        adapter = new CommentAdapter(getApplicationContext(), arrayList);
+        lvComments.setAdapter(adapter);
+
+        mComments = FirebaseUtils.getDatabase().getReference().child(CASES_COMMENTS).child(key).child(mAuth.getCurrentUser().getUid());
+        eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                arrayList.clear();
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    tvNoComments.setVisibility(View.VISIBLE);
+                } else {
+                    for (DataSnapshot comment : dataSnapshot.getChildren()) {
+                        if (comment.child(LAWYER).getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
+                            CommentModel c = comment.getValue(CommentModel.class);
+                            arrayList.add(c);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnGetCase:
-                if (lawyer_a != null && lawyer_b != null && lawyer_c != null) {
-                    SnackError("Este caso ja chegou no limite de Advogados!");
-                } else if (credits > 30) {
-                    new AwesomeSuccessDialog(OpenCaseActivity.this)
-                            .setTitle(getString(R.string.get_case))
-                            .setMessage(R.string.get_case_msg)
-                            .setColoredCircle(R.color.colorAccent)
-                            .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
-                            .setCancelable(false)
-                            .setNegativeButtonText(getString(R.string.cancel))
-                            .setNegativeButtonbackgroundColor(R.color.colorAccent)
-                            .setNegativeButtonTextColor(R.color.white)
-                            .setNegativeButtonClick(new Closure() {
-                                @Override
-                                public void exec() {
-
-                                }
-                            })
-                            .setPositiveButtonText(getString(R.string.continu))
-                            .setPositiveButtonbackgroundColor(R.color.colorAccent)
-                            .setPositiveButtonTextColor(R.color.white)
-                            .setPositiveButtonClick(new Closure() {
-                                @Override
-                                public void exec() {
-                                    DiscontCA(credits - CATCH_CASE_VALUE);
-                                    if (lawyer_a == null) {
-                                        addLawyerToCase(LAWYER_A);
-                                    } else if (lawyer_b == null) {
-                                        addLawyerToCase(LAWYER_B);
-                                    } else {
-                                        addLawyerToCase(LAWYER_C);
-                                    }
-                                }
-                            })
-                            .show();
-                } else {
-                    new AwesomeSuccessDialog(OpenCaseActivity.this)
-                            .setTitle(getString(R.string.app_name))
-                            .setMessage(R.string.insufficient_ca)
-                            .setColoredCircle(R.color.colorAccent)
-                            .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
-                            .setCancelable(false)
-                            .setPositiveButtonText(getString(R.string.ok))
-                            .setPositiveButtonbackgroundColor(R.color.colorAccent)
-                            .setPositiveButtonTextColor(R.color.white)
-                            .setPositiveButtonClick(new Closure() {
-                                @Override
-                                public void exec() {
-
-                                }
-                            })
-                            .show();
-                }
-
+                catchCase();
+                break;
+            case R.id.fbNewComment:
+                dialogNewComment();
                 break;
         }
     }
@@ -334,5 +482,25 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            mComments.addValueEventListener(eventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        try {
+            mComments.removeEventListener(eventListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onPause();
     }
 }

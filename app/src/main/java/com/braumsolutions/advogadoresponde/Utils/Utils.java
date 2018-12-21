@@ -33,5 +33,8 @@ public class Utils {
     public static final String LAWYER_A = "lawyer_a";
     public static final String LAWYER_B = "lawyer_b";
     public static final String LAWYER_C = "lawyer_c";
+    public static final String LAWYER = "lawyer";
+    public static final String CASES_COMMENTS = "cases_comments";
+    public static final String COMMENT = "comment";
 
 }

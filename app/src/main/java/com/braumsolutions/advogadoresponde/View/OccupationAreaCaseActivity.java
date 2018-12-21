@@ -58,7 +58,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
     }
 
     private void castWidgets() {
-        tvArea = findViewById(R.id.tvDescription);
+        tvArea = findViewById(R.id.tvComment);
         tvAreaMsg = findViewById(R.id.tvDecriptionMsg);
         tvMsg = findViewById(R.id.tvMsg);
         spOcuppationArea = findViewById(R.id.spOccupationArea);
