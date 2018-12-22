@@ -1,32 +1,22 @@
 package com.braumsolutions.advogadoresponde.View;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
-import com.braumsolutions.advogadoresponde.Model.CommentAdapter;
-import com.braumsolutions.advogadoresponde.Model.CommentModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
@@ -52,15 +42,11 @@ import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES_COMMENTS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CATCH_CASE_VALUE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.COMMENT;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_A;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_B;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_C;
@@ -77,17 +63,11 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg, tvNoComments;
     private Toolbar toolbar;
     private ProgressDialog dialog;
-    private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, full_name, phone;
+    private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, name, last_name, phone, lawyer_name;
     private int credits, lawyer = 0;
     private Button btnGetCase;
     private FirebaseAuth mAuth;
-    private CardView cvComments;
     private FloatingActionButton fbWhatsApp;
-    private ArrayAdapter<CommentModel> adapter;
-    private ArrayList<CommentModel> arrayList;
-    private ValueEventListener eventListener;
-    private DatabaseReference mComments;
-    private ListView lvComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +85,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         setTypeface();
         getIntentBundle();
         getCaseData();
-        //loadComments();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.user_case);
@@ -168,8 +147,9 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
-                full_name = String.format("%s %s", dataSnapshot.child(NAME).getValue(String.class), dataSnapshot.child(LAST_NAME).getValue(String.class));
-                tvUserMsg.setText(full_name);
+                name = dataSnapshot.child(NAME).getValue(String.class);
+                last_name = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                tvUserMsg.setText(String.format("%s %s", name, last_name));
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -191,6 +171,19 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                     credits = 0;
                 }
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference mLawyer = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        mLawyer.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                lawyer_name = dataSnapshot.child(NAME).getValue(String.class);
             }
 
             @Override
@@ -401,95 +394,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    /**private void dialogNewComment() {
-        LayoutInflater inflater = LayoutInflater.from(OpenCaseActivity.this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(OpenCaseActivity.this);
-        View view = inflater.inflate(R.layout.new_comment_dialog, null);
-        builder.setTitle(getString(R.string.new_comment));
-        builder.setView(view);
-        builder.setCancelable(false);
-
-        final TextInputEditText etComment = view.findViewById(R.id.etComment);
-        final TextInputLayout tilCOmment = view.findViewById(R.id.tilComment);
-
-        etComment.setTypeface(TypefaceLight(getApplicationContext()));
-        tilCOmment.setTypeface(TypefaceLight(getApplicationContext()));
-
-        builder.setPositiveButton(getString(R.string.description), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                final String comment = etComment.getText().toString().trim();
-                if (Objects.equals(comment, "")) {
-                    SnackWarning(getString(R.string.fill_comment));
-                } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES_COMMENTS).child(key).child(mAuth.getCurrentUser().getUid()).push();
-
-                    HashMap<String, String> comments = new HashMap<>();
-                    comments.put(COMMENT, comment);
-                    comments.put(LAWYER, mAuth.getCurrentUser().getUid());
-
-                    database.setValue(comments).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                SnackSuccess(getString(R.string.comment_success));
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            SnackError(e.getMessage());
-                        }
-                    });
-                }
-
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }*/
-
-    /**
-     * private void loadComments() {
-     * arrayList = new ArrayList<>();
-     * adapter = new CommentAdapter(getApplicationContext(), arrayList);
-     * lvComments.setAdapter(adapter);
-     * <p>
-     * mComments = FirebaseUtils.getDatabase().getReference().child(CASES_COMMENTS).child(key).child(mAuth.getCurrentUser().getUid());
-     * eventListener = new ValueEventListener() {
-     *
-     * @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-     * arrayList.clear();
-     * if (dataSnapshot.getChildrenCount() == 0) {
-     * tvNoComments.setVisibility(View.VISIBLE);
-     * } else {
-     * for (DataSnapshot comment : dataSnapshot.getChildren()) {
-     * if (comment.child(LAWYER).getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
-     * CommentModel c = comment.getValue(CommentModel.class);
-     * arrayList.add(c);
-     * }
-     * }
-     * }
-     * adapter.notifyDataSetChanged();
-     * }
-     * @Override public void onCancelled(@NonNull DatabaseError databaseError) {
-     * <p>
-     * }
-     * };
-     * <p>
-     * }
-     */
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -514,7 +418,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
                     if (image != null) {
                         final ArrayList<PreviewFile> previewFiles = new ArrayList<>();
-                        previewFiles.add(new PreviewFile(image, String.format("%s: %s", getString(R.string.user), full_name)));
+                        previewFiles.add(new PreviewFile(image, String.format("%s: %s %s", getString(R.string.user), name, last_name)));
                         Intent intent = new Intent(OpenCaseActivity.this, ImagePreviewActivity.class);
                         intent.putExtra(ImagePreviewActivity.IMAGE_LIST, previewFiles);
                         intent.putExtra(ImagePreviewActivity.CURRENT_ITEM, 0);
@@ -528,7 +432,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     private void dialogWhatsApp() {
         new AwesomeSuccessDialog(OpenCaseActivity.this)
                 .setTitle(getString(R.string.app_name))
-                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), full_name, getString(R.string.number), addMask(phone, "(##) #####-####")))
+                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(phone, "(##) #####-####")))
                 .setColoredCircle(R.color.colorAccent)
                 .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
                 .setCancelable(false)
@@ -547,8 +451,10 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 .setPositiveButtonClick(new Closure() {
                     @Override
                     public void exec() {
-
-
+                        String link = "https://api.whatsapp.com/send?phone=55" + phone + "&text=Olá%20" + name + ",%20Me%20chamo%20" + lawyer_name + ".%20Peguei%20seu%20caso%20no%20aplicativo%20" + getString(R.string.app_name) + ".%20Em%20que%20posso%20lhe%20ajudar?";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(link));
+                        startActivity(i);
                     }
                 })
                 .show();
@@ -564,27 +470,10 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_report_case:
-
+                //TODO: CRIAR METODO PRA REPORTAR CASO
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**@Override protected void onResume() {
-    try {
-    mComments.addValueEventListener(eventListener);
-    } catch (Exception e) {
-    e.printStackTrace();
-    }
-    super.onResume();
-    }
-
-     @Override protected void onPause() {
-     try {
-     mComments.removeEventListener(eventListener);
-     } catch (Exception e) {
-     e.printStackTrace();
-     }
-     super.onPause();
-     }*/
 }

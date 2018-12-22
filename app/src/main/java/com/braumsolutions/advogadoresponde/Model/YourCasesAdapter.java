@@ -36,17 +36,15 @@ public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.your_cases_layout, parent, false);
 
+            TextView tvAreaMsg = view.findViewById(R.id.tvAreaMsg);
+            TextView tvDescriptionMsg = view.findViewById(R.id.tvDescriptionMsg);
             TextView tvArea = view.findViewById(R.id.tvArea);
-            TextView tvDescription = view.findViewById(R.id.tvComment);
-            TextView tvLawyers = view.findViewById(R.id.tvLawyers);
-            TextView tvPicture = view.findViewById(R.id.tvPicture);
-            TextView tvPdf = view.findViewById(R.id.tvPdf);
+            TextView tvDescription = view.findViewById(R.id.tvDescription);
 
-            tvArea.setTypeface(TypefaceBold(context));
+            tvAreaMsg.setTypeface(TypefaceBold(context));
+            tvDescriptionMsg.setTypeface(TypefaceBold(context));
             tvDescription.setTypeface(TypefaceLight(context));
-            tvLawyers.setTypeface(TypefaceLight(context));
-            tvPicture.setTypeface(TypefaceLight(context));
-            tvPdf.setTypeface(TypefaceLight(context));
+            tvArea.setTypeface(TypefaceLight(context));
 
             CasesModel casesModel = cases.get(position);
 
@@ -58,12 +56,7 @@ public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
                 tvDescription.setText(casesModel.getDescription());
             }
 
-            if (casesModel.getPdf() != null) {
-                tvPdf.setVisibility(View.VISIBLE);
-            }
-            if (casesModel.getPicture() != null) {
-                tvPicture.setVisibility(View.VISIBLE);
-            }
+
 
         }
 

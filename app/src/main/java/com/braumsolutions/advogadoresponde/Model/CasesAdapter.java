@@ -48,13 +48,18 @@ public class CasesAdapter extends ArrayAdapter<CasesModel> {
             view = inflater.inflate(R.layout.cases_layout, parent, false);
 
             TextView tvArea = view.findViewById(R.id.tvArea);
-            TextView tvDescription = view.findViewById(R.id.tvComment);
-            TextView tvLawyers = view.findViewById(R.id.tvLawyers);
+            TextView tvDescription = view.findViewById(R.id.tvDescription);
             final TextView tvUser = view.findViewById(R.id.tvUser);
+            TextView tvAreMsg = view.findViewById(R.id.tvAreaMsg);
+            TextView tvDescriptionMsg = view.findViewById(R.id.tvDescriptionMsg);
+            TextView tvUserMsg = view.findViewById(R.id.tvUserMsg);
 
-            tvArea.setTypeface(TypefaceBold(context));
+            tvArea.setTypeface(TypefaceLight(context));
             tvDescription.setTypeface(TypefaceLight(context));
-            tvLawyers.setTypeface(TypefaceLight(context));
+            tvUser.setTypeface(TypefaceLight(context));
+            tvAreMsg.setTypeface(TypefaceBold(context));
+            tvDescriptionMsg.setTypeface(TypefaceBold(context));
+            tvUserMsg.setTypeface(TypefaceBold(context));
 
             CasesModel casesModel = cases.get(position);
 
