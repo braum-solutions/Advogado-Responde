@@ -41,6 +41,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
@@ -94,7 +95,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 if (phone == null) {
                     tvPhone.setText(getString(R.string.change_phone));
                 } else {
-                    tvPhone.setText(addMask(phone, "(##)#####-####"));
+                    tvPhone.setText(addMask(phone, "(##) #####-####"));
                 }
 
             }
@@ -394,26 +395,6 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         AlertDialog dialog = builder.create();
         dialog.show();
 
-    }
-
-    private static String addMask(final String textoAFormatar, final String mask){
-        String formatado = "";
-        int i = 0;
-        // vamos iterar a mascara, para descobrir quais caracteres vamos adicionar e quando...
-        for (char m : mask.toCharArray()) {
-            if (m != '#') { // se não for um #, vamos colocar o caracter informado na máscara
-                formatado += m;
-                continue;
-            }
-            // Senão colocamos o valor que será formatado
-            try {
-                formatado += textoAFormatar.charAt(i);
-            } catch (Exception e) {
-                break;
-            }
-            i++;
-        }
-        return formatado;
     }
 
     @Override

@@ -142,5 +142,9 @@
     <string name="fill_comment">Para comentar você precisa digitar algo</string>
     <string name="comment_success">Comentário enviado com sucesso!</string>
     <string name="description">Descrição</string>
+    <string name="whats_dialog">Ao clicar em continuar o aplicativo WhatsApp será aberto para que você possa conversar com o usuario dono deste caso</string>
+    <string name="number">Número</string>
+    <string name="update_phone_msg">Você precisa atualizar o seu numero de telefone no seu perfil para poder cadastrar um novo caso</string>
+    <string name="free_link">Link liberado apos você pegar este caso</string>
 
 </resources>

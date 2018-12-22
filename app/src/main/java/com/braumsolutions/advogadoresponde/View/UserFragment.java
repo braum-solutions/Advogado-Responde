@@ -3,6 +3,7 @@ package com.braumsolutions.advogadoresponde.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
+import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.Utils.Utils;
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class UserFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private TextView tvNewCase, tvNewCaseMsg, tvYourCases, tvYourCasesMsg, tvChat, tvChatMsg, tvProfile, tvProfileMsg;
+    private String phone;
+    private FirebaseAuth mAuth;
 
     public UserFragment() {}
 
@@ -26,10 +42,30 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
+
         castWidgets();
         setTypeface();
+        getData();
 
         return view;
+    }
+
+    private void getData() {
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(PHONE).getValue(String.class) != null) {
+                    phone = dataSnapshot.child(PHONE).getValue(String.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setTypeface() {
@@ -58,6 +94,16 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         tvProfileMsg = view.findViewById(R.id.tvProfileMsg);
     }
 
+    public void SnackWarning(String msg) {
+        Snackbar.with(getContext(), null)
+                .type(Type.WARNING)
+                .message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.LEFT)
+                .show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -66,8 +112,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 startActivity(intentProfile);
                 break;
             case R.id.cvNewCase:
-                Intent intentNewCase = new Intent(getContext(), OccupationAreaCaseActivity.class);
-                startActivity(intentNewCase);
+                if (phone == null) {
+                    SnackWarning(getString(R.string.update_phone_msg));
+                } else {
+                    Intent intentNewCase = new Intent(getContext(), OccupationAreaCaseActivity.class);
+                    startActivity(intentNewCase);
+                }
                 break;
             case R.id.cvYourCases:
                 Intent intentYourCases = new Intent(getContext(), YourCasesActivity.class);

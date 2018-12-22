@@ -140,4 +140,8 @@
     <string name="fill_comment">To comment you need to type something</string>
     <string name="comment_success">Comment sent successfully!</string>
     <string name="comment">Comment</string>
+    <string name="number">Number</string>
+    <string name="whats_dialog">By clicking continue the WhatsApp application will open so you can talk to the user who owns this case</string>
+    <string name="update_phone_msg">You need to update your phone number on your profile in order to register a new case</string>
+    <string name="free_link">Link released after you get this case</string>
 </resources>

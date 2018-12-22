@@ -38,18 +38,20 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private String image, name, lastName, email;
+    private String image, name, lastName, email, phone;
     private CircleImageView ivImage;
-    private TextView tvName, tvEmail;
+    private TextView tvName, tvEmail, tvPhone, tvPhoneMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,15 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 name = dataSnapshot.child(NAME).getValue(String.class);
                 lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
                 email = mAuth.getCurrentUser().getEmail();
+                if (dataSnapshot.child(PHONE).getValue(String.class) != null) {
+                    phone = dataSnapshot.child(PHONE).getValue(String.class);
+                }
+
+                if (phone == null) {
+                    tvPhoneMsg.setText(getString(R.string.change_phone));
+                } else {
+                    tvPhoneMsg.setText(addMask(phone, "(##) #####-####"));
+                }
 
                 tvEmail.setText(email);
                 tvName.setText(String.format("%s %s", name, lastName));
@@ -91,15 +102,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private void setTypeface() {
         tvName.setTypeface(TypefaceLight(getApplicationContext()));
         tvEmail.setTypeface(TypefaceLight(getApplicationContext()));
+        tvPhone.setTypeface(TypefaceLight(getApplicationContext()));
+        tvPhoneMsg.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
         tvEmail = findViewById(R.id.tvEmail);
         tvName = findViewById(R.id.tvName);
         ivImage = findViewById(R.id.ivImage);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvPhoneMsg = findViewById(R.id.tvPhoneMsg);
         findViewById(R.id.fbChangeImage).setOnClickListener(this);
         findViewById(R.id.fbChangeName).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
+        findViewById(R.id.lvPhone).setOnClickListener(this);
     }
 
     @Override
@@ -116,6 +132,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.btnBack:
                 finish();
+                break;
+            case R.id.lvPhone:
+                dialogEditPhone();
                 break;
         }
     }
@@ -229,6 +248,64 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         dialog.show();
 
     }
+
+    private void dialogEditPhone() {
+        LayoutInflater inflater = LayoutInflater.from(UserProfileActivity.this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
+
+        View view = inflater.inflate(R.layout.phone_dialog, null);
+        builder.setTitle(getString(R.string.phone));
+        builder.setMessage(getString(R.string.phone_msg));
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        final TextInputEditText etPhone = view.findViewById(R.id.etPhone);
+
+        etPhone.setText(phone);
+
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                String phone = etPhone.getText().toString().trim();
+                if (phone.equals("")) {
+                    SnackWarning(getString(R.string.fill_phone));
+                } else if (phone.length() < 11) {
+                    SnackWarning(getString(R.string.incomplet_phone));
+                } else {
+                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+                    HashMap<String, Object> phones = new HashMap<>();
+                    phones.put(PHONE, phone);
+                    database.updateChildren(phones).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                SnackSuccess(getString(R.string.phone_updated));
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+
+                }
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
 
     public void SnackError(String msg) {
         Snackbar.with(UserProfileActivity.this, null)

@@ -190,6 +190,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
+                    android:id="@+id/lvPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
@@ -197,13 +198,15 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/soon"
+                        android:text="@string/phone"
                         android:textColor="@color/colorAccent"
                         android:textSize="13sp" />
 
                     <TextView
+                        android:id="@+id/tvPhoneMsg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
