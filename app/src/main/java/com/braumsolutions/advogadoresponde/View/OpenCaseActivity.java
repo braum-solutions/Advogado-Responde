@@ -67,7 +67,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     private int credits, lawyer = 0;
     private Button btnGetCase;
     private FirebaseAuth mAuth;
-    private FloatingActionButton fbWhatsApp;
+    private FloatingActionButton fbChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,10 +236,10 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         //cvComments = findViewById(R.id.cvComments);
         tvLawyerMsg = findViewById(R.id.tvLawyerMsg);
         //tvNoComments = findViewById(R.id.tvNoComments);
-        fbWhatsApp = findViewById(R.id.fbWhatsApp);
+        fbChat = findViewById(R.id.fbChat);
         //lvComments = findViewById(R.id.lvComment);
         findViewById(R.id.btnGetCase).setOnClickListener(this);
-        findViewById(R.id.fbWhatsApp).setOnClickListener(this);
+        findViewById(R.id.fbChat).setOnClickListener(this);
         findViewById(R.id.tvPdfMsg).setOnClickListener(this);
         findViewById(R.id.tvImageMsg).setOnClickListener(this);
     }
@@ -298,7 +298,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     @SuppressLint("RestrictedApi")
     private void showComponentsComment() {
         btnGetCase.setVisibility(View.GONE);
-        fbWhatsApp.setVisibility(View.VISIBLE);
+        fbChat.setVisibility(View.VISIBLE);
 
         if (pdf == null) {
             tvPdfMsg.setText(getString(R.string.no_file));
@@ -400,9 +400,9 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnGetCase:
                 catchCase();
                 break;
-            case R.id.fbWhatsApp:
-                //dialogNewComment();
-                dialogWhatsApp();
+            case R.id.fbChat:
+                //dialogWhatsApp(phone, name, last_name);
+                openChat();
                 break;
             case R.id.tvPdfMsg:
                 if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
@@ -429,7 +429,12 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void dialogWhatsApp() {
+    private void openChat() {
+        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        startActivity(intent);
+    }
+
+    private void dialogWhatsApp(final String phone, final String name, String last_name) {
         new AwesomeSuccessDialog(OpenCaseActivity.this)
                 .setTitle(getString(R.string.app_name))
                 .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(phone, "(##) #####-####")))
