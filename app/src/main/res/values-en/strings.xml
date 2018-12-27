@@ -144,4 +144,7 @@
     <string name="whats_dialog">By clicking continue the WhatsApp application will open so you can talk to the user who owns this case</string>
     <string name="update_phone_msg">You need to update your phone number on your profile in order to register a new case</string>
     <string name="free_link">Link released after you get this case</string>
+    <string name="type_to_send">Type something to send</string>
+    <string name="fail_sent_message">Error sending message, please try again!</string>
+    <string name="error_save_chat">Error saving chat</string>
 </resources>

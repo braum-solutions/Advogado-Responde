@@ -431,6 +431,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
     private void openChat() {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        intent.putExtra(USER, user);
         startActivity(intent);
     }
 

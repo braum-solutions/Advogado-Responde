@@ -36,5 +36,10 @@ public class Utils {
     public static final String LAWYER = "lawyer";
     public static final String CASES_COMMENTS = "cases_comments";
     public static final String COMMENT = "comment";
+    public static final String MESSAGES = "messages";
+    public static final String MESSAGE = "message";
+    public static final String SENDER = "sender";
+    public static final String RECEIVER = "receiver";
+    public static final String CHAT_MESSAGES = "chat_messages";
 
 }

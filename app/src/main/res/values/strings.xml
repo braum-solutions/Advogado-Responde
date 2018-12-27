@@ -146,5 +146,8 @@
     <string name="number">Número</string>
     <string name="update_phone_msg">Você precisa atualizar o seu numero de telefone no seu perfil para poder cadastrar um novo caso</string>
     <string name="free_link">Link liberado apos você pegar este caso</string>
+    <string name="type_to_send">Digite algo para enviar</string>
+    <string name="fail_sent_message">Erro ao enviar a mensagem, tente novamente!</string>
+    <string name="error_save_chat">Erro ao salvar o bate-papo</string>
 
 </resources>
