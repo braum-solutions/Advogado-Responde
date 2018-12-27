@@ -147,4 +147,7 @@
     <string name="type_to_send">Type something to send</string>
     <string name="fail_sent_message">Error sending message, please try again!</string>
     <string name="error_save_chat">Error saving chat</string>
+    <string name="manage_credit_msg">Manage your credits</string>
+    <string name="credits">Credits</string>
+    <string name="chat_lawyer_msg">View your conversations with users</string>
 </resources>

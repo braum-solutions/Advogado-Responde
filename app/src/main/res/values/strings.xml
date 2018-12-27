@@ -149,5 +149,10 @@
     <string name="type_to_send">Digite algo para enviar</string>
     <string name="fail_sent_message">Erro ao enviar a mensagem, tente novamente!</string>
     <string name="error_save_chat">Erro ao salvar o bate-papo</string>
+    <string name="chat_lawyer_msg">Veja suas conversas com usuários</string>
+    <string name="manage_credit_msg">Gerencie seus créditos</string>
+    <string name="ca" translatable="false">CA</string>
+    <string name="credits">Créditos</string>
+    <string name="no_message">Você ainda não tem mensagens com esta pessoa</string>
 
 </resources>

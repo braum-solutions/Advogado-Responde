@@ -33,7 +33,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 public class LawyerFragment extends Fragment implements View.OnClickListener {
 
     private View view;
-    private TextView tvFindCase, tvFindCaseMsg;
+    private TextView tvFindCase, tvFindCaseMsg, tvChat, tvChatMsg, tvCredit, tvCreditMsg, tvProfile, tvProfileMsg;
     private String verified;
     private FirebaseAuth mAuth;
 
@@ -72,14 +72,29 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
 
     private void setTypeface() {
         tvFindCase.setTypeface(TypefaceBold(getContext()));
+        tvChat.setTypeface(TypefaceBold(getContext()));
+        tvCredit.setTypeface(TypefaceBold(getContext()));
+        tvProfile.setTypeface(TypefaceBold(getContext()));
         tvFindCaseMsg.setTypeface(TypefaceLight(getContext()));
+        tvChatMsg.setTypeface(TypefaceLight(getContext()));
+        tvCreditMsg.setTypeface(TypefaceLight(getContext()));
+        tvProfileMsg.setTypeface(TypefaceLight(getContext()));
+
     }
 
     private void castWidgets() {
         view.findViewById(R.id.cvProfile).setOnClickListener(this);
         view.findViewById(R.id.cvFindCase).setOnClickListener(this);
+        view.findViewById(R.id.cvChat).setOnClickListener(this);
+        view.findViewById(R.id.cvCredit).setOnClickListener(this);
         tvFindCase = view.findViewById(R.id.tvFindCase);
         tvFindCaseMsg = view.findViewById(R.id.tvFindCaseMsg);
+        tvChat = view.findViewById(R.id.tvChat);
+        tvChatMsg = view.findViewById(R.id.tvChatMsg);
+        tvCredit = view.findViewById(R.id.tvCredit);
+        tvCreditMsg = view.findViewById(R.id.tvCreditMsg);
+        tvProfile = view.findViewById(R.id.tvProfile);
+        tvProfileMsg = view.findViewById(R.id.tvProfileMsg);
     }
 
     public void SnackWarning(String msg) {
@@ -116,6 +131,12 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
                     Intent intentFindCase = new Intent(getContext(), CasesActivity.class);
                     startActivity(intentFindCase);
                 }
+                break;
+            case R.id.cvChat:
+
+                break;
+            case R.id.cvCredit:
+
                 break;
         }
     }
