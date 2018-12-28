@@ -18,7 +18,6 @@ import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,11 +25,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.RECEIVER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.SENDER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,7 +47,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Message> messages;
     private ArrayAdapter<Message> adapter;
     private ValueEventListener valueEventListenerMessages;
-    private  DatabaseReference database;
+    private  DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         getData();
         getMessages();
 
-        database.addValueEventListener(valueEventListenerMessages);
+        mDatabase.addValueEventListener(valueEventListenerMessages);
 
     }
 
@@ -67,7 +71,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new MessageAdapter(getApplicationContext(), messages);
         lvChat.setAdapter(adapter);
 
-        database = FirebaseUtils.getDatabase().getReference().child(MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
+        mDatabase = FirebaseUtils.getDatabase().getReference().child(MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
         valueEventListenerMessages = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -147,7 +151,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        database.removeEventListener(valueEventListenerMessages);
+        mDatabase.removeEventListener(valueEventListenerMessages);
     }
 
     private void sendMessage() {
@@ -155,31 +159,44 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         if (message.equals("")) {
             SnackWarning(getString(R.string.type_to_send));
         } else {
-            Message msg = new Message();
-            msg.setMessage(message);
-            msg.setSender(mAuth.getCurrentUser().getUid());
 
-            Boolean returnSaveMessage = saveMessage(mAuth.getCurrentUser().getUid(), user, msg);
-            if (!returnSaveMessage) {
+            //salva para o remetente
+            mDatabase = FirebaseUtils.getDatabase().getInstance().getReference().child(MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user).push();
+            String push = mDatabase.getKey();
+            Boolean returnSender = saveMessage(mAuth.getCurrentUser().getUid(), user, message, mDatabase);
+            if (!returnSender) {
                 SnackError(getString(R.string.fail_sent_message));
             } else {
-
-                ChatMessage chat = new ChatMessage();
-                chat.setMessage(message);
-                chat.setSender(mAuth.getCurrentUser().getUid());
-                chat.setReceiver(user);
-
-                Boolean returnSaveChat = saveChat(mAuth.getCurrentUser().getUid(), user, chat);
-                if (!returnSaveChat) {
-                    SnackError(getString(R.string.error_save_chat));
+                //salva para o destinatario
+                mDatabase = FirebaseUtils.getDatabase().getInstance().getReference().child(MESSAGES).child(user).child(mAuth.getCurrentUser().getUid()).child(push);
+                Boolean returnAddressee = saveMessage(mAuth.getCurrentUser().getUid(), user, message, mDatabase);
+                if (!returnAddressee) {
+                    SnackError(getString(R.string.fail_sent_message));
                 } else {
-
                     etMessage.setText("");
-                    etMessage.requestFocus();
-
                 }
-
             }
+
+            //Salva a Conversa para o Remetente
+            ChatMessage chatSender = new ChatMessage();
+            chatSender.setUid(user);
+            chatSender.setMessage(message);
+
+            Boolean returnSaveChatSender = saveChat(mAuth.getCurrentUser().getUid(), user, chatSender);
+            if (!returnSaveChatSender) {
+                SnackError(getString(R.string.error_save_chat));
+            } else {
+                //Salva a Conversa para o Remetente
+                ChatMessage chatAddressee = new ChatMessage();
+                chatAddressee.setUid(mAuth.getCurrentUser().getUid());
+                chatAddressee.setMessage(message);
+
+                Boolean returnSaveChatAdressee = saveChat(user, mAuth.getCurrentUser().getUid(), chatAddressee);
+                if (!returnSaveChatAdressee) {
+                    SnackError(getString(R.string.error_save_chat));
+                }
+            }
+
         }
     }
 
@@ -187,21 +204,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private boolean saveMessage(String sender, String receiver, Message message) {
+    private boolean saveMessage(String sender, String receiver, String message, DatabaseReference datadase) {
         try {
-            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(MESSAGES);
-            database.child(sender).child(receiver).push().setValue(message).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            database.child(receiver).child(sender).push().setValue(message).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
+
+            HashMap<String, String> msg = new HashMap<>();
+            msg.put(SENDER, sender);
+            msg.put(RECEIVER, receiver);
+            msg.put(MESSAGE, message);
+            //msg.put(DATE, null);
+            msg.put(KEY, mDatabase.getKey());
+            datadase.setValue(msg);
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,24 +222,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean saveChat(String sender, String receiver, ChatMessage chatMessage) {
+    private boolean saveChat(String uidSender, String uidAddressee, ChatMessage chatMessage) {
         try {
-            DatabaseReference database = FirebaseUtils.getDatabase().getInstance().getReference().child(CHAT_MESSAGES);
-            database.child(sender).child(receiver).setValue(chatMessage).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            database.child(receiver).child(sender).setValue(chatMessage).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
+
+            mDatabase = FirebaseUtils.getDatabase().getInstance().getReference().child(CHAT_MESSAGES);
+            mDatabase.child(uidSender).child(uidAddressee).setValue(chatMessage);
+
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            SnackError(e.getMessage());
             return false;
         }
     }

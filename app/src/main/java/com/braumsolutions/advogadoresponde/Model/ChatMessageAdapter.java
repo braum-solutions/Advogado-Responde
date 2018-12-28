@@ -45,42 +45,42 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @androidx.annotation.NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = null;
         mAuth = FirebaseAuth.getInstance();
 
-        if (view == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            view = inflater.inflate(R.layout.chat_list_item, null);
-        } else {
-            view = convertView;
+        if (chatMessageList != null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+
+            view = inflater.inflate(R.layout.chat_list_item, parent, false);
+
+            final ChatMessage chatMessage = getItem(position);
+
+            final CircleImageView ivImage = view.findViewById(R.id.ivImage);
+            final TextView tvName = view.findViewById(R.id.tvName);
+            TextView tvMessage = view.findViewById(R.id.tvMessage);
+
+            tvName.setTypeface(TypefaceBold(context));
+            tvMessage.setTypeface(TypefaceLight(context));
+
+            tvMessage.setText(chatMessage.getMessage());
+
+            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(chatMessage.getUid());
+            database.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Picasso.with(context).load(dataSnapshot.child(IMAGE).getValue(String.class)).placeholder(R.drawable.avatar).into(ivImage);
+                    tvName.setText(String.format("%s %s", dataSnapshot.child(NAME).getValue(String.class), dataSnapshot.child(LAST_NAME).getValue(String.class)));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
         }
-
-        final ChatMessage chatMessage = getItem(position);
-
-        final CircleImageView ivImage = view.findViewById(R.id.ivImage);
-        final TextView tvName = view.findViewById(R.id.tvName);
-        TextView tvMessage = view.findViewById(R.id.tvMessage);
-
-        tvName.setTypeface(TypefaceBold(context));
-        tvMessage.setTypeface(TypefaceLight(context));
-
-        tvMessage.setText(chatMessage.getMessage());
-
-        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(chatMessage.getReceiver());
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Picasso.with(context).load(dataSnapshot.child(IMAGE).getValue(String.class)).placeholder(R.drawable.avatar).into(ivImage);
-                tvName.setText(String.format("%s %s", dataSnapshot.child(NAME).getValue(String.class), dataSnapshot.child(LAST_NAME).getValue(String.class)));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
 
         return view;
     }

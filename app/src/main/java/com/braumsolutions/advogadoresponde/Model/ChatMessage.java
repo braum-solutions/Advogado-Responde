@@ -2,8 +2,7 @@ package com.braumsolutions.advogadoresponde.Model;
 
 public class ChatMessage {
 
-    private String sender;
-    private String receiver;
+    private String uid;
     private String name;
     private String message;
 
@@ -12,17 +11,17 @@ public class ChatMessage {
     }
 
     public ChatMessage(String uid, String name, String message) {
-        this.sender = uid;
+        this.uid = uid;
         this.name = name;
         this.message = message;
     }
 
-    public String getSender() {
-        return sender;
+    public String getUid() {
+        return uid;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setUid(String sender) {
+        this.uid = sender;
     }
 
     public String getName() {
@@ -41,11 +40,4 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
 }

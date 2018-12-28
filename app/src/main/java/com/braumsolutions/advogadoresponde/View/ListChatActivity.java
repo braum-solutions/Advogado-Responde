@@ -16,6 +16,7 @@ import com.braumsolutions.advogadoresponde.Model.ChatMessageAdapter;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
@@ -48,7 +50,7 @@ public class ListChatActivity extends AppCompatActivity {
         loadChatMessages();
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Lista de bate-papo");
+        getSupportActionBar().setTitle(getString(R.string.chat));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -57,23 +59,11 @@ public class ListChatActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ChatMessage chatMessage = (ChatMessage) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                intent.putExtra(USER, chatMessage.getReceiver());
+                intent.putExtra(USER, chatMessage.getUid());
                 startActivity(intent);
             }
         });
 
-    }
-
-    @Override
-    protected void onResume() {
-        mDatabase.addValueEventListener(valueEventListener);
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDatabase.removeEventListener(valueEventListener);
     }
 
     private void loadChatMessages() {
@@ -81,29 +71,33 @@ public class ListChatActivity extends AppCompatActivity {
         adapter = new ChatMessageAdapter(ListChatActivity.this, arrayChatMessages);
         lvChat.setAdapter(adapter);
 
-        mDatabase = FirebaseUtils.getDatabase().getReference().child(CHAT_MESSAGES).child(mAuth.getCurrentUser().getUid());
-        valueEventListener = new ValueEventListener() {
+        mDatabase = FirebaseUtils.getDatabase().getInstance().getReference().child(CHAT_MESSAGES).child(mAuth.getCurrentUser().getUid());
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 arrayChatMessages.clear();
                 if (dataSnapshot.getChildrenCount() == 0) {
                     tvNoChat.setVisibility(View.VISIBLE);
                 } else {
                     tvNoChat.setVisibility(View.GONE);
                     for (DataSnapshot chat : dataSnapshot.getChildren()) {
-                        ChatMessage chatMessage = chat.getValue(ChatMessage.class);
-                        arrayChatMessages.add(chatMessage);
+                        try {
+                            ChatMessage chatMessage = chat.getValue(ChatMessage.class);
+                            arrayChatMessages.add(chatMessage);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     adapter.notifyDataSetChanged();
                 }
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
-        };
+        });
+
 
     }
 
@@ -111,5 +105,6 @@ public class ListChatActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         lvChat = findViewById(R.id.lvChat);
         tvNoChat = findViewById(R.id.tvNoChat);
+        tvNoChat.setTypeface(TypefaceLight(getApplicationContext()));
     }
 }

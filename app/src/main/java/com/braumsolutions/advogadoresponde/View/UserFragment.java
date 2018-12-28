@@ -124,7 +124,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 startActivity(intentYourCases);
                 break;
             case R.id.cvChat:
-                Intent intentChat = new Intent(getContext(), ChatActivity.class);
+                Intent intentChat = new Intent(getContext(), ListChatActivity.class);
                 startActivity(intentChat);
                 break;
         }
