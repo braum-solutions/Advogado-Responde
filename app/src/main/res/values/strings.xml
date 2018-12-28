@@ -154,5 +154,6 @@
     <string name="ca" translatable="false">CA</string>
     <string name="credits">Créditos</string>
     <string name="no_message">Você ainda não tem mensagens com esta pessoa</string>
+    <string name="no_chat">Você não tem conversas ainda</string>
 
 </resources>

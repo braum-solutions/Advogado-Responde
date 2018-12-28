@@ -133,7 +133,8 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.cvChat:
-
+                Intent intentChat = new Intent(getContext(), ListChatActivity.class);
+                startActivity(intentChat);
                 break;
             case R.id.cvCredit:
 

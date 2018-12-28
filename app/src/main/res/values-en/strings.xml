@@ -150,4 +150,6 @@
     <string name="manage_credit_msg">Manage your credits</string>
     <string name="credits">Credits</string>
     <string name="chat_lawyer_msg">View your conversations with users</string>
+    <string name="no_message">You do not have any messages with this person</string>
+    <string name="no_chat">You have not had any conversations yet.</string>
 </resources>

@@ -26,17 +26,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.RECEIVER;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.SENDER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -172,7 +166,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 ChatMessage chat = new ChatMessage();
                 chat.setMessage(message);
-                chat.setMessage(mAuth.getCurrentUser().getUid());
+                chat.setSender(mAuth.getCurrentUser().getUid());
+                chat.setReceiver(user);
 
                 Boolean returnSaveChat = saveChat(mAuth.getCurrentUser().getUid(), user, chat);
                 if (!returnSaveChat) {
