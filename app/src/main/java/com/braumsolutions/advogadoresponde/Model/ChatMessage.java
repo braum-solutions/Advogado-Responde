@@ -5,15 +5,17 @@ public class ChatMessage {
     private String uid;
     private String name;
     private String message;
+    private String key;
 
     public ChatMessage() {
 
     }
 
-    public ChatMessage(String uid, String name, String message) {
+    public ChatMessage(String uid, String name, String message, String key) {
         this.uid = uid;
         this.name = name;
         this.message = message;
+        this.key = key;
     }
 
     public String getUid() {
@@ -40,4 +42,11 @@ public class ChatMessage {
         this.message = message;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

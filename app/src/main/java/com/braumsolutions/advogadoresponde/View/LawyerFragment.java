@@ -33,7 +33,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 public class LawyerFragment extends Fragment implements View.OnClickListener {
 
     private View view;
-    private TextView tvFindCase, tvFindCaseMsg, tvChat, tvChatMsg, tvCredit, tvCreditMsg, tvProfile, tvProfileMsg;
+    private TextView tvFindCase, tvFindCaseMsg, tvChat, tvChatMsg, tvCredit, tvCreditMsg, tvProfile, tvProfileMsg, tvYourCases, tvYourCasesMsg;
     private String verified;
     private FirebaseAuth mAuth;
 
@@ -72,6 +72,7 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
 
     private void setTypeface() {
         tvFindCase.setTypeface(TypefaceBold(getContext()));
+        tvYourCases.setTypeface(TypefaceBold(getContext()));
         tvChat.setTypeface(TypefaceBold(getContext()));
         tvCredit.setTypeface(TypefaceBold(getContext()));
         tvProfile.setTypeface(TypefaceBold(getContext()));
@@ -79,6 +80,7 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
         tvChatMsg.setTypeface(TypefaceLight(getContext()));
         tvCreditMsg.setTypeface(TypefaceLight(getContext()));
         tvProfileMsg.setTypeface(TypefaceLight(getContext()));
+        tvYourCasesMsg.setTypeface(TypefaceLight(getContext()));
 
     }
 
@@ -91,6 +93,8 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
         tvFindCaseMsg = view.findViewById(R.id.tvFindCaseMsg);
         tvChat = view.findViewById(R.id.tvChat);
         tvChatMsg = view.findViewById(R.id.tvChatMsg);
+        tvYourCases = view.findViewById(R.id.tvYourCases);
+        tvYourCasesMsg = view.findViewById(R.id.tvYourCasesMsg);
         tvCredit = view.findViewById(R.id.tvCredit);
         tvCreditMsg = view.findViewById(R.id.tvCreditMsg);
         tvProfile = view.findViewById(R.id.tvProfile);

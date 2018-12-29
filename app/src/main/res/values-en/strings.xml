@@ -152,4 +152,8 @@
     <string name="chat_lawyer_msg">View your conversations with users</string>
     <string name="no_message">You do not have any messages with this person</string>
     <string name="no_chat">You have not had any conversations yet.</string>
+    <string name="your_cases_catched_msg">Track your caught cases</string>
+    <string name="delete_chat">Delete Conversation</string>
+    <string name="delete_chat_msg">Do you really want to delete this conversation?</string>
+    <string name="chat_deleted">Conversation deleted successfully!</string>
 </resources>

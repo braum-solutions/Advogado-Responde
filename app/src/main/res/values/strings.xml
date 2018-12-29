@@ -155,5 +155,9 @@
     <string name="credits">Créditos</string>
     <string name="no_message">Você ainda não tem mensagens com esta pessoa</string>
     <string name="no_chat">Você não tem conversas ainda</string>
+    <string name="your_cases_catched_msg">Acompanhe seus casos pegos</string>
+    <string name="delete_chat">Deletar Conversa</string>
+    <string name="delete_chat_msg">Você deseja realmente deletar esta conversa?</string>
+    <string name="chat_deleted">Conversa deletada com sucesso!</string>
 
 </resources>

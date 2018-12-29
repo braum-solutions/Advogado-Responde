@@ -96,7 +96,7 @@
                         </android.support.v7.widget.CardView>
 
                         <android.support.v7.widget.CardView
-                            android:id="@+id/cvChat"
+                            android:id="@+id/cvYourCases"
                             android:layout_width="160dp"
                             android:layout_height="190dp"
                             android:layout_marginStart="5dp"
@@ -117,14 +117,14 @@
                                     android:layout_height="64dp"
                                     android:background="@drawable/circle"
                                     android:padding="10dp"
-                                    android:src="@drawable/chat" />
+                                    android:src="@drawable/term" />
 
                                 <TextView
-                                    android:id="@+id/tvChat"
+                                    android:id="@+id/tvYourCases"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
-                                    android:text="@string/chat"
+                                    android:text="@string/your_cases"
                                     android:textStyle="bold" />
 
                                 <View
@@ -134,12 +134,12 @@
                                     android:background="@color/colorGrayLight" />
 
                                 <TextView
-                                    android:id="@+id/tvChatMsg"
+                                    android:id="@+id/tvYourCasesMsg"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:padding="5dp"
-                                    android:text="@string/chat_lawyer_msg"
+                                    android:text="@string/your_cases_catched_msg"
                                     android:textColor="@android:color/darker_gray" />
 
                             </LinearLayout>
@@ -211,10 +211,75 @@
                         </android.support.v7.widget.CardView>
 
                         <android.support.v7.widget.CardView
-                            android:id="@+id/cvProfile"
+                            android:id="@+id/cvChat"
                             android:layout_width="160dp"
                             android:layout_height="190dp"
                             android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="8dp"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="64dp"
+                                    android:layout_height="64dp"
+                                    android:background="@drawable/circle"
+                                    android:padding="10dp"
+                                    android:src="@drawable/chat" />
+
+                                <TextView
+                                    android:id="@+id/tvChat"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:text="@string/chat"
+                                    android:textStyle="bold" />
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_margin="10dp"
+                                    android:background="@color/colorGrayLight" />
+
+                                <TextView
+                                    android:id="@+id/tvChatMsg"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="@string/chat_lawyer_msg"
+                                    android:textColor="@android:color/darker_gray" />
+
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:clipToPadding="false"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cvProfile"
+                            android:layout_width="340dp"
+                            android:layout_height="190dp"
+                            android:layout_marginStart="10dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="8dp"
@@ -232,7 +297,7 @@
                                     android:layout_height="64dp"
                                     android:background="@drawable/circle"
                                     android:padding="10dp"
-                                    android:src="@drawable/avatar"  />
+                                    android:src="@drawable/avatar" />
 
                                 <TextView
                                     android:id="@+id/tvProfile"
@@ -258,76 +323,9 @@
                                     android:textColor="@android:color/darker_gray" />
 
                             </LinearLayout>
-
                         </android.support.v7.widget.CardView>
 
                     </LinearLayout>
-
-                    <!--<LinearLayout
-                        android:id="@+id/linearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:clipToPadding="false"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/btnNotCategory"
-                            android:layout_width="340dp"
-                            android:layout_height="190dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?android:attr/selectableItemBackground">
-
-                            <LinearLayout
-                                android:id="@+id/cvProfile"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="64dp"
-                                    android:layout_height="64dp"
-                                    android:background="@drawable/circle"
-                                    android:padding="10dp"
-                                    android:src="@drawable/avatar" />
-
-                                <TextView
-                                    android:id="@+id/tvNotCategory"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:text="@string/profile"
-                                    android:textStyle="bold" />
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_margin="10dp"
-                                    android:background="@color/colorGrayLight" />
-
-                                <TextView
-                                    android:id="@+id/tvNotCategoryMsg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:padding="5dp"
-                                    android:text="@string/profile_msg"
-                                    android:textColor="@android:color/darker_gray" />
-
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
-
-                    </LinearLayout>-->
 
                 </LinearLayout>
 
