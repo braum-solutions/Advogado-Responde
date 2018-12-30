@@ -111,7 +111,6 @@ public class ListChatActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
-                                                        //TODO:QUANDO É EXCLUIDO UM REGISTRO ELE É EXCLUIDO NO BANCO DE DADOS MAS NAO SAI DA LISTA
                                                         SnackSuccess(getString(R.string.chat_deleted));
                                                     }
                                                 }
@@ -132,7 +131,7 @@ public class ListChatActivity extends AppCompatActivity {
                             }
                         })
                         .show();
-                return false;
+                return true;
             }
         });
 

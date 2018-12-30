@@ -60,7 +60,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class OpenCaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg, tvNoComments;
+    private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg;
     private Toolbar toolbar;
     private ProgressDialog dialog;
     private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, name, last_name, phone, lawyer_name;
@@ -242,6 +242,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.fbChat).setOnClickListener(this);
         findViewById(R.id.tvPdfMsg).setOnClickListener(this);
         findViewById(R.id.tvImageMsg).setOnClickListener(this);
+        findViewById(R.id.tvUserMsg).setOnClickListener(this);
     }
 
     public void SnackError(String msg) {
@@ -401,7 +402,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 catchCase();
                 break;
             case R.id.fbChat:
-                //dialogWhatsApp(phone, name, last_name);
                 openChat();
                 break;
             case R.id.tvPdfMsg:
@@ -426,6 +426,11 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
                 break;
+            case R.id.tvUserMsg:
+                Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
+                intent.putExtra(USER, user);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -433,37 +438,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(USER, user);
         startActivity(intent);
-    }
-
-    private void dialogWhatsApp(final String phone, final String name, String last_name) {
-        new AwesomeSuccessDialog(OpenCaseActivity.this)
-                .setTitle(getString(R.string.app_name))
-                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(phone, "(##) #####-####")))
-                .setColoredCircle(R.color.colorAccent)
-                .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
-                .setCancelable(false)
-                .setNegativeButtonText(getString(R.string.cancel))
-                .setNegativeButtonbackgroundColor(R.color.colorAccent)
-                .setNegativeButtonTextColor(R.color.white)
-                .setNegativeButtonClick(new Closure() {
-                    @Override
-                    public void exec() {
-
-                    }
-                })
-                .setPositiveButtonText(getString(R.string.continu))
-                .setPositiveButtonbackgroundColor(R.color.colorAccent)
-                .setPositiveButtonTextColor(R.color.white)
-                .setPositiveButtonClick(new Closure() {
-                    @Override
-                    public void exec() {
-                        String link = "https://api.whatsapp.com/send?phone=55" + phone + "&text=Olá%20" + name + ",%20Me%20chamo%20" + lawyer_name + ".%20Peguei%20seu%20caso%20no%20aplicativo%20" + getString(R.string.app_name) + ".%20Em%20que%20posso%20lhe%20ajudar?";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(link));
-                        startActivity(i);
-                    }
-                })
-                .show();
     }
 
     @Override

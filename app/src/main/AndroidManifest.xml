@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.ListChatActivity"
+        <activity android:name=".View.ViewUserProfileActivity"></activity>
+        <activity
+            android:name=".View.ListChatActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

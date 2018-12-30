@@ -1,8 +1,12 @@
 package com.braumsolutions.advogadoresponde.View;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -40,14 +44,15 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ListView lvChat;
-    private TextView tvName, tvNoMessage;
+    private TextView tvNoMessage;
     private EditText etMessage;
+    private Toolbar toolbar;
     private String user;
     private FirebaseAuth mAuth;
     private ArrayList<Message> messages;
     private ArrayAdapter<Message> adapter;
     private ValueEventListener valueEventListenerMessages;
-    private  DatabaseReference mDatabase;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +64,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         getIntentBundle();
         castWidgets();
         setTypeface();
-        getData();
         getMessages();
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getData();
 
         mDatabase.addValueEventListener(valueEventListenerMessages);
 
@@ -101,7 +111,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                tvName.setText(dataSnapshot.child(NAME).getValue(String.class));
+                getSupportActionBar().setTitle(dataSnapshot.child(NAME).getValue(String.class));
             }
 
             @Override
@@ -112,18 +122,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setTypeface() {
-        tvName.setTypeface(TypefaceLight(getApplicationContext()));
         tvNoMessage.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
-        findViewById(R.id.btnBack).setOnClickListener(this);
-        findViewById(R.id.btnProfile).setOnClickListener(this);
         findViewById(R.id.fbSend).setOnClickListener(this);
         tvNoMessage = findViewById(R.id.tvNoMessage);
         lvChat = findViewById(R.id.lvChat);
-        tvName = findViewById(R.id.tvName);
         etMessage = findViewById(R.id.etMessage);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     private void getIntentBundle() {
@@ -134,13 +141,29 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.nav_view_profile:
+                profile();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnBack:
                 finish();
-                break;
-            case R.id.btnProfile:
-                profile();
                 break;
             case R.id.fbSend:
                 sendMessage();
@@ -201,7 +224,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void profile() {
-
+        Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
+        intent.putExtra(USER, user);
+        startActivity(intent);
     }
 
     private boolean saveMessage(String sender, String receiver, String message, DatabaseReference datadase) {
