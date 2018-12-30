@@ -89,6 +89,7 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.cvFindCase).setOnClickListener(this);
         view.findViewById(R.id.cvChat).setOnClickListener(this);
         view.findViewById(R.id.cvCredit).setOnClickListener(this);
+        view.findViewById(R.id.cvYourCases).setOnClickListener(this);
         tvFindCase = view.findViewById(R.id.tvFindCase);
         tvFindCaseMsg = view.findViewById(R.id.tvFindCaseMsg);
         tvChat = view.findViewById(R.id.tvChat);
@@ -142,6 +143,10 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.cvCredit:
 
+                break;
+            case R.id.cvYourCases:
+                Intent intent = new Intent(getContext(), LawyerCasesActivity.class);
+                startActivity(intent);
                 break;
         }
     }

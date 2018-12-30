@@ -50,6 +50,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_A;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_B;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_C;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
@@ -372,6 +373,8 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                                 tvImageMsg.setText(getString(R.string.click_to_view));
                             }
 
+                            addToMyCases();
+
                         }
                     })
                     .show();
@@ -393,6 +396,18 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                     })
                     .show();
         }
+    }
+
+    private void addToMyCases() {
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid()).push();
+        HashMap<String, String> cases = new HashMap<>();
+        cases.put(CASES, key);
+        database.setValue(cases).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                SnackError(e.getMessage());
+            }
+        });
     }
 
     @Override

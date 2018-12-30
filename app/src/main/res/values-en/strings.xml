@@ -156,4 +156,6 @@
     <string name="delete_chat">Delete Conversation</string>
     <string name="delete_chat_msg">Do you really want to delete this conversation?</string>
     <string name="chat_deleted">Conversation deleted successfully!</string>
+    <string name="view_profile">Visit profile</string>
+    <string name="not_catch_case">You have not picked up any case yet.</string>
 </resources>

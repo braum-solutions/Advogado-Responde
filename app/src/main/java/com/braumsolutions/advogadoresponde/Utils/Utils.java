@@ -41,5 +41,5 @@ public class Utils {
     public static final String SENDER = "sender";
     public static final String RECEIVER = "receiver";
     public static final String CHAT_MESSAGES = "chat_messages";
-
+    public static final String LAWYER_CASES = "lawyer_cases";
 }
