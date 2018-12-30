@@ -172,7 +172,7 @@
                     android:id="@+id/tvQuestionsMsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/answered_questions"
+                    android:text="@string/cauth_cases"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="13sp" />

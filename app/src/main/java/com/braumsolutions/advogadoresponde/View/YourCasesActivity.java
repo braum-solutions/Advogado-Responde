@@ -4,8 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.braumsolutions.advogadoresponde.Model.CasesModel;
@@ -20,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
@@ -27,6 +30,7 @@ public class YourCasesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView lvCase;
+    private TextView tvNoCases;
     private FirebaseAuth mAuth;
     private ArrayAdapter<CasesModel> adapter;
     private ArrayList<CasesModel> arrayList;
@@ -41,6 +45,7 @@ public class YourCasesActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         castWidgets();
+        setTypeface();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.your_cases));
@@ -50,6 +55,10 @@ public class YourCasesActivity extends AppCompatActivity {
 
         getCases();
 
+    }
+
+    private void setTypeface() {
+        tvNoCases.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void getCases() {
@@ -63,10 +72,11 @@ public class YourCasesActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 arrayList.clear();
                 if (dataSnapshot.getChildrenCount() == 0) {
-                    //MENSAGEM QUE NAO HA CASOS
+                    tvNoCases.setVisibility(View.VISIBLE);
                 } else {
                     for (DataSnapshot cases : dataSnapshot.getChildren()) {
                         if (cases.child(USER).getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
+                            tvNoCases.setVisibility(View.GONE);
                             CasesModel c = cases.getValue(CasesModel.class);
                             arrayList.add(c);
                         }
@@ -85,6 +95,7 @@ public class YourCasesActivity extends AppCompatActivity {
     private void castWidgets() {
         toolbar = findViewById(R.id.toolbar);
         lvCase = findViewById(R.id.lvCase);
+        tvNoCases = findViewById(R.id.tvNoCases);
     }
 
     @Override

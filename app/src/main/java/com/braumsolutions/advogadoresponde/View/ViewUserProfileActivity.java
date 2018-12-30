@@ -23,6 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
@@ -35,7 +36,8 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
     private FirebaseAuth mAuth;
     private String image, name, lastName, email, phone, user, lawyer_name;
     private CircleImageView ivImage;
-    private TextView tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg;
+    private TextView tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvQuestions, tvQuestionsMsg;
+    private int c = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,33 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
 
             }
         });
+
+        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(CASES);
+        databaseQuestions.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    tvQuestions.setText(String.valueOf(c));
+                } else {
+                    for (DataSnapshot cases : dataSnapshot.getChildren()) {
+                        if (cases.child(USER).getValue().toString().equals(user)) {
+                            c += 1;
+                            if (dataSnapshot.getChildrenCount() < 10) {
+                                tvQuestions.setText(String.format("0%s", c));
+                            } else {
+                                tvQuestions.setText(String.format("%s", c));
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void setTypeface() {
@@ -101,6 +130,8 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         tvEmailMsg.setTypeface(TypefaceLight(getApplicationContext()));
         tvPhone.setTypeface(TypefaceLight(getApplicationContext()));
         tvPhoneMsg.setTypeface(TypefaceLight(getApplicationContext()));
+        tvQuestions.setTypeface(TypefaceLight(getApplicationContext()));
+        tvQuestionsMsg.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
@@ -110,6 +141,8 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         ivImage = findViewById(R.id.ivImage);
         tvPhone = findViewById(R.id.tvPhone);
         tvPhoneMsg = findViewById(R.id.tvPhoneMsg);
+        tvQuestions = findViewById(R.id.tvQuestions);
+        tvQuestionsMsg = findViewById(R.id.tvQuestionsMsg);
         findViewById(R.id.fbWhats).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
     }

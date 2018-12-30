@@ -43,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.ANSWERS;
@@ -147,15 +148,18 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(ANSWERS).child(mAuth.getCurrentUser().getUid());
+        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid());
         databaseQuestions.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(ANSWERS).getValue(String.class) == null) {
+                if (dataSnapshot.getChildrenCount() == 0) {
                     tvQuestion.setText("0");
                 } else {
-                    String credits = dataSnapshot.child(CREDITS).getValue(String.class);
-                    tvQuestion.setText(String.format("%s", credits));
+                    if (dataSnapshot.getChildrenCount() < 10) {
+                        tvQuestion.setText(String.format("0%s", dataSnapshot.getChildrenCount()));
+                    } else {
+                        tvQuestion.setText(String.format("%s", dataSnapshot.getChildrenCount()));
+                    }
                 }
             }
 

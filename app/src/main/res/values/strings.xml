@@ -161,5 +161,7 @@
     <string name="chat_deleted">Conversa deletada com sucesso!</string>
     <string name="view_profile">Visitar Perfil</string>
     <string name="not_catch_case">Você ainda não pegou nenhum caso</string>
+    <string name="cauth_cases">Casos Pegos</string>
+    <string name="no_cases">Você não tem nenhum caso registrado ainda</string>
 
 </resources>
