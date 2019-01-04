@@ -163,5 +163,8 @@
     <string name="not_catch_case">Você ainda não pegou nenhum caso</string>
     <string name="cauth_cases">Casos Pegos</string>
     <string name="no_cases">Você não tem nenhum caso registrado ainda</string>
+    <string name="leave_case">Deixar Caso</string>
+    <string name="leave_case_msg">Deseja realmente abandorar este caso?\nAo fazer isso você não podera ter mais contato com o usuario pelo nosso aplicativo, sua conversa com este usuario sera apagada!\nOs creditos gastos também não serão reembolsados.</string>
+    <string name="leave_case_wait">Deixando o caso, Aguarde!</string>
 
 </resources>

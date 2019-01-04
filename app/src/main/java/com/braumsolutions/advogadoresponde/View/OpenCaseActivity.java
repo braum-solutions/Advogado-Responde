@@ -15,8 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
+import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeWarningDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
+import com.braumsolutions.advogadoresponde.Model.CasesModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
@@ -43,6 +46,7 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBo
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CATCH_CASE_VALUE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
@@ -217,7 +221,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         tvLawyer.setTypeface(TypefaceBold(getApplicationContext()));
         tvLawyerMsg.setTypeface(TypefaceLight(getApplicationContext()));
         btnGetCase.setTypeface(TypefaceLight(getApplicationContext()));
-        //tvNoComments.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
@@ -234,11 +237,8 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         tvDescriptionMsg = findViewById(R.id.tvDescriptionMsg);
         btnGetCase = findViewById(R.id.btnGetCase);
         tvLawyer = findViewById(R.id.tvLawyer);
-        //cvComments = findViewById(R.id.cvComments);
         tvLawyerMsg = findViewById(R.id.tvLawyerMsg);
-        //tvNoComments = findViewById(R.id.tvNoComments);
         fbChat = findViewById(R.id.fbChat);
-        //lvComments = findViewById(R.id.lvComment);
         findViewById(R.id.btnGetCase).setOnClickListener(this);
         findViewById(R.id.fbChat).setOnClickListener(this);
         findViewById(R.id.tvPdfMsg).setOnClickListener(this);
@@ -399,7 +399,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void addToMyCases() {
-        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid()).push();
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid()).child(key);
         HashMap<String, String> cases = new HashMap<>();
         cases.put(CASES, key);
         database.setValue(cases).addOnFailureListener(new OnFailureListener() {
@@ -442,9 +442,13 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.tvUserMsg:
-                Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
-                intent.putExtra(USER, user);
-                startActivity(intent);
+                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                    Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
+                    intent.putExtra(USER, user);
+                    startActivity(intent);
+                } else {
+                    SnackWarning("Você precisa pegar este caso para ver o perfil do usuário");
+                }
                 break;
         }
     }
@@ -457,7 +461,9 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_case, menu);
+        if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+            getMenuInflater().inflate(R.menu.menu_case, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -465,10 +471,113 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_report_case:
-                //TODO: CRIAR METODO PRA REPORTAR CASO
+                Intent intent = new Intent(getApplicationContext(), ReportCaseActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_leave_case:
+                new AwesomeInfoDialog(OpenCaseActivity.this)
+                        .setTitle(getString(R.string.leave_case))
+                        .setMessage(R.string.leave_case_msg)
+                        .setColoredCircle(R.color.colorYellow)
+                        .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
+                        .setCancelable(false)
+                        .setNegativeButtonText(getString(R.string.cancel))
+                        .setNegativeButtonbackgroundColor(R.color.colorYellow)
+                        .setNegativeButtonTextColor(R.color.white)
+                        .setNegativeButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+
+                            }
+                        })
+                        .setPositiveButtonText(getString(R.string.continu))
+                        .setPositiveButtonbackgroundColor(R.color.colorYellow)
+                        .setPositiveButtonTextColor(R.color.white)
+                        .setPositiveButtonClick(new Closure() {
+                            @Override
+                            public void exec() {
+                                //TODO: CRIAR METODO PARA EXLUIR O ADVOGADO DO CASO, EXCLUIR O CASO DA LISTA DO ADVOGADO, EXCLUIR A CONVERSA COM O USUÁRIO, EXCLUIR O CHAT COM O USUARIO.
+
+                                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid())) {
+                                    leaveCase(LAWYER_A);
+                                } else if (Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid())) {
+                                    leaveCase(LAWYER_B);
+                                } else if (Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                                    leaveCase(LAWYER_C);
+                                }
+
+
+                            }
+                        })
+                        .show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void leaveCase(String lawyer) {
+        SnackSuccess(getString(R.string.leave_case_wait));
+
+        DatabaseReference mCase = FirebaseUtils.getDatabase().getReference().child(CASES).child(key).child(lawyer);
+        mCase.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    DatabaseReference mCaseLawyer = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid()).child(key);
+                    mCaseLawyer.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+
+                                DatabaseReference mChat = FirebaseUtils.getDatabase().getReference().child(CHAT_MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
+                                mChat.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+
+                                            DatabaseReference mMessages = FirebaseUtils.getDatabase().getReference().child(CHAT_MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
+                                            mMessages.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+
+                                                        finish();
+
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    SnackError(e.getMessage());
+                                                }
+                                            });
+                                        }
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        SnackError(e.getMessage());
+                                    }
+                                });
+
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            SnackError(e.getMessage());
+                        }
+                    });
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                SnackError(e.getMessage());
+            }
+        });
     }
 
 }
