@@ -6,11 +6,13 @@ public class Utils {
 
     public static int REQ_CODE = 1;
     public static int CODE_PDF = 2;
-    public static String[] OCCUPATION_AREA_ARRAY = {"Trabalhista", "Previdenciário", "Outro"};
+    public static final String[] OCCUPATION_AREA_ARRAY = {"Trabalhista", "Previdenciário", "Outro"};
+    public static final String[] UF_ARRAY_FULL = {"Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "Espirito Santo", "Goiás", "Maranhão", "Mato Grosso do Sul", "Mato Grosso", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"};
     public static final String[] UF_ARRAY = {"UF", "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RO", "RS", "RR", "SC", "SE", "SP", "TO"};
     public static final String EMAIL = "email";
     public static final String USER = "user";
     public static final String NAME = "name";
+    public static final String UF = "uf";
     public static final String IMAGE = "image";
     public static final String CPF = "cpf";
     public static final String DATE = "date";

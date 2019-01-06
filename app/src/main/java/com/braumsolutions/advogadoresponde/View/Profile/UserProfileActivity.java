@@ -9,11 +9,14 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.braumsolutions.advogadoresponde.Model.UserModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
@@ -38,6 +41,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,13 +60,15 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
-    private String image, name, lastName, cpf, date, ddd, phone, cep, city, address, number, neighborhood, complement;
+    private String image, name, lastName, cpf, date, ddd, phone, cep, city, uf, address, number, neighborhood, complement;
     private CircleImageView ivImage;
     private Button btnChangeImage;
     private TextView tvProfileImage, tvPersonalData, tvPhone, tvAddress;
@@ -89,6 +95,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        textWatcherEditTexts();
+
     }
 
     @Override
@@ -111,7 +119,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         .start(this);
                 break;
             case R.id.fbSave:
-
+                saveData();
                 break;
         }
     }
@@ -171,6 +179,296 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    private void saveData() {
+        if (etName.getText().toString().trim().equals("")) {
+            tilName.setError(getString(R.string.fill_name));
+            etName.requestFocus();
+        } else if (etLastName.getText().toString().trim().equals("")) {
+            tilLastName.setError(getString(R.string.fill_last_name));
+            etLastName.requestFocus();
+        } else if (etCPF.getText().toString().trim().equals("")) {
+            tilCPF.setError(getString(R.string.fill_cpf));
+            etCPF.requestFocus();
+        } else if (etDate.getText().toString().trim().equals("")) {
+            tilDate.setError(getString(R.string.fill_date));
+            etDate.requestFocus();
+        } else if (etDDD.getText().toString().trim().equals("")) {
+            tilDDD.setError(getString(R.string.fill_ddd));
+            etDDD.requestFocus();
+        } else if (etPhone.getText().toString().trim().equals("")) {
+            tilPhone.setError(getString(R.string.fill_phone_user));
+            etPhone.requestFocus();
+        } else if (etCEP.getText().toString().trim().equals("")) {
+            tilCEP.setError(getString(R.string.fill_cep));
+            etCEP.requestFocus();
+        } else if (etCity.getText().toString().trim().equals("")) {
+            tilCity.setError(getString(R.string.fill_city));
+            etCity.requestFocus();
+        } else if (spUF.getSelectedIndex() == 0) {
+            SnackWarning(getString(R.string.select_uf));
+        } else if (etAddress.getText().toString().trim().equals("")) {
+            tilAddress.setError(getString(R.string.fill_address));
+            etAddress.requestFocus();
+        } else if (etNumber.getText().toString().trim().equals("")) {
+            tilNumber.setError(getString(R.string.fill_number));
+            etNumber.requestFocus();
+        } else if (etNeighborhood.getText().toString().trim().equals("")) {
+            tilNeighborhood.setError(getString(R.string.fill_neighborhood));
+            etNeighborhood.requestFocus();
+        } else {
+
+            createDialog(getString(R.string.please_wait), getString(R.string.saving));
+
+            HashMap<String, Object> user = new HashMap<>();
+            user.put(NAME, etName.getText().toString().trim());
+            user.put(LAST_NAME, etLastName.getText().toString().trim());
+            user.put(CPF, etCPF.getText().toString().trim());
+            user.put(DATE, etDate.getText().toString().trim());
+            user.put(DDD, etDDD.getText().toString().trim());
+            user.put(PHONE, etPhone.getText().toString().trim());
+            user.put(CEP, etCEP.getText().toString().trim());
+            user.put(CITY, etCity.getText().toString().trim());
+            user.put(UF, String.valueOf(spUF.getSelectedIndex()));
+            user.put(ADDRESS, etAddress.getText().toString().trim());
+            user.put(NUMBER, etNumber.getText().toString().trim());
+            user.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
+            user.put(COMPLEMENT, etComplement.getText().toString().trim());
+
+            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+            database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        SnackSuccess(getString(R.string.data_saved));
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    SnackError(e.getMessage());
+                }
+            });
+
+        }
+    }
+
+    private void textWatcherEditTexts() {
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilLastName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCPF.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCPF.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDate.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDDD.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDDD.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilPhone.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCEP.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCEP.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCity.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilAddress.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilNumber.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etNeighborhood.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilNeighborhood.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     private void createDialog(String title, String message) {
         dialog = KProgressHUD.create(UserProfileActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -192,10 +490,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
                 cpf = dataSnapshot.child(CPF).getValue(String.class);
                 date = dataSnapshot.child(DATE).getValue(String.class);
-                ddd  = dataSnapshot.child(DDD).getValue(String.class);
+                ddd = dataSnapshot.child(DDD).getValue(String.class);
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
                 cep = dataSnapshot.child(CEP).getValue(String.class);
                 city = dataSnapshot.child(CITY).getValue(String.class);
+                uf = dataSnapshot.child(UF).getValue(String.class);
                 address = dataSnapshot.child(ADDRESS).getValue(String.class);
                 number = dataSnapshot.child(NUMBER).getValue(String.class);
                 neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
@@ -214,6 +513,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setUserData() {
+        spUF.setItems(UF_ARRAY_FULL);
         Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
         etName.setText(name);
         etLastName.setText(lastName);
@@ -227,12 +527,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         etNumber.setText(number);
         etNeighborhood.setText(neighborhood);
         etComplement.setText(complement);
+        spUF.setSelectedIndex(Integer.parseInt(uf));
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
     }
 
     private void setTypeface() {
+        spUF.setTypeface(TypefaceLight(getApplicationContext()));
         btnChangeImage.setTypeface(TypefaceLight(getApplicationContext()));
         tilName.setTypeface(TypefaceLight(getApplicationContext()));
         tilLastName.setTypeface(TypefaceLight(getApplicationContext()));

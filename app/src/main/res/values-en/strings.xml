@@ -178,4 +178,16 @@
     <string name="address">Address</string>
     <string name="neighborhood">Neighborhood</string>
     <string name="complement">Complement</string>
+    <string name="my_profile">My profile</string>
+    <string name="data_saved">Data saved successfully!</string>
+    <string name="fill_cpf">Enter your CPF</string>
+    <string name="fill_date">Enter your birth date</string>
+    <string name="fill_ddd">Enter the DDD of your number</string>
+    <string name="fill_phone_user">Enter your phone number</string>
+    <string name="fill_cep">Enter the zip code of your city</string>
+    <string name="fill_city">Enter the name of your city</string>
+    <string name="select_uf">Select State (UF)</string>
+    <string name="fill_address">Enter your address</string>
+    <string name="fill_neighborhood">Enter the name of your neighborhood</string>
+    <string name="fill_number">Enter your home number</string>
 </resources>

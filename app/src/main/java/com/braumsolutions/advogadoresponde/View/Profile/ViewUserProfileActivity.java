@@ -25,6 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
@@ -35,7 +36,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 public class ViewUserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private String image, name, lastName, email, phone, user, lawyer_name;
+    private String image, name, lastName, email, ddd, phone, user, lawyer_name;
     private CircleImageView ivImage;
     private TextView tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvQuestions, tvQuestionsMsg;
     private int c = 0;
@@ -85,11 +86,12 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
                 email = dataSnapshot.child(EMAIL).getValue(String.class);
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
+                ddd = dataSnapshot.child(DDD).getValue(String.class);
 
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
                 tvName.setText(String.format("%s %s", name, lastName));
                 tvEmailMsg.setText(email);
-                tvPhoneMsg.setText(addMask(phone, "(##) #####-####"));
+                tvPhoneMsg.setText(addMask(ddd + phone, "(##) #####-####"));
 
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -167,10 +169,10 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         findViewById(R.id.btnBack).setOnClickListener(this);
     }
 
-    private void dialogWhatsApp(final String phone, final String name, String last_name) {
+    private void dialogWhatsApp(final String phone, final String ddd, final String name, String last_name) {
         new AwesomeSuccessDialog(ViewUserProfileActivity.this)
                 .setTitle(getString(R.string.app_name))
-                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(phone, "(##) #####-####")))
+                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(ddd + phone, "(##) #####-####")))
                 .setColoredCircle(R.color.colorAccent)
                 .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
                 .setCancelable(false)
@@ -189,7 +191,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 .setPositiveButtonClick(new Closure() {
                     @Override
                     public void exec() {
-                        String link = "https://api.whatsapp.com/send?phone=55" + phone + "&text=Olá%20" + name + ",%20Me%20chamo%20" + lawyer_name + ".%20Peguei%20seu%20caso%20no%20aplicativo%20" + getString(R.string.app_name) + ".%20Em%20que%20posso%20lhe%20ajudar?";
+                        String link = "https://api.whatsapp.com/send?phone=55" + ddd + phone + "&text=Olá%20" + name + ",%20Me%20chamo%20" + lawyer_name + ".%20Peguei%20seu%20caso%20no%20aplicativo%20" + getString(R.string.app_name) + ".%20Em%20que%20posso%20lhe%20ajudar?";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(link));
                         startActivity(i);
@@ -202,7 +204,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fbWhats:
-                dialogWhatsApp(phone, name, lastName);
+                dialogWhatsApp(phone, ddd, name, lastName);
                 break;
             case R.id.btnBack:
                 finish();
