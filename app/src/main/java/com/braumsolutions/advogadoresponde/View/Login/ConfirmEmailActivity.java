@@ -1,6 +1,5 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
+import com.braumsolutions.advogadoresponde.View.Main.MainActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;

@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Chat;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,6 +18,7 @@ import com.braumsolutions.advogadoresponde.Model.Message;
 import com.braumsolutions.advogadoresponde.Model.MessageAdapter;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.View.Profile.ViewUserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;

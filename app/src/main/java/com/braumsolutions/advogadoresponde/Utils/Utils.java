@@ -12,6 +12,15 @@ public class Utils {
     public static final String USER = "user";
     public static final String NAME = "name";
     public static final String IMAGE = "image";
+    public static final String CPF = "cpf";
+    public static final String DATE = "date";
+    public static final String DDD = "ddd";
+    public static final String CEP = "cep";
+    public static final String CITY = "city";
+    public static final String ADDRESS = "address";
+    public static final String NUMBER = "number";
+    public static final String NEIGHBORNHOOD = "neighborhood";
+    public static final String COMPLEMENT = "complement";
     public static final String LAST_NAME = "last_name";
     public static final String TYPE_REGISTER = "type_register";
     public static final String OAB_CODE = "oab_code";

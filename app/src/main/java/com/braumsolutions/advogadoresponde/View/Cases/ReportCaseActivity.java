@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Cases;
 
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;

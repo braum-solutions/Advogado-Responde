@@ -1,9 +1,7 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Cases;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,11 +16,11 @@ import android.widget.TextView;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
-import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeWarningDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
-import com.braumsolutions.advogadoresponde.Model.CasesModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.View.Chat.ChatActivity;
+import com.braumsolutions.advogadoresponde.View.Profile.ViewUserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -43,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;

@@ -1,17 +1,17 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Cases;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.braumsolutions.advogadoresponde.Model.CasesAdapter;
 import com.braumsolutions.advogadoresponde.Model.CasesModel;
-import com.braumsolutions.advogadoresponde.Model.YourCasesAdapter;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,15 +23,14 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 
-import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
-public class YourCasesActivity extends AppCompatActivity {
+public class CasesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView lvCase;
-    private TextView tvNoCases;
     private FirebaseAuth mAuth;
     private ArrayAdapter<CasesModel> adapter;
     private ArrayList<CasesModel> arrayList;
@@ -42,27 +41,37 @@ public class YourCasesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_cases);
+        setContentView(R.layout.activity_cases);
 
         mAuth = FirebaseAuth.getInstance();
 
         createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
-        setTypeface();
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.your_cases));
-        getSupportActionBar().setSubtitle(getString(R.string.your_cases_msg));
+        getSupportActionBar().setTitle(getString(R.string.find_cases));
+        getSupportActionBar().setSubtitle(getString(R.string.find_cases_msg));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         getCases();
 
+        lvCase.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CasesModel casesModel = arrayList.get(position);
+                Intent intentCase = new Intent(getApplicationContext(), OpenCaseActivity.class);
+                intentCase.putExtra(KEY, casesModel.getKey());
+                intentCase.putExtra(USER, casesModel.getUser());
+                startActivity(intentCase);
+            }
+        });
+
     }
 
     private void createDialog(String title, String message) {
-        dialog = KProgressHUD.create(YourCasesActivity.this)
+        dialog = KProgressHUD.create(CasesActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel(title)
                 .setDetailsLabel(message)
@@ -72,13 +81,9 @@ public class YourCasesActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void setTypeface() {
-        tvNoCases.setTypeface(TypefaceLight(getApplicationContext()));
-    }
-
     private void getCases() {
         arrayList = new ArrayList<>();
-        adapter = new YourCasesAdapter(getApplicationContext(), arrayList);
+        adapter = new CasesAdapter(getApplicationContext(), arrayList);
         lvCase.setAdapter(adapter);
 
         database = FirebaseUtils.getDatabase().getReference().child(CASES);
@@ -87,14 +92,11 @@ public class YourCasesActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 arrayList.clear();
                 if (dataSnapshot.getChildrenCount() == 0) {
-                    tvNoCases.setVisibility(View.VISIBLE);
+                    //MENSAGEM QUE NAO HA CASOS
                 } else {
                     for (DataSnapshot cases : dataSnapshot.getChildren()) {
-                        if (cases.child(USER).getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
-                            tvNoCases.setVisibility(View.GONE);
-                            CasesModel c = cases.getValue(CasesModel.class);
-                            arrayList.add(c);
-                        }
+                        CasesModel c = cases.getValue(CasesModel.class);
+                        arrayList.add(c);
                     }
                 }
                 if (dialog.isShowing()) {
@@ -113,7 +115,6 @@ public class YourCasesActivity extends AppCompatActivity {
     private void castWidgets() {
         toolbar = findViewById(R.id.toolbar);
         lvCase = findViewById(R.id.lvCase);
-        tvNoCases = findViewById(R.id.tvNoCases);
     }
 
     @Override
@@ -135,5 +136,6 @@ public class YourCasesActivity extends AppCompatActivity {
         }
         super.onPause();
     }
+
 
 }

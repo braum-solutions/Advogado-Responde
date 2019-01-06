@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Login;
 
 import android.Manifest;
 import android.content.Intent;

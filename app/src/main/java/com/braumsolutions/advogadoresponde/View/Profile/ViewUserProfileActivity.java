@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Profile;
 
 import android.content.Intent;
 import android.net.Uri;

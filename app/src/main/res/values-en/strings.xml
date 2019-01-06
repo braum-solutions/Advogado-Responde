@@ -165,4 +165,17 @@
     <string name="no_cases">You have no registered cases yet</string>
     <string name="please_wait">Please wait</string>
     <string name="saving">Saving ...</string>
+    <string name="cell">Cell phone</string>
+    <string name="image_profile">Profile Picture</string>
+    <string name="change_image">Change Photo</string>
+    <string name="personal_data">Personal Data</string>
+    <string name="nasc_date">Date of Birth</string>
+    <string name="phone_contact">Contact Phone</string>
+    <string name="comercial_address">Business Address</string>
+    <string name="cep">Zip Code</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="address">Address</string>
+    <string name="neighborhood">Neighborhood</string>
+    <string name="complement">Complement</string>
 </resources>

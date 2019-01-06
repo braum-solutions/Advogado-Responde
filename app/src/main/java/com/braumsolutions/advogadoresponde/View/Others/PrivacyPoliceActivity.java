@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Others;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

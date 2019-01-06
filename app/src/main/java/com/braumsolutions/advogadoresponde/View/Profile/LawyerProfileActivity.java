@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Profile;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -47,7 +47,6 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLi
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.ANSWERS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;

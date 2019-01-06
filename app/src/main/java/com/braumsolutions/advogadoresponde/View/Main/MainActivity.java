@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Main;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.View.Others.AboutActivity;
+import com.braumsolutions.advogadoresponde.View.Login.ConfirmEmailActivity;
+import com.braumsolutions.advogadoresponde.View.Login.LoginActivity;
+import com.braumsolutions.advogadoresponde.View.Profile.UserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -26,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.Objects;
 
@@ -37,20 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private Toolbar toolbar;
-    private ProgressDialog dialog;
     private String type;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dialog = new ProgressDialog(MainActivity.this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        dialog.setIndeterminate(true);
-        dialog.show();
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -60,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.app_name);
         //getSupportActionBar().setSubtitle(R.string.main_menu);
 
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(MainActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void getuUserData() {

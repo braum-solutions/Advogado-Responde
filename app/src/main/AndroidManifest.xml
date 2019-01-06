@@ -13,111 +13,112 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.ReportCaseActivity"></activity>
+        <activity android:name=".View.Cases.ReportCaseActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".View.LawyerCasesActivity"
+            android:name=".View.Cases.LawyerCasesActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.MainActivity" />
+                android:value=".View.Main.MainActivity" />
         </activity>
         <activity
-            android:name=".View.ViewUserProfileActivity"
+            android:name=".View.Profile.ViewUserProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.ListChatActivity"
+            android:name=".View.Chat.ListChatActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.MainActivity" />
+                android:value=".View.Main.MainActivity" />
         </activity>
         <activity
-            android:name=".View.OpenCaseActivity"
+            android:name=".View.Cases.OpenCaseActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.CasesActivity" />
+                android:value=".View.Cases.CasesActivity" />
         </activity>
         <activity
-            android:name=".View.CasesActivity"
+            android:name=".View.Cases.CasesActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.MainActivity" />
+                android:value=".View.Main.MainActivity" />
         </activity>
         <activity
-            android:name=".View.DescriptionCaseActivity"
+            android:name=".View.NewCase.DescriptionCaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.FileCaseActivity"
+            android:name=".View.NewCase.FileCaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.OccupationAreaCaseActivity"
+            android:name=".View.NewCase.OccupationAreaCaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.ChatActivity"
+            android:name=".View.Chat.ChatActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.OpenCaseActivity" />
+                android:value=".View.Cases.OpenCaseActivity" />
         </activity>
         <activity
-            android:name=".View.YourCasesActivity"
+            android:name=".View.Cases.YourCasesActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.MainActivity" />
+                android:value=".View.Main.MainActivity" />
         </activity>
         <activity
-            android:name=".View.LawyerProfileActivity"
+            android:name=".View.Profile.LawyerProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.UserProfileActivity"
+            android:name=".View.Profile.UserProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.AboutActivity"
+            android:name=".View.Others.AboutActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.MainActivity" />
+                android:value=".View.Main.MainActivity" />
         </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".View.UserImageActivity"
+            android:name=".View.Login.UserImageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.LawyerCodeActivity"
+            android:name=".View.Login.LawyerCodeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.TypeRegistrationActivity"
+            android:name=".View.Login.TypeRegistrationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.NameRegisterActivity"
+            android:name=".View.Login.NameRegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.ConfirmEmailActivity"
+            android:name=".View.Login.ConfirmEmailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.PrivacyPoliceActivity"
+            android:name=".View.Others.PrivacyPoliceActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".View.NameRegisterActivity" />
+                android:value=".View.Login.NameRegisterActivity" />
         </activity>
         <activity
-            android:name=".View.SignInActivity"
+            android:name=".View.Login.SignInActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.SignUpActivity"
+            android:name=".View.Login.SignUpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.LoginActivity"
+            android:name=".View.Login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.MainActivity"
+            android:name=".View.Main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

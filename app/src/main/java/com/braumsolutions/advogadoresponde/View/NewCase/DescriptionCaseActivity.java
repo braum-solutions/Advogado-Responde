@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.NewCase;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +18,7 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.View.Main.MainActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;

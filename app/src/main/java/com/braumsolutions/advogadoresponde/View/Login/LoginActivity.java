@@ -1,6 +1,5 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;

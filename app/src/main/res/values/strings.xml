@@ -167,6 +167,23 @@
     <string name="leave_case_msg">Deseja realmente abandorar este caso? Ao fazer isso você não podera ter mais contato com o usuario pelo nosso aplicativo, sua conversa com este usuario sera apagada! Os creditos gastos também não serão reembolsados.</string>
     <string name="leave_case_wait">Deixando o caso, Aguarde!</string>
     <string name="please_wait">Por favor, Aguarde</string>
-    <string name="saving">Salvando ...</string>
+    <string name="saving">Salvando …</string>
+    <string name="cell">Celular</string>
+    <string name="image_profile">Foto de Perfil</string>
+    <string name="change_image">Alterar Foto</string>
+    <string name="personal_data">Dados Pessoais</string>
+    <string name="cpf" translatable="false">CPF</string>
+    <string name="nasc_date">Data de Nascimento</string>
+    <string name="phone_contact">Telefone de Contato</string>
+    <string name="ddd" translatable="false">DDD</string>
+    <string name="comercial_address">Endereço Comercial</string>
+    <string name="cep">CEP</string>
+    <string name="city">Cidade</string>
+    <string name="state">Estado</string>
+    <string name="address">Endereço</string>
+    <string name="n" translatable="false">Nº</string>
+    <string name="neighborhood">Bairro</string>
+    <string name="complement">Complemento</string>
+    <string name="my_profile">Meu Perfil</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Main;
 
 
 import android.content.Intent;
@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
-import com.braumsolutions.advogadoresponde.Utils.Utils;
+import com.braumsolutions.advogadoresponde.View.Chat.ListChatActivity;
+import com.braumsolutions.advogadoresponde.View.NewCase.OccupationAreaCaseActivity;
+import com.braumsolutions.advogadoresponde.View.Profile.UserProfileActivity;
+import com.braumsolutions.advogadoresponde.View.Cases.YourCasesActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;

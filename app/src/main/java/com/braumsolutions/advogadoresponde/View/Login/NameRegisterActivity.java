@@ -1,4 +1,4 @@
-package com.braumsolutions.advogadoresponde.View;
+package com.braumsolutions.advogadoresponde.View.Login;
 
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
+import com.braumsolutions.advogadoresponde.View.Others.PrivacyPoliceActivity;
 
 import java.util.Objects;
 
