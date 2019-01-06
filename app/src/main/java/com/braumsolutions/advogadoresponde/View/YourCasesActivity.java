@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class YourCasesActivity extends AppCompatActivity {
     private ArrayList<CasesModel> arrayList;
     private ValueEventListener eventListener;
     private DatabaseReference database;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class YourCasesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_your_cases);
 
         mAuth = FirebaseAuth.getInstance();
+
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
         setTypeface();
@@ -55,6 +59,17 @@ public class YourCasesActivity extends AppCompatActivity {
 
         getCases();
 
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(YourCasesActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void setTypeface() {
@@ -81,6 +96,9 @@ public class YourCasesActivity extends AppCompatActivity {
                             arrayList.add(c);
                         }
                     }
+                }
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
                 }
                 adapter.notifyDataSetChanged();
             }

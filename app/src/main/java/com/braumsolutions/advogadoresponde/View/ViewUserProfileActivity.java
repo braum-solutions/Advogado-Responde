@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,6 +39,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
     private CircleImageView ivImage;
     private TextView tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvQuestions, tvQuestionsMsg;
     private int c = 0;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_view_user_profile);
 
         mAuth = FirebaseAuth.getInstance();
+
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
         setTypeface();
@@ -58,6 +62,17 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         if (bundle != null) {
             user = bundle.getString(USER);
         }
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(ViewUserProfileActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void getDataUser() {
@@ -75,6 +90,11 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 tvName.setText(String.format("%s %s", name, lastName));
                 tvEmailMsg.setText(email);
                 tvPhoneMsg.setText(addMask(phone, "(##) #####-####"));
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+
             }
 
             @Override

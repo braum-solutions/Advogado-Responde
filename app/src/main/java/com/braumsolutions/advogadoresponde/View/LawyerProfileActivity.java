@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -64,6 +65,7 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
     private ImageView ivVerified;
     private FirebaseAuth mAuth;
     private String phone, image, name, lastName, email, oab, oabUf, verified;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +74,23 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
 
         mAuth = FirebaseAuth.getInstance();
 
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+
         castWidgets();
         getUserData();
         setTypeface();
 
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(LawyerProfileActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void getUserData() {
@@ -97,6 +112,10 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                     tvPhone.setText(getString(R.string.change_phone));
                 } else {
                     tvPhone.setText(addMask(phone, "(##) #####-####"));
+                }
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
                 }
 
             }
@@ -411,6 +430,8 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                 Uri imageUri = result.getUri();
                 ivImage.setImageURI(imageUri);
 
+                createDialog(getString(R.string.please_wait), getString(R.string.saving));
+
                 StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                 mStorage.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -428,6 +449,9 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
                                     SnackSuccess(getString(R.string.profile_pic_updated));
                                 }
                             }

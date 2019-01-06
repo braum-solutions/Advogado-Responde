@@ -3,6 +3,7 @@ package com.braumsolutions.advogadoresponde.View;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.himangi.imagepreview.ImagePreviewActivity;
 import com.himangi.imagepreview.PreviewFile;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +57,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_A;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_B;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_C;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
@@ -67,12 +70,12 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg;
     private Toolbar toolbar;
-    private ProgressDialog dialog;
     private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, name, last_name, phone, lawyer_name;
     private int credits, lawyer = 0;
     private Button btnGetCase;
     private FirebaseAuth mAuth;
     private FloatingActionButton fbChat;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +84,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
         mAuth = FirebaseAuth.getInstance();
 
-        dialog = new ProgressDialog(OpenCaseActivity.this);
-        dialog.setMessage(getString(R.string.loading));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setIndeterminate(true);
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
         setTypeface();
@@ -96,6 +96,18 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(OpenCaseActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void getCaseData() {
@@ -155,9 +167,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 name = dataSnapshot.child(NAME).getValue(String.class);
                 last_name = dataSnapshot.child(LAST_NAME).getValue(String.class);
                 tvUserMsg.setText(String.format("%s %s", name, last_name));
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+
             }
 
             @Override
@@ -189,6 +199,9 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 lawyer_name = dataSnapshot.child(NAME).getValue(String.class);
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
 
             @Override
@@ -536,7 +549,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
 
-                                            DatabaseReference mMessages = FirebaseUtils.getDatabase().getReference().child(CHAT_MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
+                                            DatabaseReference mMessages = FirebaseUtils.getDatabase().getReference().child(MESSAGES).child(mAuth.getCurrentUser().getUid()).child(user);
                                             mMessages.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {

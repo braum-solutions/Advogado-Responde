@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -57,6 +58,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private CircleImageView ivImage;
     private TextView tvName, tvEmail, tvPhone, tvPhoneMsg, tvQuestions, tvQuestionsMsg;
     private int c = 0;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +67,23 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         mAuth = FirebaseAuth.getInstance();
 
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+
         castWidgets();
         setTypeface();
         getUserData();
 
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(UserProfileActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
     }
 
     private void getUserData() {
@@ -121,6 +136,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         }
                     }
                 }
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+
             }
 
             @Override
@@ -185,6 +205,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 Uri imageUri = result.getUri();
                 ivImage.setImageURI(imageUri);
 
+                createDialog(getString(R.string.please_wait), getString(R.string.saving));
+
                 StorageReference mStorage = FirebaseUtils.getStorage().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
                 mStorage.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -202,6 +224,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
                                     SnackSuccess(getString(R.string.profile_pic_updated));
                                 }
                             }

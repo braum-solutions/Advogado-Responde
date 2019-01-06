@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class LawyerCasesActivity extends AppCompatActivity {
     private ArrayList<LawyerCasesModel> arrayList;
     private ValueEventListener eventListener;
     private DatabaseReference database;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class LawyerCasesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lawyer_cases);
 
         mAuth = FirebaseAuth.getInstance();
+
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
         setTypeface();
@@ -85,6 +89,17 @@ public class LawyerCasesActivity extends AppCompatActivity {
 
     }
 
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(LawyerCasesActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
+    }
+
     private void getCases() {
         arrayList = new ArrayList<>();
         adapter = new LawyerCasesAdapter(getApplicationContext(), arrayList);
@@ -103,6 +118,9 @@ public class LawyerCasesActivity extends AppCompatActivity {
                         LawyerCasesModel c = cases.getValue(LawyerCasesModel.class);
                         arrayList.add(c);
                     }
+                }
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
                 }
                 adapter.notifyDataSetChanged();
             }

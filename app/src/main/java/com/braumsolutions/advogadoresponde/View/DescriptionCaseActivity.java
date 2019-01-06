@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -57,6 +58,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     private ProgressBar loading;
     private String area, uriPdf, uriPicture;
     private FirebaseAuth mAuth;
+    private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,13 +137,11 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
 
     private void enableFields() {
         tilDescription.setEnabled(true);
-        btnComplete.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
     }
 
     private void disableFields() {
         tilDescription.setEnabled(false);
-        btnComplete.setVisibility(View.INVISIBLE);
         loading.setVisibility(View.VISIBLE);
     }
 
@@ -156,6 +156,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     }
 
     private void dialogDone() {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
         new AwesomeInfoDialog(DescriptionCaseActivity.this)
                 .setTitle(getString(R.string.app_name))
                 .setMessage(R.string.case_done_msg)
@@ -257,6 +260,17 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
 
     }
 
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(DescriptionCaseActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -273,6 +287,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                 } else {
 
                     disableFields();
+                    createDialog(getString(R.string.please_wait), getString(R.string.saving));
 
                     //Salva os dados do caso
                     final DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES).push();

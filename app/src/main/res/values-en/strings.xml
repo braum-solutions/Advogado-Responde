@@ -158,4 +158,11 @@
     <string name="chat_deleted">Conversation deleted successfully!</string>
     <string name="view_profile">Visit profile</string>
     <string name="not_catch_case">You have not picked up any case yet.</string>
+    <string name="cauth_cases">Caught Cases</string>
+    <string name="leave_case">Leave Case</string>
+    <string name="leave_case_wait">Leaving the case, Wait!</string>
+    <string name="leave_case_msg">Do you really want to abandon this case?\nBy doing this you can not have more contact with the user by our application, your conversation with this user will be deleted!\nThe credits spent will also not be refunded.</string>
+    <string name="no_cases">You have no registered cases yet</string>
+    <string name="please_wait">Please wait</string>
+    <string name="saving">Saving ...</string>
 </resources>
