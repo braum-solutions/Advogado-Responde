@@ -190,4 +190,14 @@
     <string name="fill_address">Enter your address</string>
     <string name="fill_neighborhood">Enter the name of your neighborhood</string>
     <string name="fill_number">Enter your home number</string>
+    <string name="mini_curriculum">Mini curriculum</string>
+    <string name="mini_curriculum_msg">Describe your professional and academic experience</string>
+    <string name="profissional_data">Professional Data</string>
+    <string name="oab_register">OAB Registration</string>
+    <string name="display_name">Display name in profile</string>
+    <string name="fill_oab_register">Enter your OAB record</string>
+    <string name="select_oab_uf">Select the State (UF) of your OAB record</string>
+    <string name="fill_name_display">Enter your display name</string>
+    <string name="fill_curriculum">Fill out your mini curriculum</string>
+    <string name="curriculum_low_caractere">Your mini curriculum must be longer than 100 characters</string>
 </resources>

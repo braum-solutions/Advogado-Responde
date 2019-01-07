@@ -196,5 +196,15 @@
     <string name="fill_address">Digite o seu endereço</string>
     <string name="fill_neighborhood">Digite o nome de seu bairro</string>
     <string name="fill_number">Digite o número de sua casa</string>
+    <string name="mini_curriculum">Mini currículo</string>
+    <string name="mini_curriculum_msg">Descreva sua experiência profissional e acadêmica</string>
+    <string name="profissional_data">Dados Profissionais</string>
+    <string name="oab_register">Registro OAB</string>
+    <string name="display_name">Nome para exibição no perfil</string>
+    <string name="fill_oab_register">Digite o seu registro OAB</string>
+    <string name="select_oab_uf">Selecione o Estado (UF) de seu registro OAB</string>
+    <string name="fill_name_display">Digite seu nome para exibição</string>
+    <string name="fill_curriculum">Preencha seu mini currículo</string>
+    <string name="curriculum_low_caractere">Seu mini-curriculo deve ter mais que 100 caracteres</string>
 
 </resources>

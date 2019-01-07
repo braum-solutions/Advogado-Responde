@@ -7,10 +7,16 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,8 +49,20 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
+import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.ADDRESS;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CEP;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CITY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.COMPLEMENT;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CPF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CURRICULUM;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DATE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DISPLAY_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
@@ -53,17 +71,24 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class LawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvName, tvEmail, tvCredits, tvCreditsMsg, tvQuestion, tvQuestionMsg, tvOab, tvPhone;
-    private CircleImageView ivImage;
-    private ImageView ivVerified;
     private FirebaseAuth mAuth;
-    private String phone, image, name, lastName, email, oab, oabUf, verified;
+    private Toolbar toolbar;
+    private String image, name, lastName, cpf, date, ddd, phone, cep, city, uf, address, number, neighborhood, complement, oab, oabUf, displayName, curriculum, verified;
+    private CircleImageView ivImage;
+    private Button btnChangeImage;
+    private TextView tvProfileImage, tvPersonalData, tvPhone, tvAddress, tvProfissionalData, tvCurriculum;
+    private TextInputEditText etName, etLastName, etCPF, etDate, etDDD, etPhone, etCEP, etCity, etAddress, etNumber, etNeighborhood, etComplement, etOABRegister, etDisplayName, etCurriculum;
+    private TextInputLayout tilName, tilLastName, tilCPF, tilDate, tilDDD, tilPhone, tilCEP, tilCity, tilAddress, tilNumber, tilNeighborhood, tilComplement, tilOABRegister, tilDisplayName, tilCurriculum;
+    private MaterialSpinner spUF, spUFOAB;
     private KProgressHUD dialog;
 
     @Override
@@ -76,347 +101,41 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
         createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
-        getUserData();
         setTypeface();
+        getUserData();
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.my_profile);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        textWatcherEditTexts();
 
     }
 
-    private void createDialog(String title, String message) {
-        dialog = KProgressHUD.create(LawyerProfileActivity.this)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setLabel(title)
-                .setDetailsLabel(message)
-                .setCancellable(true)
-                .setAnimationSpeed(2)
-                .setDimAmount(0.5f);
-        dialog.show();
-    }
-
-    private void getUserData() {
-        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-        databaseUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                image = dataSnapshot.child(IMAGE).getValue(String.class);
-                name = dataSnapshot.child(NAME).getValue(String.class);
-                lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
-                email = mAuth.getCurrentUser().getEmail();
-                phone = dataSnapshot.child(PHONE).getValue(String.class);
-
-                tvEmail.setText(email);
-                tvName.setText(String.format("%s %s", name, lastName));
-                Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
-
-                if (phone == null) {
-                    tvPhone.setText(getString(R.string.change_phone));
-                } else {
-                    tvPhone.setText(addMask(phone, "(##) #####-####"));
-                }
-
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
-        databaseOab.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
-                oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
-                verified = dataSnapshot.child(VERIFIED).getValue(String.class);
-
-                tvOab.setText(String.format("%s / %s", oab, UF_ARRAY[Integer.parseInt(oabUf)]));
-                if (Objects.equals(verified, "true")) {
-                    ivVerified.setVisibility(View.VISIBLE);
-                } else if (Objects.equals(verified, "false")) {
-                    ivVerified.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference databaseCredits = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
-        databaseCredits.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(CREDITS).getValue(String.class) == null) {
-                    tvCredits.setText("0 CA");
-                } else {
-                    String credits = dataSnapshot.child(CREDITS).getValue(String.class);
-                    tvCredits.setText(String.format("%s CA", credits));
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(LAWYER_CASES).child(mAuth.getCurrentUser().getUid());
-        databaseQuestions.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == 0) {
-                    tvQuestion.setText("0");
-                } else {
-                    if (dataSnapshot.getChildrenCount() < 10) {
-                        tvQuestion.setText(String.format("0%s", dataSnapshot.getChildrenCount()));
-                    } else {
-                        tvQuestion.setText(String.format("%s", dataSnapshot.getChildrenCount()));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void setTypeface() {
-        tvName.setTypeface(TypefaceLight(getApplicationContext()));
-        tvOab.setTypeface(TypefaceLight(getApplicationContext()));
-        tvCreditsMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestionMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvCredits.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestion.setTypeface(TypefaceLight(getApplicationContext()));
-    }
-
-    private void castWidgets() {
-        tvEmail = findViewById(R.id.tvEmail);
-        tvName = findViewById(R.id.tvName);
-        ivImage = findViewById(R.id.ivImage);
-        tvCredits = findViewById(R.id.tvCredits);
-        tvCreditsMsg = findViewById(R.id.tvCreditsMsg);
-        tvQuestion = findViewById(R.id.tvQuestions);
-        tvQuestionMsg = findViewById(R.id.tvQuestionsMsg);
-        tvOab = findViewById(R.id.tvOab);
-        ivVerified = findViewById(R.id.ivVerified);
-        tvPhone = findViewById(R.id.tvPhone);
-        findViewById(R.id.btnBack).setOnClickListener(this);
-        findViewById(R.id.fbChangeImage).setOnClickListener(this);
-        findViewById(R.id.lvPhone).setOnClickListener(this);
-        findViewById(R.id.lvOab).setOnClickListener(this);
-        findViewById(R.id.fbName).setOnClickListener(this);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnBack:
-                finish();
-                break;
-            case R.id.fbChangeImage:
+            case R.id.btnChangeImage:
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(this);
                 break;
-            case R.id.lvPhone:
-                dialogEditPhone();
-                break;
-            case R.id.fbName:
-                dialogEditName();
-                break;
-            case R.id.lvOab:
-                if (Objects.equals(verified, "false")) {
-                    dialogEditOab();
-                } else {
-                    SnackWarning(getString(R.string.oab_verified));
-                }
+            case R.id.fbSave:
+                saveData();
                 break;
         }
-    }
-
-    private void dialogEditOab() {
-        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
-        View view = inflater.inflate(R.layout.oab_dialog, null);
-        builder.setTitle(getString(R.string.oab_code));
-        builder.setMessage(getString(R.string.edit_oad_msg));
-        builder.setView(view);
-        builder.setCancelable(false);
-
-        final MaterialSpinner spUf = view.findViewById(R.id.spUF);
-        final TextInputEditText etOab = view.findViewById(R.id.etOab);
-
-        spUf.setItems(UF_ARRAY);
-        spUf.setSelectedIndex(Integer.parseInt(oabUf));
-        etOab.setText(oab);
-
-        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String oabCode = etOab.getText().toString().trim();
-                String oabUf = String.valueOf(spUf.getSelectedIndex());
-
-                if (oabUf.equals("0")) {
-                    SnackWarning(getString(R.string.select_uf_oab));
-                } else if (oabCode.equals("")) {
-                    SnackWarning(getString(R.string.enter_oab_code));
-                } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
-                    HashMap<String, Object> oab = new HashMap<>();
-                    oab.put(OAB_CODE, oabCode);
-                    oab.put(OAB_UF, oabUf);
-                    database.updateChildren(oab).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                SnackSuccess(getString(R.string.oab_updated));
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            SnackError(e.getMessage());
-                        }
-                    });
-                }
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void dialogEditName() {
-        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
-        View view = inflater.inflate(R.layout.name_dialog, null);
-        builder.setTitle(getString(R.string.name_lastname));
-        builder.setMessage(getString(R.string.update_name_last_name));
-        builder.setView(view);
-        builder.setCancelable(false);
-
-        final TextInputEditText etName = view.findViewById(R.id.etName);
-        final TextInputEditText etLastName = view.findViewById(R.id.etLastName);
-
-        etName.setText(name);
-        etLastName.setText(lastName);
-
-        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name = etName.getText().toString().trim();
-                String lastName = etLastName.getText().toString().trim();
-
-                if (name.equals("")) {
-                    SnackWarning(getString(R.string.fill_name));
-                } else if (lastName.equals("")) {
-                    SnackWarning(getString(R.string.fill_last_name));
-                } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-                    HashMap<String, Object> user = new HashMap<>();
-                    user.put(NAME, name);
-                    user.put(LAST_NAME, lastName);
-                    database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                SnackSuccess(getString(R.string.name_updated_success));
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            SnackError(e.getMessage());
-                        }
-                    });
-                }
-
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }
-
-    private void dialogEditPhone() {
-        LayoutInflater inflater = LayoutInflater.from(LawyerProfileActivity.this);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(LawyerProfileActivity.this);
-
-        View view = inflater.inflate(R.layout.phone_dialog, null);
-        builder.setTitle(getString(R.string.phone));
-        builder.setMessage(getString(R.string.phone_msg));
-        builder.setView(view);
-        builder.setCancelable(false);
-
-        final TextInputEditText etPhone = view.findViewById(R.id.etPhone);
-
-        etPhone.setText(phone);
-
-        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                String phone = etPhone.getText().toString().trim();
-                if (phone.equals("")) {
-                    SnackWarning(getString(R.string.fill_phone));
-                } else if (phone.length() < 11) {
-                    SnackWarning(getString(R.string.incomplet_phone));
-                } else {
-                    DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-                    HashMap<String, Object> phones = new HashMap<>();
-                    phones.put(PHONE, phone);
-                    database.updateChildren(phones).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                SnackSuccess(getString(R.string.phone_updated));
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            SnackError(e.getMessage());
-                        }
-                    });
-
-                }
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
     }
 
     @Override
@@ -472,6 +191,579 @@ public class LawyerProfileActivity extends AppCompatActivity implements View.OnC
             }
         }
 
+    }
+
+    private void saveData() {
+        if (etName.getText().toString().trim().equals("")) {
+            tilName.setError(getString(R.string.fill_name));
+            etName.requestFocus();
+        } else if (etLastName.getText().toString().trim().equals("")) {
+            tilLastName.setError(getString(R.string.fill_last_name));
+            etLastName.requestFocus();
+        } else if (etCPF.getText().toString().trim().equals("")) {
+            tilCPF.setError(getString(R.string.fill_cpf));
+            etCPF.requestFocus();
+        } else if (etDate.getText().toString().trim().equals("")) {
+            tilDate.setError(getString(R.string.fill_date));
+            etDate.requestFocus();
+        } else if (etOABRegister.getText().toString().trim().equals("")) {
+            tilOABRegister.setError(getString(R.string.fill_oab_register));
+            etOABRegister.requestFocus();
+        } else if (spUFOAB.getSelectedIndex() == 0) {
+            SnackWarning(getString(R.string.select_oab_uf));
+        } else if (etDisplayName.getText().toString().trim().equals("")) {
+            tilDisplayName.setError(getString(R.string.fill_name_display));
+            etDisplayName.requestFocus();
+        } else if (etDDD.getText().toString().trim().equals("")) {
+            tilDDD.setError(getString(R.string.fill_ddd));
+            etDDD.requestFocus();
+        } else if (etPhone.getText().toString().trim().equals("")) {
+            tilPhone.setError(getString(R.string.fill_phone_user));
+            etPhone.requestFocus();
+        } else if (etCEP.getText().toString().trim().equals("")) {
+            tilCEP.setError(getString(R.string.fill_cep));
+            etCEP.requestFocus();
+        } else if (etCity.getText().toString().trim().equals("")) {
+            tilCity.setError(getString(R.string.fill_city));
+            etCity.requestFocus();
+        } else if (spUF.getSelectedIndex() == 0) {
+            SnackWarning(getString(R.string.select_uf));
+        } else if (etAddress.getText().toString().trim().equals("")) {
+            tilAddress.setError(getString(R.string.fill_address));
+            etAddress.requestFocus();
+        } else if (etNumber.getText().toString().trim().equals("")) {
+            tilNumber.setError(getString(R.string.fill_number));
+            etNumber.requestFocus();
+        } else if (etNeighborhood.getText().toString().trim().equals("")) {
+            tilNeighborhood.setError(getString(R.string.fill_neighborhood));
+            etNeighborhood.requestFocus();
+        } else if (etCurriculum.getText().toString().trim().equals("")) {
+            tilCurriculum.setError(getString(R.string.fill_curriculum));
+            etCurriculum.requestFocus();
+        } else if (etCurriculum.getText().toString().trim().length() < 100) {
+            tilCurriculum.setError(getString(R.string.curriculum_low_caractere));
+            etCurriculum.requestFocus();
+        } else {
+
+            createDialog(getString(R.string.please_wait), getString(R.string.saving));
+
+            HashMap<String, Object> user = new HashMap<>();
+            user.put(NAME, etName.getText().toString().trim());
+            user.put(DISPLAY_NAME, etDisplayName.getText().toString().trim());
+            user.put(LAST_NAME, etLastName.getText().toString().trim());
+            user.put(CPF, etCPF.getText().toString().trim());
+            user.put(DATE, etDate.getText().toString().trim());
+            user.put(DDD, etDDD.getText().toString().trim());
+            user.put(PHONE, etPhone.getText().toString().trim());
+            user.put(CEP, etCEP.getText().toString().trim());
+            user.put(CITY, etCity.getText().toString().trim());
+            user.put(UF, String.valueOf(spUF.getSelectedIndex()));
+            user.put(ADDRESS, etAddress.getText().toString().trim());
+            user.put(NUMBER, etNumber.getText().toString().trim());
+            user.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
+            user.put(COMPLEMENT, etComplement.getText().toString().trim());
+            user.put(CURRICULUM, etCurriculum.getText().toString().trim());
+
+            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+            database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+
+                        if (Objects.equals(verified, "true")) {
+
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            SnackSuccess(getString(R.string.data_saved));
+
+                        } else {
+
+                            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+                            HashMap<String, Object> oab = new HashMap<>();
+                            oab.put(OAB_CODE, oab);
+                            oab.put(OAB_UF, oabUf);
+                            database.updateChildren(oab).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+
+                                        if (dialog.isShowing()) {
+                                            dialog.dismiss();
+                                        }
+                                        SnackSuccess(getString(R.string.data_saved));
+
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    SnackError(e.getMessage());
+                                }
+                            });
+
+                        }
+
+
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    SnackError(e.getMessage());
+                }
+            });
+
+        }
+    }
+
+    private void textWatcherEditTexts() {
+        etCurriculum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCurriculum.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDisplayName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDisplayName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etOABRegister.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilOABRegister.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilLastName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCPF.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCPF.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDate.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDDD.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDDD.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilPhone.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCEP.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCEP.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCity.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilAddress.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilNumber.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etNeighborhood.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilNeighborhood.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void createDialog(String title, String message) {
+        dialog = KProgressHUD.create(LawyerProfileActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel(title)
+                .setDetailsLabel(message)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        dialog.show();
+    }
+
+    private void getUserData() {
+        DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                image = dataSnapshot.child(IMAGE).getValue(String.class);
+                name = dataSnapshot.child(NAME).getValue(String.class);
+                lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                cpf = dataSnapshot.child(CPF).getValue(String.class);
+                date = dataSnapshot.child(DATE).getValue(String.class);
+                ddd = dataSnapshot.child(DDD).getValue(String.class);
+                phone = dataSnapshot.child(PHONE).getValue(String.class);
+                cep = dataSnapshot.child(CEP).getValue(String.class);
+                city = dataSnapshot.child(CITY).getValue(String.class);
+                uf = dataSnapshot.child(UF).getValue(String.class);
+                address = dataSnapshot.child(ADDRESS).getValue(String.class);
+                number = dataSnapshot.child(NUMBER).getValue(String.class);
+                neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
+                complement = dataSnapshot.child(COMPLEMENT).getValue(String.class);
+                displayName = dataSnapshot.child(DISPLAY_NAME).getValue(String.class);
+                curriculum = dataSnapshot.child(CURRICULUM).getValue(String.class);
+
+                spUF.setItems(UF_ARRAY_FULL);
+                spUFOAB.setItems(UF_ARRAY_OAB);
+                Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
+                etName.setText(name);
+                etLastName.setText(lastName);
+                etCPF.setText(cpf);
+                etDate.setText(date);
+                etDDD.setText(ddd);
+                etPhone.setText(phone);
+                etCEP.setText(cep);
+                etCity.setText(city);
+                etAddress.setText(address);
+                etNumber.setText(number);
+                etNeighborhood.setText(neighborhood);
+                etComplement.setText(complement);
+                etDisplayName.setText(displayName);
+                etCurriculum.setText(curriculum);
+                if (uf != null) {
+                    spUF.setSelectedIndex(Integer.parseInt(uf));
+                }
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+        databaseOab.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
+                oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
+                verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+
+                etOABRegister.setText(oab);
+                spUFOAB.setSelectedIndex(Integer.parseInt(oabUf));
+
+                if (Objects.equals(verified, "true")) {
+                    etOABRegister.setEnabled(false);
+                    spUFOAB.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setTypeface() {
+        spUF.setTypeface(TypefaceLight(getApplicationContext()));
+        spUFOAB.setTypeface(TypefaceLight(getApplicationContext()));
+        btnChangeImage.setTypeface(TypefaceLight(getApplicationContext()));
+        tilName.setTypeface(TypefaceLight(getApplicationContext()));
+        tilOABRegister.setTypeface(TypefaceLight(getApplicationContext()));
+        tilDisplayName.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCurriculum.setTypeface(TypefaceLight(getApplicationContext()));
+        tilLastName.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCPF.setTypeface(TypefaceLight(getApplicationContext()));
+        tilDDD.setTypeface(TypefaceLight(getApplicationContext()));
+        tilDate.setTypeface(TypefaceLight(getApplicationContext()));
+        tilPhone.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCEP.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCity.setTypeface(TypefaceLight(getApplicationContext()));
+        tilAddress.setTypeface(TypefaceLight(getApplicationContext()));
+        tilNumber.setTypeface(TypefaceLight(getApplicationContext()));
+        tilNeighborhood.setTypeface(TypefaceLight(getApplicationContext()));
+        tilComplement.setTypeface(TypefaceLight(getApplicationContext()));
+        etName.setTypeface(TypefaceLight(getApplicationContext()));
+        etLastName.setTypeface(TypefaceLight(getApplicationContext()));
+        etCPF.setTypeface(TypefaceLight(getApplicationContext()));
+        etDDD.setTypeface(TypefaceLight(getApplicationContext()));
+        etDate.setTypeface(TypefaceLight(getApplicationContext()));
+        etPhone.setTypeface(TypefaceLight(getApplicationContext()));
+        etCEP.setTypeface(TypefaceLight(getApplicationContext()));
+        etOABRegister.setTypeface(TypefaceLight(getApplicationContext()));
+        etDisplayName.setTypeface(TypefaceLight(getApplicationContext()));
+        etCurriculum.setTypeface(TypefaceLight(getApplicationContext()));
+        etCity.setTypeface(TypefaceLight(getApplicationContext()));
+        etAddress.setTypeface(TypefaceLight(getApplicationContext()));
+        etNumber.setTypeface(TypefaceLight(getApplicationContext()));
+        etNeighborhood.setTypeface(TypefaceLight(getApplicationContext()));
+        etComplement.setTypeface(TypefaceLight(getApplicationContext()));
+        tvProfileImage.setTypeface(TypefaceBold(getApplicationContext()));
+        tvPersonalData.setTypeface(TypefaceBold(getApplicationContext()));
+        tvPhone.setTypeface(TypefaceBold(getApplicationContext()));
+        tvAddress.setTypeface(TypefaceBold(getApplicationContext()));
+        tvProfissionalData.setTypeface(TypefaceBold(getApplicationContext()));
+        tvCurriculum.setTypeface(TypefaceBold(getApplicationContext()));
+    }
+
+    private void castWidgets() {
+        toolbar = findViewById(R.id.toolbar);
+        spUF = findViewById(R.id.spUF);
+        spUFOAB = findViewById(R.id.spUFOAB);
+        btnChangeImage = findViewById(R.id.btnChangeImage);
+        tilName = findViewById(R.id.tilName);
+        tilLastName = findViewById(R.id.tilLastName);
+        tilCPF = findViewById(R.id.tilCPF);
+        tilDate = findViewById(R.id.tilDate);
+        tilDDD = findViewById(R.id.tilDDD);
+        tilPhone = findViewById(R.id.tilPhone);
+        tilCEP = findViewById(R.id.tilCEP);
+        tilCity = findViewById(R.id.tilCity);
+        tilAddress = findViewById(R.id.tilAddress);
+        tilNumber = findViewById(R.id.tilNumber);
+        tilNeighborhood = findViewById(R.id.tilNeighborhood);
+        tilComplement = findViewById(R.id.tilComplement);
+        tilOABRegister = findViewById(R.id.tilOABRegister);
+        tilDisplayName = findViewById(R.id.tilDisplayName);
+        tilCurriculum = findViewById(R.id.tilCurriculum);
+        ivImage = findViewById(R.id.ivImage);
+        btnChangeImage = findViewById(R.id.btnChangeImage);
+        tvProfileImage = findViewById(R.id.tvProfileImage);
+        tvPersonalData = findViewById(R.id.tvPersonalData);
+        tvProfissionalData = findViewById(R.id.tvProfissionalData);
+        tvCurriculum = findViewById(R.id.tvCurriculum);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvAddress = findViewById(R.id.tvAddress);
+        etName = findViewById(R.id.etName);
+        etLastName = findViewById(R.id.etLastName);
+        etCPF = findViewById(R.id.etCPF);
+        etDisplayName = findViewById(R.id.etDisplayName);
+        etOABRegister = findViewById(R.id.etOABRegister);
+        etDate = findViewById(R.id.etDate);
+        etCurriculum = findViewById(R.id.etCurriculum);
+        etDDD = findViewById(R.id.etDDD);
+        etPhone = findViewById(R.id.etPhone);
+        etCEP = findViewById(R.id.etCEP);
+        etCity = findViewById(R.id.etCity);
+        etAddress = findViewById(R.id.etAddress);
+        etNumber = findViewById(R.id.etNumber);
+        etNeighborhood = findViewById(R.id.etNeighborhood);
+        etComplement = findViewById(R.id.etComplement);
+        findViewById(R.id.btnChangeImage).setOnClickListener(this);
+        findViewById(R.id.fbSave).setOnClickListener(this);
     }
 
     public void SnackError(String msg) {

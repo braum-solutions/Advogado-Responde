@@ -500,7 +500,26 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
                 complement = dataSnapshot.child(COMPLEMENT).getValue(String.class);
 
-                setUserData();
+                spUF.setItems(UF_ARRAY_FULL);
+                Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
+                etName.setText(name);
+                etLastName.setText(lastName);
+                etCPF.setText(cpf);
+                etDate.setText(date);
+                etDDD.setText(ddd);
+                etPhone.setText(phone);
+                etCEP.setText(cep);
+                etCity.setText(city);
+                etAddress.setText(address);
+                etNumber.setText(number);
+                etNeighborhood.setText(neighborhood);
+                etComplement.setText(complement);
+                if (uf != null) {
+                    spUF.setSelectedIndex(Integer.parseInt(uf));
+                }
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
 
             }
 
@@ -510,27 +529,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-    }
-
-    private void setUserData() {
-        spUF.setItems(UF_ARRAY_FULL);
-        Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
-        etName.setText(name);
-        etLastName.setText(lastName);
-        etCPF.setText(cpf);
-        etDate.setText(date);
-        etDDD.setText(ddd);
-        etPhone.setText(phone);
-        etCEP.setText(cep);
-        etCity.setText(city);
-        etAddress.setText(address);
-        etNumber.setText(number);
-        etNeighborhood.setText(neighborhood);
-        etComplement.setText(complement);
-        spUF.setSelectedIndex(Integer.parseInt(uf));
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
     }
 
     private void setTypeface() {
