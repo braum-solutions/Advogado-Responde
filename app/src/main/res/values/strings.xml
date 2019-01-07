@@ -206,5 +206,8 @@
     <string name="fill_name_display">Digite seu nome para exibição</string>
     <string name="fill_curriculum">Preencha seu mini currículo</string>
     <string name="curriculum_low_caractere">Seu mini-curriculo deve ter mais que 100 caracteres</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="full_name">Nome Completo</string>
+    <string name="profissional_address">Endereço Profissional</string>
 
 </resources>

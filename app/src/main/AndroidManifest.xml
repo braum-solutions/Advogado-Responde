@@ -13,8 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.Cases.ReportCaseActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".View.Profile.LawyerProfileActivity"></activity>
+        <activity
+            android:name=".View.Cases.ReportCaseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".View.Cases.LawyerCasesActivity"
             android:screenOrientation="portrait">
@@ -71,10 +73,10 @@
                 android:value=".View.Main.MainActivity" />
         </activity>
         <activity
-            android:name=".View.Profile.LawyerProfileActivity"
+            android:name=".View.Profile.EditLawyerProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.Profile.UserProfileActivity"
+            android:name=".View.Profile.EditUserProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".View.Others.AboutActivity"

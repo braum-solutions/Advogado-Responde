@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.braumsolutions.advogadoresponde.Model.UserModel;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.chootdev.csnackbar.Align;
@@ -41,7 +40,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,35 +51,42 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.CEP;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CITY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.COMPLEMENT;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CPF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CURRICULUM;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DATE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DISPLAY_NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditLawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
-    private String image, name, lastName, cpf, date, ddd, phone, cep, city, uf, address, number, neighborhood, complement;
+    private String image, name, lastName, cpf, date, ddd, phone, cep, city, uf, address, number, neighborhood, complement, oab, oabUf, displayName, curriculum, verified;
     private CircleImageView ivImage;
     private Button btnChangeImage;
-    private TextView tvProfileImage, tvPersonalData, tvPhone, tvAddress;
-    private TextInputEditText etName, etLastName, etCPF, etDate, etDDD, etPhone, etCEP, etCity, etAddress, etNumber, etNeighborhood, etComplement;
-    private TextInputLayout tilName, tilLastName, tilCPF, tilDate, tilDDD, tilPhone, tilCEP, tilCity, tilAddress, tilNumber, tilNeighborhood, tilComplement;
-    private MaterialSpinner spUF;
+    private TextView tvProfileImage, tvPersonalData, tvPhone, tvAddress, tvProfissionalData, tvCurriculum;
+    private TextInputEditText etName, etLastName, etCPF, etDate, etDDD, etPhone, etCEP, etCity, etAddress, etNumber, etNeighborhood, etComplement, etOABRegister, etDisplayName, etCurriculum;
+    private TextInputLayout tilName, tilLastName, tilCPF, tilDate, tilDDD, tilPhone, tilCEP, tilCity, tilAddress, tilNumber, tilNeighborhood, tilComplement, tilOABRegister, tilDisplayName, tilCurriculum;
+    private MaterialSpinner spUF, spUFOAB;
     private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.activity_edit_lawyer_profile);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -192,6 +198,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         } else if (etDate.getText().toString().trim().equals("")) {
             tilDate.setError(getString(R.string.fill_date));
             etDate.requestFocus();
+        } else if (etOABRegister.getText().toString().trim().equals("")) {
+            tilOABRegister.setError(getString(R.string.fill_oab_register));
+            etOABRegister.requestFocus();
+        } else if (spUFOAB.getSelectedIndex() == 0) {
+            SnackWarning(getString(R.string.select_oab_uf));
+        } else if (etDisplayName.getText().toString().trim().equals("")) {
+            tilDisplayName.setError(getString(R.string.fill_name_display));
+            etDisplayName.requestFocus();
         } else if (etDDD.getText().toString().trim().equals("")) {
             tilDDD.setError(getString(R.string.fill_ddd));
             etDDD.requestFocus();
@@ -215,12 +229,19 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         } else if (etNeighborhood.getText().toString().trim().equals("")) {
             tilNeighborhood.setError(getString(R.string.fill_neighborhood));
             etNeighborhood.requestFocus();
+        } else if (etCurriculum.getText().toString().trim().equals("")) {
+            tilCurriculum.setError(getString(R.string.fill_curriculum));
+            etCurriculum.requestFocus();
+        } else if (etCurriculum.getText().toString().trim().length() < 100) {
+            tilCurriculum.setError(getString(R.string.curriculum_low_caractere));
+            etCurriculum.requestFocus();
         } else {
 
             createDialog(getString(R.string.please_wait), getString(R.string.saving));
 
             HashMap<String, Object> user = new HashMap<>();
             user.put(NAME, etName.getText().toString().trim());
+            user.put(DISPLAY_NAME, etDisplayName.getText().toString().trim());
             user.put(LAST_NAME, etLastName.getText().toString().trim());
             user.put(CPF, etCPF.getText().toString().trim());
             user.put(DATE, etDate.getText().toString().trim());
@@ -233,16 +254,49 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             user.put(NUMBER, etNumber.getText().toString().trim());
             user.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
             user.put(COMPLEMENT, etComplement.getText().toString().trim());
+            user.put(CURRICULUM, etCurriculum.getText().toString().trim());
 
             DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
             database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
+
+                        if (Objects.equals(verified, "true")) {
+
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            SnackSuccess(getString(R.string.data_saved));
+
+                        } else {
+
+                            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+                            HashMap<String, Object> oab = new HashMap<>();
+                            oab.put(OAB_CODE, oab);
+                            oab.put(OAB_UF, oabUf);
+                            database.updateChildren(oab).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+
+                                        if (dialog.isShowing()) {
+                                            dialog.dismiss();
+                                        }
+                                        SnackSuccess(getString(R.string.data_saved));
+
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    SnackError(e.getMessage());
+                                }
+                            });
+
                         }
-                        SnackSuccess(getString(R.string.data_saved));
+
+
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -259,6 +313,63 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void textWatcherEditTexts() {
+        etCurriculum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilCurriculum.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etDisplayName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilDisplayName.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etOABRegister.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != "") {
+                    tilOABRegister.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -470,7 +581,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createDialog(String title, String message) {
-        dialog = KProgressHUD.create(UserProfileActivity.this)
+        dialog = KProgressHUD.create(EditLawyerProfileActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel(title)
                 .setDetailsLabel(message)
@@ -499,8 +610,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 number = dataSnapshot.child(NUMBER).getValue(String.class);
                 neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
                 complement = dataSnapshot.child(COMPLEMENT).getValue(String.class);
+                displayName = dataSnapshot.child(DISPLAY_NAME).getValue(String.class);
+                curriculum = dataSnapshot.child(CURRICULUM).getValue(String.class);
 
                 spUF.setItems(UF_ARRAY_FULL);
+                spUFOAB.setItems(UF_ARRAY_OAB);
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
                 etName.setText(name);
                 etLastName.setText(lastName);
@@ -514,6 +628,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 etNumber.setText(number);
                 etNeighborhood.setText(neighborhood);
                 etComplement.setText(complement);
+                etDisplayName.setText(displayName);
+                etCurriculum.setText(curriculum);
                 if (uf != null) {
                     spUF.setSelectedIndex(Integer.parseInt(uf));
                 }
@@ -529,12 +645,38 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+        databaseOab.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                oab = dataSnapshot.child(OAB_CODE).getValue(String.class);
+                oabUf = dataSnapshot.child(OAB_UF).getValue(String.class);
+                verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+
+                etOABRegister.setText(oab);
+                spUFOAB.setSelectedIndex(Integer.parseInt(oabUf));
+
+                if (Objects.equals(verified, "true")) {
+                    etOABRegister.setEnabled(false);
+                    spUFOAB.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setTypeface() {
         spUF.setTypeface(TypefaceLight(getApplicationContext()));
+        spUFOAB.setTypeface(TypefaceLight(getApplicationContext()));
         btnChangeImage.setTypeface(TypefaceLight(getApplicationContext()));
         tilName.setTypeface(TypefaceLight(getApplicationContext()));
+        tilOABRegister.setTypeface(TypefaceLight(getApplicationContext()));
+        tilDisplayName.setTypeface(TypefaceLight(getApplicationContext()));
+        tilCurriculum.setTypeface(TypefaceLight(getApplicationContext()));
         tilLastName.setTypeface(TypefaceLight(getApplicationContext()));
         tilCPF.setTypeface(TypefaceLight(getApplicationContext()));
         tilDDD.setTypeface(TypefaceLight(getApplicationContext()));
@@ -553,6 +695,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         etDate.setTypeface(TypefaceLight(getApplicationContext()));
         etPhone.setTypeface(TypefaceLight(getApplicationContext()));
         etCEP.setTypeface(TypefaceLight(getApplicationContext()));
+        etOABRegister.setTypeface(TypefaceLight(getApplicationContext()));
+        etDisplayName.setTypeface(TypefaceLight(getApplicationContext()));
+        etCurriculum.setTypeface(TypefaceLight(getApplicationContext()));
         etCity.setTypeface(TypefaceLight(getApplicationContext()));
         etAddress.setTypeface(TypefaceLight(getApplicationContext()));
         etNumber.setTypeface(TypefaceLight(getApplicationContext()));
@@ -562,11 +707,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         tvPersonalData.setTypeface(TypefaceBold(getApplicationContext()));
         tvPhone.setTypeface(TypefaceBold(getApplicationContext()));
         tvAddress.setTypeface(TypefaceBold(getApplicationContext()));
+        tvProfissionalData.setTypeface(TypefaceBold(getApplicationContext()));
+        tvCurriculum.setTypeface(TypefaceBold(getApplicationContext()));
     }
 
     private void castWidgets() {
         toolbar = findViewById(R.id.toolbar);
         spUF = findViewById(R.id.spUF);
+        spUFOAB = findViewById(R.id.spUFOAB);
         btnChangeImage = findViewById(R.id.btnChangeImage);
         tilName = findViewById(R.id.tilName);
         tilLastName = findViewById(R.id.tilLastName);
@@ -580,16 +728,24 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         tilNumber = findViewById(R.id.tilNumber);
         tilNeighborhood = findViewById(R.id.tilNeighborhood);
         tilComplement = findViewById(R.id.tilComplement);
+        tilOABRegister = findViewById(R.id.tilOABRegister);
+        tilDisplayName = findViewById(R.id.tilDisplayName);
+        tilCurriculum = findViewById(R.id.tilCurriculum);
         ivImage = findViewById(R.id.ivImage);
         btnChangeImage = findViewById(R.id.btnChangeImage);
         tvProfileImage = findViewById(R.id.tvProfileImage);
         tvPersonalData = findViewById(R.id.tvPersonalData);
+        tvProfissionalData = findViewById(R.id.tvProfissionalData);
+        tvCurriculum = findViewById(R.id.tvCurriculum);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
         etName = findViewById(R.id.etName);
         etLastName = findViewById(R.id.etLastName);
         etCPF = findViewById(R.id.etCPF);
+        etDisplayName = findViewById(R.id.etDisplayName);
+        etOABRegister = findViewById(R.id.etOABRegister);
         etDate = findViewById(R.id.etDate);
+        etCurriculum = findViewById(R.id.etCurriculum);
         etDDD = findViewById(R.id.etDDD);
         etPhone = findViewById(R.id.etPhone);
         etCEP = findViewById(R.id.etCEP);
@@ -603,7 +759,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void SnackError(String msg) {
-        Snackbar.with(UserProfileActivity.this, null)
+        Snackbar.with(EditLawyerProfileActivity.this, null)
                 .type(Type.ERROR)
                 .message(msg)
                 .duration(Duration.LONG)
@@ -613,7 +769,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void SnackSuccess(String msg) {
-        Snackbar.with(UserProfileActivity.this, null)
+        Snackbar.with(EditLawyerProfileActivity.this, null)
                 .type(Type.SUCCESS)
                 .message(msg)
                 .duration(Duration.LONG)
@@ -623,7 +779,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void SnackWarning(String msg) {
-        Snackbar.with(UserProfileActivity.this, null)
+        Snackbar.with(EditLawyerProfileActivity.this, null)
                 .type(Type.WARNING)
                 .message(msg)
                 .duration(Duration.LONG)
@@ -633,3 +789,4 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
 }
+

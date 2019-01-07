@@ -1,6 +1,5 @@
 package com.braumsolutions.advogadoresponde.View.Main;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.braumsolutions.advogadoresponde.View.Others.AboutActivity;
 import com.braumsolutions.advogadoresponde.View.Login.ConfirmEmailActivity;
 import com.braumsolutions.advogadoresponde.View.Login.LoginActivity;
-import com.braumsolutions.advogadoresponde.View.Profile.UserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
