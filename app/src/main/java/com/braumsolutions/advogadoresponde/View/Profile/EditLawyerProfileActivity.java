@@ -22,6 +22,7 @@ import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,11 +34,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -65,6 +72,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
@@ -90,8 +98,6 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
 
         mAuth = FirebaseAuth.getInstance();
 
-        createDialog(getString(R.string.please_wait), getString(R.string.loading));
-
         castWidgets();
         setTypeface();
         getUserData();
@@ -102,6 +108,10 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         textWatcherEditTexts();
+
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
 
     }
 
@@ -495,6 +505,22 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 if (s != "") {
                     tilCEP.setError(null);
                 }
+
+                if (s.length() == 8) {
+                    Ion.with(getApplicationContext())
+                            .load("http://viacep.com.br/ws/" + s + "/json/")
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    etCity.setText(result.get("localidade").getAsString());
+                                    spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                    etNeighborhood.setText(result.get("bairro").getAsString());
+                                    etAddress.setText(result.get("logradouro").getAsString());
+                                    etComplement.setText(result.get("complemento").getAsString());
+                                }
+                            });
+                }
             }
 
             @Override
@@ -580,6 +606,15 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
         });
     }
 
+    private static int indexOf( String c , String [] arr ) {
+        for( int i = 0 ; i < arr.length ; i++ ) {
+            if(Objects.equals(arr[i], c)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private void createDialog(String title, String message) {
         dialog = KProgressHUD.create(EditLawyerProfileActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -592,6 +627,8 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
     }
 
     private void getUserData() {
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+
         DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
@@ -633,6 +670,7 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 if (uf != null) {
                     spUF.setSelectedIndex(Integer.parseInt(uf));
                 }
+
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }

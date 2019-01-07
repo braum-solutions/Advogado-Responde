@@ -33,13 +33,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonObject;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,6 +63,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
@@ -81,8 +86,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_edit_user_profile);
 
         mAuth = FirebaseAuth.getInstance();
-
-        createDialog(getString(R.string.please_wait), getString(R.string.loading));
 
         castWidgets();
         setTypeface();
@@ -215,8 +218,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             etNeighborhood.requestFocus();
         } else {
 
-            createDialog(getString(R.string.please_wait), getString(R.string.saving));
-
             HashMap<String, Object> user = new HashMap<>();
             user.put(NAME, etName.getText().toString().trim());
             user.put(LAST_NAME, etLastName.getText().toString().trim());
@@ -232,6 +233,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             user.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
             user.put(COMPLEMENT, etComplement.getText().toString().trim());
 
+            createDialog(getString(R.string.please_wait), getString(R.string.saving));
+
             DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
             database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -241,6 +244,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                             dialog.dismiss();
                         }
                         SnackSuccess(getString(R.string.data_saved));
+                        SnackWarning(String.valueOf(dialog.isShowing()));
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -382,6 +386,22 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 if (s != "") {
                     tilCEP.setError(null);
                 }
+
+                if (s.length() == 8) {
+                    Ion.with(getApplicationContext())
+                            .load("http://viacep.com.br/ws/" + s + "/json/")
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    etCity.setText(result.get("localidade").getAsString());
+                                    spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                    etNeighborhood.setText(result.get("bairro").getAsString());
+                                    etAddress.setText(result.get("logradouro").getAsString());
+                                    etComplement.setText(result.get("complemento").getAsString());
+                                }
+                            });
+                }
             }
 
             @Override
@@ -478,7 +498,18 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         dialog.show();
     }
 
+    private static int indexOf( String c , String [] arr ) {
+        for( int i = 0 ; i < arr.length ; i++ ) {
+            if(Objects.equals(arr[i], c)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private void getUserData() {
+        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+
         DatabaseReference databaseUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
         databaseUser.addValueEventListener(new ValueEventListener() {
             @Override
@@ -515,6 +546,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 if (uf != null) {
                     spUF.setSelectedIndex(Integer.parseInt(uf));
                 }
+
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }

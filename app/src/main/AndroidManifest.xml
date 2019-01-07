@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.Profile.LawyerProfileActivity"></activity>
+        <activity android:name=".View.Profile.UserProfileActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".View.Profile.LawyerProfileActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".View.Cases.ReportCaseActivity"
             android:screenOrientation="portrait" />
