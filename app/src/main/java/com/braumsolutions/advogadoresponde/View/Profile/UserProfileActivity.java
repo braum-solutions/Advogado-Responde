@@ -86,17 +86,28 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Picasso.with(getApplicationContext()).load(dataSnapshot.child(IMAGE).getValue(String.class)).placeholder(R.drawable.avatar).into(ivImage, null);
-                tvDisplayName.setText(String.format("%s %s",dataSnapshot.child(NAME).getValue(String.class), dataSnapshot.child(LAST_NAME).getValue(String.class)));
+                tvDisplayName.setText(String.format("%s %s", dataSnapshot.child(NAME).getValue(String.class), dataSnapshot.child(LAST_NAME).getValue(String.class)));
                 tvEmailMsg.setText(mAuth.getCurrentUser().getEmail());
-                tvPhoneMsg.setText(addMask(dataSnapshot.child(DDD).getValue(String.class) + dataSnapshot.child(PHONE).getValue(String.class), "(##) #####-####"));
-                tvStreetNumberNeighborhood.setText(String.format("%s, %s, %s", dataSnapshot.child(ADDRESS).getValue(String.class), dataSnapshot.child(NUMBER).getValue(String.class), dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class)));
-                tvCityStateMsg.setText(String.format("%s - %s", dataSnapshot.child(CITY).getValue(String.class), UF_ARRAY[Integer.parseInt(dataSnapshot.child(UF).getValue(String.class))]));
-                tvCEP.setText(dataSnapshot.child(CEP).getValue(String.class));
+                if (dataSnapshot.child(PHONE).getValue(String.class) == null) {
+                    tvPhoneMsg.setText(getString(R.string.no_phone));
+                } else {
+                    tvPhoneMsg.setText(addMask(dataSnapshot.child(DDD).getValue(String.class) + dataSnapshot.child(PHONE).getValue(String.class), "(##) #####-####"));
+                }
+                if (dataSnapshot.child(CEP).getValue(String.class) == null) {
+                    tvStreetNumberNeighborhood.setText(getString(R.string.no_address));
+                    tvCityStateMsg.setVisibility(View.GONE);
+                    tvCEP.setVisibility(View.GONE);
+                } else {
+                    tvCityStateMsg.setVisibility(View.VISIBLE);
+                    tvCEP.setVisibility(View.VISIBLE);
+                    tvStreetNumberNeighborhood.setText(String.format("%s, %s, %s", dataSnapshot.child(ADDRESS).getValue(String.class), dataSnapshot.child(NUMBER).getValue(String.class), dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class)));
+                    tvCityStateMsg.setText(String.format("%s - %s", dataSnapshot.child(CITY).getValue(String.class), UF_ARRAY[Integer.parseInt(dataSnapshot.child(UF).getValue(String.class))]));
+                    tvCEP.setText(dataSnapshot.child(CEP).getValue(String.class));
+                }
 
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-
             }
 
             @Override

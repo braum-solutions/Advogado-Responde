@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -90,6 +91,7 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
     private TextInputLayout tilName, tilLastName, tilCPF, tilDate, tilDDD, tilPhone, tilCEP, tilCity, tilAddress, tilNumber, tilNeighborhood, tilComplement, tilOABRegister, tilDisplayName, tilCurriculum;
     private MaterialSpinner spUF, spUFOAB;
     private KProgressHUD dialog;
+    private boolean haveCEP = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -507,19 +509,22 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 }
 
                 if (s.length() == 8) {
-                    Ion.with(getApplicationContext())
-                            .load("http://viacep.com.br/ws/" + s + "/json/")
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    etCity.setText(result.get("localidade").getAsString());
-                                    spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
-                                    etNeighborhood.setText(result.get("bairro").getAsString());
-                                    etAddress.setText(result.get("logradouro").getAsString());
-                                    etComplement.setText(result.get("complemento").getAsString());
-                                }
-                            });
+                    if (!haveCEP) {
+                        Ion.with(getApplicationContext())
+                                .load("http://viacep.com.br/ws/" + s + "/json/")
+                                .asJsonObject()
+                                .setCallback(new FutureCallback<JsonObject>() {
+                                    @Override
+                                    public void onCompleted(Exception e, JsonObject result) {
+                                        etCity.setText(result.get("localidade").getAsString());
+                                        spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                        etNeighborhood.setText(result.get("bairro").getAsString());
+                                        etAddress.setText(result.get("logradouro").getAsString());
+                                        etComplement.setText(result.get("complemento").getAsString());
+                                    }
+                                });
+                    }
+                    haveCEP = false;
                 }
             }
 
@@ -650,6 +655,9 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 displayName = dataSnapshot.child(DISPLAY_NAME).getValue(String.class);
                 curriculum = dataSnapshot.child(CURRICULUM).getValue(String.class);
 
+                if (cep != null) {
+                    haveCEP = true;
+                }
                 spUF.setItems(UF_ARRAY_FULL);
                 spUFOAB.setItems(UF_ARRAY_OAB);
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);

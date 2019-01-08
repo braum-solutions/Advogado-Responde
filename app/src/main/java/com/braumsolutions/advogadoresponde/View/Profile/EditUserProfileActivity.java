@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -79,6 +80,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
     private TextInputLayout tilName, tilLastName, tilCPF, tilDate, tilDDD, tilPhone, tilCEP, tilCity, tilAddress, tilNumber, tilNeighborhood, tilComplement;
     private MaterialSpinner spUF;
     private KProgressHUD dialog;
+    private boolean haveCEP = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +246,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                             dialog.dismiss();
                         }
                         SnackSuccess(getString(R.string.data_saved));
-                        SnackWarning(String.valueOf(dialog.isShowing()));
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -388,20 +389,25 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 }
 
                 if (s.length() == 8) {
-                    Ion.with(getApplicationContext())
-                            .load("http://viacep.com.br/ws/" + s + "/json/")
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    etCity.setText(result.get("localidade").getAsString());
-                                    spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
-                                    etNeighborhood.setText(result.get("bairro").getAsString());
-                                    etAddress.setText(result.get("logradouro").getAsString());
-                                    etComplement.setText(result.get("complemento").getAsString());
-                                }
-                            });
+                    if (!haveCEP) {
+                        Ion.with(getApplicationContext())
+                                .load("http://viacep.com.br/ws/" + s + "/json/")
+                                .asJsonObject()
+                                .setCallback(new FutureCallback<JsonObject>() {
+                                    @Override
+                                    public void onCompleted(Exception e, JsonObject result) {
+                                        etCity.setText(result.get("localidade").getAsString());
+                                        spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                        etNeighborhood.setText(result.get("bairro").getAsString());
+                                        etAddress.setText(result.get("logradouro").getAsString());
+                                        etComplement.setText(result.get("complemento").getAsString());
+                                    }
+                                });
+                    }
+                    haveCEP = false;
                 }
+
+
             }
 
             @Override
@@ -498,9 +504,9 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         dialog.show();
     }
 
-    private static int indexOf( String c , String [] arr ) {
-        for( int i = 0 ; i < arr.length ; i++ ) {
-            if(Objects.equals(arr[i], c)) {
+    private static int indexOf(String c, String[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (Objects.equals(arr[i], c)) {
                 return i;
             }
         }
@@ -529,6 +535,9 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
                 complement = dataSnapshot.child(COMPLEMENT).getValue(String.class);
 
+                if (cep != null) {
+                    haveCEP = true;
+                }
                 spUF.setItems(UF_ARRAY_FULL);
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
                 etName.setText(name);

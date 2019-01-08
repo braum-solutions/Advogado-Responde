@@ -200,4 +200,10 @@
     <string name="fill_name_display">Enter your display name</string>
     <string name="fill_curriculum">Fill out your mini curriculum</string>
     <string name="curriculum_low_caractere">Your mini curriculum must be longer than 100 characters</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="full_name">Full Name</string>
+    <string name="profissional_address">Professional Address</string>
+    <string name="no_phone">No phone added</string>
+    <string name="no_address">No addresses added</string>
+    <string name="get_case_to_see_profile">You need to pick up this case to see the user profile</string>
 </resources>

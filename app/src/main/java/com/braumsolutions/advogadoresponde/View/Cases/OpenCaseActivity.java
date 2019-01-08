@@ -457,7 +457,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                     intent.putExtra(USER, user);
                     startActivity(intent);
                 } else {
-                    SnackWarning("Você precisa pegar este caso para ver o perfil do usuário");
+                    SnackWarning(getString(R.string.get_case_to_see_profile));
                 }
                 break;
         }
@@ -506,7 +506,6 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                         .setPositiveButtonClick(new Closure() {
                             @Override
                             public void exec() {
-                                //TODO: CRIAR METODO PARA EXLUIR O ADVOGADO DO CASO, EXCLUIR O CASO DA LISTA DO ADVOGADO, EXCLUIR A CONVERSA COM O USUÁRIO, EXCLUIR O CHAT COM O USUARIO.
 
                                 if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid())) {
                                     leaveCase(LAWYER_A);

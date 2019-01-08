@@ -209,5 +209,8 @@
     <string name="edit_profile">Editar Perfil</string>
     <string name="full_name">Nome Completo</string>
     <string name="profissional_address">Endereço Profissional</string>
+    <string name="no_phone">Nenhum telefone adicionado</string>
+    <string name="no_address">Nenhum endereço adicionado</string>
+    <string name="get_case_to_see_profile">Você precisa pegar este caso para ver o perfil do usuário</string>
 
 </resources>
