@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
@@ -40,6 +41,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.RECEIVER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.SENDER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,7 +50,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvNoMessage;
     private EditText etMessage;
     private Toolbar toolbar;
-    private String user;
+    private String user, type;
     private FirebaseAuth mAuth;
     private ArrayList<Message> messages;
     private ArrayAdapter<Message> adapter;
@@ -113,6 +115,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 getSupportActionBar().setTitle(dataSnapshot.child(NAME).getValue(String.class));
+                type = dataSnapshot.child(TYPE_REGISTER).getValue(String.class);
             }
 
             @Override
@@ -225,9 +228,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void profile() {
-        Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
-        intent.putExtra(USER, user);
-        startActivity(intent);
+        if (Objects.equals(type, "1")) {
+            Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
+            intent.putExtra(USER, user);
+            startActivity(intent);
+        } else {
+            /*Intent intent = new Intent(getApplicationContext(), ViewLawyerProfileActivity.class);
+            intent.putExtra(USER, user);
+            startActivity(intent);*/
+        }
+
     }
 
     private boolean saveMessage(String sender, String receiver, String message, DatabaseReference datadase) {

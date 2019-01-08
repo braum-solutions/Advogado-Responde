@@ -23,22 +23,30 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
+import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.ADDRESS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CEP;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CITY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class ViewUserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private String image, name, lastName, email, ddd, phone, user, lawyer_name;
+    private String image, name, lastName, email, ddd, phone, user, lawyer_name, address, number, neighborhood, city, uf, cep;
     private CircleImageView ivImage;
-    private TextView tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvQuestions, tvQuestionsMsg;
+    private TextView tvCityState, tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvAddress, tvStreetNumberNeighborhood, tvCityStateMsg, tvCEP;
     private int c = 0;
     private KProgressHUD dialog;
 
@@ -87,11 +95,21 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 email = dataSnapshot.child(EMAIL).getValue(String.class);
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
                 ddd = dataSnapshot.child(DDD).getValue(String.class);
+                address = dataSnapshot.child(ADDRESS).getValue(String.class);
+                number = dataSnapshot.child(NUMBER).getValue(String.class);
+                neighborhood = dataSnapshot.child(NEIGHBORNHOOD).getValue(String.class);
+                city = dataSnapshot.child(CITY).getValue(String.class);
+                uf = dataSnapshot.child(UF).getValue(String.class);
+                cep = dataSnapshot.child(CEP).getValue(String.class);
 
+                tvStreetNumberNeighborhood.setText(String.format("%s, %s, %s", address, number, neighborhood));
+                tvCityStateMsg.setText(String.format("%s - %s", city, UF_ARRAY[Integer.parseInt(uf)]));
+                tvCEP.setText(cep);
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
                 tvName.setText(String.format("%s %s", name, lastName));
                 tvEmailMsg.setText(email);
                 tvPhoneMsg.setText(addMask(ddd + phone, "(##) #####-####"));
+                tvCityState.setText(String.format("%s - %s", city, UF_ARRAY[Integer.parseInt(uf)]));
 
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -118,53 +136,33 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
             }
         });
 
-        DatabaseReference databaseQuestions = FirebaseUtils.getDatabase().getReference().child(CASES);
-        databaseQuestions.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == 0) {
-                    tvQuestions.setText(String.valueOf(c));
-                } else {
-                    for (DataSnapshot cases : dataSnapshot.getChildren()) {
-                        if (cases.child(USER).getValue().toString().equals(user)) {
-                            c += 1;
-                            if (dataSnapshot.getChildrenCount() < 10) {
-                                tvQuestions.setText(String.format("0%s", c));
-                            } else {
-                                tvQuestions.setText(String.format("%s", c));
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
     private void setTypeface() {
-        tvName.setTypeface(TypefaceLight(getApplicationContext()));
-        tvEmail.setTypeface(TypefaceLight(getApplicationContext()));
+        tvName.setTypeface(TypefaceBold(getApplicationContext()));
+        tvCityState.setTypeface(TypefaceLight(getApplicationContext()));
+        tvEmail.setTypeface(TypefaceBold(getApplicationContext()));
         tvEmailMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvPhone.setTypeface(TypefaceLight(getApplicationContext()));
+        tvPhone.setTypeface(TypefaceBold(getApplicationContext()));
         tvPhoneMsg.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestions.setTypeface(TypefaceLight(getApplicationContext()));
-        tvQuestionsMsg.setTypeface(TypefaceLight(getApplicationContext()));
+        tvAddress.setTypeface(TypefaceBold(getApplicationContext()));
+        tvStreetNumberNeighborhood.setTypeface(TypefaceLight(getApplicationContext()));
+        tvCityStateMsg.setTypeface(TypefaceLight(getApplicationContext()));
+        tvCEP.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
+        tvCityState = findViewById(R.id.tvCityState);
         tvEmail = findViewById(R.id.tvEmail);
         tvEmailMsg = findViewById(R.id.tvEmailMsg);
         tvName = findViewById(R.id.tvName);
         ivImage = findViewById(R.id.ivImage);
         tvPhone = findViewById(R.id.tvPhone);
         tvPhoneMsg = findViewById(R.id.tvPhoneMsg);
-        tvQuestions = findViewById(R.id.tvQuestions);
-        tvQuestionsMsg = findViewById(R.id.tvQuestionsMsg);
+        tvAddress = findViewById(R.id.tvAddress);
+        tvStreetNumberNeighborhood = findViewById(R.id.tvStreetNumberNeighborhood);
+        tvCityStateMsg = findViewById(R.id.tvCityStateMsg);
+        tvCEP = findViewById(R.id.tvCEP);
         findViewById(R.id.fbWhats).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
     }
