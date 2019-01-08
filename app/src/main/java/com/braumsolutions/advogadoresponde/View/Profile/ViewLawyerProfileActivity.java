@@ -1,17 +1,18 @@
 package com.braumsolutions.advogadoresponde.View.Profile;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeSuccessDialog;
-import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,15 +21,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.addMask;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.ADDRESS;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CEP;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CITY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.CURRICULUM;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
@@ -36,23 +39,29 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_CODE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB_UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
-public class ViewUserProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ViewLawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private String image, name, lastName, email, ddd, phone, user, lawyer_name, address, number, neighborhood, city, uf, cep;
+    private String image, name, lastName, email, ddd, phone, user, address, number, neighborhood, city, uf, cep, curriculum;
     private CircleImageView ivImage;
-    private TextView tvCityState, tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvAddress, tvStreetNumberNeighborhood, tvCityStateMsg, tvCEP;
+    private ImageView ivVerified;
+    private TextView tvCityState, tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvAddress, tvStreetNumberNeighborhood, tvCityStateMsg, tvCEP, tvCurriculum, tvCurriculumMsg, tvOAB;
     private KProgressHUD dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_user_profile);
+        setContentView(R.layout.activity_view_lawyer_profile);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -73,7 +82,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
     }
 
     private void createDialog(String title, String message) {
-        dialog = KProgressHUD.create(ViewUserProfileActivity.this)
+        dialog = KProgressHUD.create(ViewLawyerProfileActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel(title)
                 .setDetailsLabel(message)
@@ -100,6 +109,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 city = dataSnapshot.child(CITY).getValue(String.class);
                 uf = dataSnapshot.child(UF).getValue(String.class);
                 cep = dataSnapshot.child(CEP).getValue(String.class);
+                curriculum = dataSnapshot.child(CURRICULUM).getValue(String.class);
 
                 tvStreetNumberNeighborhood.setText(String.format("%s, %s, %s", address, number, neighborhood));
                 tvCityStateMsg.setText(String.format("%s - %s", city, UF_ARRAY[Integer.parseInt(uf)]));
@@ -108,7 +118,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
                 tvName.setText(String.format("%s %s", name, lastName));
                 tvEmailMsg.setText(email);
                 tvPhoneMsg.setText(addMask(ddd + phone, "(##) #####-####"));
-                tvCityState.setText(String.format("%s - %s", city, UF_ARRAY[Integer.parseInt(uf)]));
+                tvCurriculumMsg.setText(curriculum);
 
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -122,11 +132,15 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
             }
         });
 
-        DatabaseReference mLawyer = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-        mLawyer.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(user);
+        databaseOab.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lawyer_name = dataSnapshot.child(NAME).getValue(String.class);
+                tvOAB.setText(String.format("%s - %s", dataSnapshot.child(OAB_CODE).getValue(String.class), UF_ARRAY_OAB[Integer.parseInt(dataSnapshot.child(OAB_UF).getValue(String.class))]));
+
+                if (Objects.equals(dataSnapshot.child(VERIFIED).getValue(String.class), "true")) {
+                    ivVerified.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -139,7 +153,7 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
 
     private void setTypeface() {
         tvName.setTypeface(TypefaceBold(getApplicationContext()));
-        tvCityState.setTypeface(TypefaceLight(getApplicationContext()));
+        tvOAB.setTypeface(TypefaceLight(getApplicationContext()));
         tvEmail.setTypeface(TypefaceBold(getApplicationContext()));
         tvEmailMsg.setTypeface(TypefaceLight(getApplicationContext()));
         tvPhone.setTypeface(TypefaceBold(getApplicationContext()));
@@ -148,10 +162,13 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         tvStreetNumberNeighborhood.setTypeface(TypefaceLight(getApplicationContext()));
         tvCityStateMsg.setTypeface(TypefaceLight(getApplicationContext()));
         tvCEP.setTypeface(TypefaceLight(getApplicationContext()));
+        tvCurriculum.setTypeface(TypefaceBold(getApplicationContext()));
+        tvCurriculumMsg.setTypeface(TypefaceLight(getApplicationContext()));
     }
 
     private void castWidgets() {
-        tvCityState = findViewById(R.id.tvCityState);
+        ivVerified = findViewById(R.id.ivVerified);
+        tvOAB = findViewById(R.id.tvOAB);
         tvEmail = findViewById(R.id.tvEmail);
         tvEmailMsg = findViewById(R.id.tvEmailMsg);
         tvName = findViewById(R.id.tvName);
@@ -162,50 +179,33 @@ public class ViewUserProfileActivity extends AppCompatActivity implements View.O
         tvStreetNumberNeighborhood = findViewById(R.id.tvStreetNumberNeighborhood);
         tvCityStateMsg = findViewById(R.id.tvCityStateMsg);
         tvCEP = findViewById(R.id.tvCEP);
+        tvCurriculum = findViewById(R.id.tvCurriculum);
+        tvCurriculumMsg = findViewById(R.id.tvCurriculumMsg);
         findViewById(R.id.fbWhats).setOnClickListener(this);
         findViewById(R.id.btnBack).setOnClickListener(this);
-    }
-
-    private void dialogWhatsApp(final String phone, final String ddd, final String name, String last_name) {
-        new AwesomeSuccessDialog(ViewUserProfileActivity.this)
-                .setTitle(getString(R.string.app_name))
-                .setMessage(String.format("%s\n%s: %s\n%s: %s", getString(R.string.whats_dialog), getString(R.string.user), String.format("%s %s", name, last_name), getString(R.string.number), addMask(ddd + phone, "(##) #####-####")))
-                .setColoredCircle(R.color.colorAccent)
-                .setDialogIconAndColor(R.drawable.ic_dialog_warning, R.color.white)
-                .setCancelable(false)
-                .setNegativeButtonText(getString(R.string.cancel))
-                .setNegativeButtonbackgroundColor(R.color.colorAccent)
-                .setNegativeButtonTextColor(R.color.white)
-                .setNegativeButtonClick(new Closure() {
-                    @Override
-                    public void exec() {
-
-                    }
-                })
-                .setPositiveButtonText(getString(R.string.continu))
-                .setPositiveButtonbackgroundColor(R.color.colorAccent)
-                .setPositiveButtonTextColor(R.color.white)
-                .setPositiveButtonClick(new Closure() {
-                    @Override
-                    public void exec() {
-                        String link = "https://api.whatsapp.com/send?phone=55" + ddd + phone + "&text=Olá%20" + name + ",%20Me%20chamo%20" + lawyer_name + ".%20Peguei%20seu%20caso%20no%20aplicativo%20" + getString(R.string.app_name) + ".%20Em%20que%20posso%20lhe%20ajudar?";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(link));
-                        startActivity(i);
-                    }
-                })
-                .show();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fbWhats:
-                dialogWhatsApp(phone, ddd, name, lastName);
+                //dialogWhatsApp(phone, ddd, name, lastName);
+                SnackSuccess(getString(R.string.soon));
                 break;
             case R.id.btnBack:
                 finish();
                 break;
         }
     }
+
+    public void SnackSuccess(String msg) {
+        Snackbar.with(ViewLawyerProfileActivity.this, null)
+                .type(Type.SUCCESS)
+                .message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.LEFT)
+                .show();
+    }
+
 }

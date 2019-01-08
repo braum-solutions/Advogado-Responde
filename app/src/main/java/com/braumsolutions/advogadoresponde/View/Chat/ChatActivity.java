@@ -18,6 +18,7 @@ import com.braumsolutions.advogadoresponde.Model.Message;
 import com.braumsolutions.advogadoresponde.Model.MessageAdapter;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.View.Profile.ViewLawyerProfileActivity;
 import com.braumsolutions.advogadoresponde.View.Profile.ViewUserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
@@ -233,9 +234,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra(USER, user);
             startActivity(intent);
         } else {
-            /*Intent intent = new Intent(getApplicationContext(), ViewLawyerProfileActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ViewLawyerProfileActivity.class);
             intent.putExtra(USER, user);
-            startActivity(intent);*/
+            startActivity(intent);
         }
 
     }
