@@ -1,6 +1,9 @@
 package com.braumsolutions.advogadoresponde.View.Profile;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
@@ -23,6 +27,7 @@ import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
+import com.congfandi.simpledatepicker.Picker;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,6 +52,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -79,7 +85,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_OAB;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
-public class EditLawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditLawyerProfileActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
@@ -138,6 +144,9 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 break;
             case R.id.fbSave:
                 saveData();
+                break;
+            case R.id.etDate:
+                new Picker().show(getSupportFragmentManager(),null);
                 break;
         }
     }
@@ -510,19 +519,31 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
 
                 if (s.length() == 8) {
                     if (!haveCEP) {
-                        Ion.with(getApplicationContext())
-                                .load("http://viacep.com.br/ws/" + s + "/json/")
-                                .asJsonObject()
-                                .setCallback(new FutureCallback<JsonObject>() {
-                                    @Override
-                                    public void onCompleted(Exception e, JsonObject result) {
-                                        etCity.setText(result.get("localidade").getAsString());
-                                        spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
-                                        etNeighborhood.setText(result.get("bairro").getAsString());
-                                        etAddress.setText(result.get("logradouro").getAsString());
-                                        etComplement.setText(result.get("complemento").getAsString());
-                                    }
-                                });
+                        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+                        try {
+                            Ion.with(getApplicationContext())
+                                    .load("http://viacep.com.br/ws/" + s + "/json/")
+                                    .asJsonObject()
+                                    .setCallback(new FutureCallback<JsonObject>() {
+                                        @Override
+                                        public void onCompleted(Exception e, JsonObject result) {
+                                            etCity.setText(result.get("localidade").getAsString());
+                                            spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                            etNeighborhood.setText(result.get("bairro").getAsString());
+                                            etAddress.setText(result.get("logradouro").getAsString());
+                                            etComplement.setText(result.get("complemento").getAsString());
+                                            if (dialog.isShowing()) {
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            SnackError(e.getMessage());
+                        }
+
                     }
                     haveCEP = false;
                 }
@@ -611,9 +632,9 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
         });
     }
 
-    private static int indexOf( String c , String [] arr ) {
-        for( int i = 0 ; i < arr.length ; i++ ) {
-            if(Objects.equals(arr[i], c)) {
+    private static int indexOf(String c, String[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (Objects.equals(arr[i], c)) {
                 return i;
             }
         }
@@ -801,6 +822,7 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
         etNeighborhood = findViewById(R.id.etNeighborhood);
         etComplement = findViewById(R.id.etComplement);
         findViewById(R.id.btnChangeImage).setOnClickListener(this);
+        findViewById(R.id.etDate).setOnClickListener(this);
         findViewById(R.id.fbSave).setOnClickListener(this);
     }
 
@@ -834,5 +856,20 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                 .show();
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        tilDate.setError(null);
+        String dd = String.valueOf(dayOfMonth);
+        String mm = String.valueOf(month + 1);
+        String yy = String.valueOf(year);
+        if (dayOfMonth < 10){
+            dd = "0" + dd;
+        }
+        if (month + 1 < 10) {
+            mm = "0" + mm;
+        }
+        date = String.format("%s/%s/%s", dd, mm, yy);
+        etDate.setText(date);
+    }
 }
 

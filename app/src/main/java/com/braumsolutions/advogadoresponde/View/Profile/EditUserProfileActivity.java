@@ -1,5 +1,6 @@
 package com.braumsolutions.advogadoresponde.View.Profile;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
@@ -23,6 +25,7 @@ import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
+import com.congfandi.simpledatepicker.Picker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,7 +71,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.UF_ARRAY_FULL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
-public class EditUserProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditUserProfileActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private FirebaseAuth mAuth;
     private Toolbar toolbar;
@@ -123,6 +126,9 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.fbSave:
                 saveData();
+                break;
+            case R.id.etDate:
+                new Picker().show(getSupportFragmentManager(),null);
                 break;
         }
     }
@@ -180,6 +186,22 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             }
         }
 
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        tilDate.setError(null);
+        String dd = String.valueOf(dayOfMonth);
+        String mm = String.valueOf(month + 1);
+        String yy = String.valueOf(year);
+        if (dayOfMonth < 10){
+            dd = "0" + dd;
+        }
+        if (month + 1 < 10) {
+            mm = "0" + mm;
+        }
+        date = String.format("%s/%s/%s", dd, mm, yy);
+        etDate.setText(date);
     }
 
     private void saveData() {
@@ -390,19 +412,31 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
 
                 if (s.length() == 8) {
                     if (!haveCEP) {
-                        Ion.with(getApplicationContext())
-                                .load("http://viacep.com.br/ws/" + s + "/json/")
-                                .asJsonObject()
-                                .setCallback(new FutureCallback<JsonObject>() {
-                                    @Override
-                                    public void onCompleted(Exception e, JsonObject result) {
-                                        etCity.setText(result.get("localidade").getAsString());
-                                        spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
-                                        etNeighborhood.setText(result.get("bairro").getAsString());
-                                        etAddress.setText(result.get("logradouro").getAsString());
-                                        etComplement.setText(result.get("complemento").getAsString());
-                                    }
-                                });
+                        createDialog(getString(R.string.please_wait), getString(R.string.loading));
+                        try {
+                            Ion.with(getApplicationContext())
+                                    .load("http://viacep.com.br/ws/" + s + "/json/")
+                                    .asJsonObject()
+                                    .setCallback(new FutureCallback<JsonObject>() {
+                                        @Override
+                                        public void onCompleted(Exception e, JsonObject result) {
+                                            etCity.setText(result.get("localidade").getAsString());
+                                            spUF.setSelectedIndex(indexOf(result.get("uf").getAsString(), UF_ARRAY));
+                                            etNeighborhood.setText(result.get("bairro").getAsString());
+                                            etAddress.setText(result.get("logradouro").getAsString());
+                                            etComplement.setText(result.get("complemento").getAsString());
+                                            if (dialog.isShowing()) {
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            SnackError(e.getMessage());
+                        }
+
                     }
                     haveCEP = false;
                 }
@@ -639,6 +673,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         etComplement = findViewById(R.id.etComplement);
         findViewById(R.id.btnChangeImage).setOnClickListener(this);
         findViewById(R.id.fbSave).setOnClickListener(this);
+        findViewById(R.id.etDate).setOnClickListener(this);
     }
 
     public void SnackError(String msg) {
