@@ -1,5 +1,8 @@
 package com.braumsolutions.advogadoresponde.Utils;
 
+import com.github.thunder413.datetimeutils.DateTimeUtils;
+
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +39,11 @@ public class MethodsUtils {
             i++;
         }
         return formatado;
+    }
+
+    public static String getDateTime() {
+        DateTimeUtils.setTimeZone("GMT-2");
+        return DateTimeUtils.formatDate(new Date());
     }
 
 }

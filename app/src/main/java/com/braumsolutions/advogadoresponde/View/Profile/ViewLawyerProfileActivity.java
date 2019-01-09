@@ -33,9 +33,9 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.CEP;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CITY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CURRICULUM;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DDD;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DISPLAY_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.EMAIL;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NEIGHBORNHOOD;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NUMBER;
@@ -52,7 +52,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 public class ViewLawyerProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private String image, name, lastName, email, ddd, phone, user, address, number, neighborhood, city, uf, cep, curriculum;
+    private String image, display_name, email, ddd, phone, user, address, number, neighborhood, city, uf, cep, curriculum;
     private CircleImageView ivImage;
     private ImageView ivVerified;
     private TextView tvCityState, tvName, tvEmail, tvEmailMsg, tvPhone, tvPhoneMsg, tvAddress, tvStreetNumberNeighborhood, tvCityStateMsg, tvCEP, tvCurriculum, tvCurriculumMsg, tvOAB;
@@ -98,8 +98,7 @@ public class ViewLawyerProfileActivity extends AppCompatActivity implements View
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 image = dataSnapshot.child(IMAGE).getValue(String.class);
-                name = dataSnapshot.child(NAME).getValue(String.class);
-                lastName = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                display_name = dataSnapshot.child(DISPLAY_NAME).getValue(String.class);
                 email = dataSnapshot.child(EMAIL).getValue(String.class);
                 phone = dataSnapshot.child(PHONE).getValue(String.class);
                 ddd = dataSnapshot.child(DDD).getValue(String.class);
@@ -115,7 +114,7 @@ public class ViewLawyerProfileActivity extends AppCompatActivity implements View
                 tvCityStateMsg.setText(String.format("%s - %s", city, UF_ARRAY[Integer.parseInt(uf)]));
                 tvCEP.setText(cep);
                 Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.avatar).into(ivImage, null);
-                tvName.setText(String.format("%s %s", name, lastName));
+                tvName.setText(display_name);
                 tvEmailMsg.setText(email);
                 tvPhoneMsg.setText(addMask(ddd + phone, "(##) #####-####"));
                 tvCurriculumMsg.setText(curriculum);
@@ -189,7 +188,7 @@ public class ViewLawyerProfileActivity extends AppCompatActivity implements View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fbWhats:
-                //dialogWhatsApp(phone, ddd, name, lastName);
+                //dialogWhatsApp(phone, ddd, display_name, lastName);
                 SnackSuccess(getString(R.string.soon));
                 break;
             case R.id.btnBack:

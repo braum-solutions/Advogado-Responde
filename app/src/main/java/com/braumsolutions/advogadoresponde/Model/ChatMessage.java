@@ -6,16 +6,26 @@ public class ChatMessage {
     private String name;
     private String message;
     private String key;
+    private String send_date;
 
     public ChatMessage() {
 
     }
 
-    public ChatMessage(String uid, String name, String message, String key) {
+    public ChatMessage(String uid, String name, String message, String key, String sendDate) {
         this.uid = uid;
         this.name = name;
         this.message = message;
         this.key = key;
+        this.send_date = sendDate;
+    }
+
+    public String getSend_date() {
+        return send_date;
+    }
+
+    public void setSend_date(String send_date) {
+        this.send_date = send_date;
     }
 
     public String getUid() {

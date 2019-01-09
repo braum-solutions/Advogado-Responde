@@ -2,53 +2,62 @@ package com.braumsolutions.advogadoresponde.Model;
 
 public class Message {
 
-        private String sender;
-        private String receiver;
-        private String message;
-        private String key;
+    private String sender;
+    private String receiver;
+    private String message;
+    private String key;
+    private String send_date;
 
-        public Message() {
-        }
+    public Message() {
+    }
 
-    public Message(String sender, String recevier, String message, String key) {
+    public Message(String sender, String recevier, String message, String key, String sendDate) {
         this.sender = sender;
         this.receiver = recevier;
         this.message = message;
         this.key = key;
+        this.send_date = sendDate;
     }
 
-        public String getSender() {
-            return sender;
-        }
+    public String getSend_date() {
+        return send_date;
+    }
 
-        public void setSender(String sender) {
-            this.sender = sender;
-        }
+    public void setSend_date(String send_date) {
+        this.send_date = send_date;
+    }
 
-        public String getMessage() {
-            return message;
-        }
+    public String getSender() {
+        return sender;
+    }
 
-        public void setMessage(String message) {
-            this.message = message;
-        }
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 
-        public String getKey() {
-            return key;
-        }
+    public String getMessage() {
+        return message;
+    }
 
-        public void setKey(String key) {
-            this.key = key;
-        }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-        public String getReceiver() {
-            return receiver;
-        }
+    public String getKey() {
+        return key;
+    }
 
-        public void setReceiver(String receiver) {
-            this.receiver = receiver;
-        }
+    public void setKey(String key) {
+        this.key = key;
+    }
 
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
 
 
 }

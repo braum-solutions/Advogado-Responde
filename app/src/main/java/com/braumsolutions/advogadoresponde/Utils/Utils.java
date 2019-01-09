@@ -39,6 +39,7 @@ public class Utils {
     public static final String PDF = "pdf";
     public static final String CASES = "cases";
     public static final String KEY = "key";
+    public static final String SEND_DATE = "send_date";
     public static final String PICTURE = "picture";
     public static final String DESCRIPTION = "description";
     public static final String OCCUPATION_AREA = "occupation_area";

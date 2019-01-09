@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.getDateTime;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
@@ -42,6 +43,7 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.RECEIVER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.SENDER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.SEND_DATE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
@@ -209,6 +211,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             ChatMessage chatSender = new ChatMessage();
             chatSender.setUid(user);
             chatSender.setMessage(message);
+            chatSender.setSend_date(getDateTime());
 
             Boolean returnSaveChatSender = saveChat(mAuth.getCurrentUser().getUid(), user, chatSender);
             if (!returnSaveChatSender) {
@@ -248,7 +251,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             msg.put(SENDER, sender);
             msg.put(RECEIVER, receiver);
             msg.put(MESSAGE, message);
-            //msg.put(DATE, null);
+            msg.put(SEND_DATE, getDateTime());
             msg.put(KEY, mDatabase.getKey());
             datadase.setValue(msg);
 
@@ -271,6 +274,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     }
+
+
 
     public void SnackError(String msg) {
         Snackbar.with(ChatActivity.this, null)
