@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.getDateTime;
+import static com.braumsolutions.advogadoresponde.Utils.MethodsUtils.getDateTimeMessage;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
@@ -64,9 +65,12 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
             final CircleImageView ivImage = view.findViewById(R.id.ivImage);
             TextView tvMessage = view.findViewById(R.id.tvMessage);
+            TextView tvDate = view.findViewById(R.id.tvDate);
 
             tvMessage.setTypeface(TypefaceLight(context));
             tvMessage.setText(message.getMessage());
+            tvDate.setText(getDateTimeMessage(message.getSend_date()));
+            tvDate.setTypeface(TypefaceLight(context));
             DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(message.getSender());
             database.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -79,33 +83,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
                 }
             });
-            if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.SECONDS) < 60) {
-                String seg = String.valueOf(DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.SECONDS));
-                if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.SECONDS) < 10) {
-                    seg = "0" + seg;
-                }
-                Log.d("QWERTY", String.format("%s seg", seg));
-            } else if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.MINUTES) < 60) {
-                String min = String.valueOf(DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.MINUTES));
-                if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.MINUTES) < 10) {
-                    min = "0" + min;
-                }
-                Log.d("QWERTY", String.format("%s min", min));
-            } else if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.HOURS) < 24) {
-                String hour = String.valueOf(DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.HOURS));
-                if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.HOURS) < 10) {
-                    hour = "0" + hour;
-                }
-                Log.d("QWERTY", String.format("%s hora", hour));
-            } else if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.DAYS) < 30) {
-                String day = String.valueOf(DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.DAYS));
-                if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.DAYS) < 10) {
-                    day = "0" + day;
-                }
-                Log.d("QWERTY", String.format("%s dia", day));
-            } else if (DateTimeUtils.getDateDiff(getDateTime(), message.getSend_date(), DateTimeUnits.DAYS) > 30) {
-                Log.d("QWERTY", "Mais de 30 dias");
-            }
+
 
         }
 
