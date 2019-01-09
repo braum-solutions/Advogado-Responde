@@ -14,6 +14,9 @@ import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.Locale;
+import java.util.Objects;
+
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
@@ -21,13 +24,14 @@ import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationF
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
 
 public class OccupationAreaCaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tvArea, tvAreaMsg, tvMsg;
     private MaterialSpinner spOcuppationArea;
     private Button btnNext;
-    private String[] caseArrayBr = {"Trabalhista", "Previdenciário", "Outro"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,11 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
         setTypeface();
         setAnimation();
 
-        spOcuppationArea.setItems(caseArrayBr);
+        if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
+            spOcuppationArea.setItems(OCCUPATION_AREA_ARRAY_EN);
+        } else {
+            spOcuppationArea.setItems(OCCUPATION_AREA_ARRAY_BR);
+        }
 
     }
 

@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.Nullable;
 
@@ -27,7 +29,8 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class LawyerCasesAdapter extends ArrayAdapter<LawyerCasesModel> {
@@ -84,8 +87,11 @@ public class LawyerCasesAdapter extends ArrayAdapter<LawyerCasesModel> {
 
                         }
                     });
-
-                    tvArea.setText(OCCUPATION_AREA_ARRAY[Integer.parseInt(dataSnapshot.child(OCCUPATION_AREA).getValue(String.class))]);
+                    if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
+                        tvArea.setText(OCCUPATION_AREA_ARRAY_EN[Integer.parseInt(dataSnapshot.child(OCCUPATION_AREA).getValue(String.class))]);
+                    } else {
+                        tvArea.setText(OCCUPATION_AREA_ARRAY_BR[Integer.parseInt(dataSnapshot.child(OCCUPATION_AREA).getValue(String.class))]);
+                    }
 
                     if (dataSnapshot.child(DESCRIPTION).getValue(String.class).length() > 60) {
                         tvDescription.setText(String.format(context.getString(R.string.click_to_see_more), dataSnapshot.child(DESCRIPTION).getValue(String.class).substring(0, 60)));

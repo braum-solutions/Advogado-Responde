@@ -161,6 +161,9 @@ public class ListChatActivity extends AppCompatActivity {
                 arrayChatMessages.clear();
                 if (dataSnapshot.getChildrenCount() == 0) {
                     tvNoChat.setVisibility(View.VISIBLE);
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
                 } else {
                     tvNoChat.setVisibility(View.GONE);
                     for (DataSnapshot chat : dataSnapshot.getChildren()) {

@@ -59,7 +59,6 @@ public class MethodsUtils {
             } else {
                 return String.format("%s dias", day);
             }
-
         } else if (DateTimeUtils.getDateDiff(getDateTime(), date, DateTimeUnits.HOURS) >= 1 && DateTimeUtils.getDateDiff(getDateTime(), date, DateTimeUnits.HOURS) <= 24) {
             String hour = String.valueOf(DateTimeUtils.getDateDiff(getDateTime(), date, DateTimeUnits.HOURS));
             if (DateTimeUtils.getDateDiff(getDateTime(), date, DateTimeUnits.HOURS) < 10) {

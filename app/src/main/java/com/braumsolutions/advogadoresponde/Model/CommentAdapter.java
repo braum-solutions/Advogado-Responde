@@ -24,11 +24,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.COMMENT;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class CommentAdapter extends ArrayAdapter<CommentModel> {

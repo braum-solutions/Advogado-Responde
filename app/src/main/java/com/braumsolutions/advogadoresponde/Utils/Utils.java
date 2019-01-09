@@ -6,7 +6,10 @@ public class Utils {
 
     public static int REQ_CODE = 1;
     public static int CODE_PDF = 2;
-    public static final String[] OCCUPATION_AREA_ARRAY = {"Trabalhista", "Previdenciário", "Outro"};
+    public static final String[] SLIDE_TEXT_BR = {"FAÇA PERGUNTAS PARA ADVOGADOS ONLINE", "SEM SAIR DE CASA, TUDO EM SEU CELULAR", "ADVOGADOS VERIFICADOS PELO SITE DA OAB"};
+    public static final String[] SLIDE_TEXT_EN = {"MAKE ANSWERS FOR ONLINE LAWYERS", "WITHOUT LEAVING HOME, EVERYTHING ON YOUR MOBILE PHONE","ATTORNEYS VERIFIED BY THE OAB SITE"};
+    public static final String[] OCCUPATION_AREA_ARRAY_BR = {"Acidentário", "Administrativo", "Aeronáutico", "Agrário", "Ambiental", "Bancário", "Canônico", "Civil", "Constitucional", "Consumidor", "Contratual", "Digital", "Mulher", "Sucessões", "Família", "Negócios", "Propriedade", "Trânsito", "Desportivo", "Petróleo", "Trabalho", "Educacional", "Eleitoral", "Empresarial", "Espacial", "Financeiro", "Imobiliário", "Internacional", "Marítimo", "Médico", "Militar", "Minerário", "Penal", "Providenciário", "Processual do Trabalho", "Sanitário", "Sindical", "Societário", "Tributário", "Urbanístico", "Humanos"};
+    public static final String[] OCCUPATION_AREA_ARRAY_EN = {"Acidary", "Administrative", "Aeronautical", "Agrarian", "Environmental", "Bank officer", "Canonical", "Civil", "Constitutional", "Consumer", "Contractual", "Digital", "Woman", "Succession", "Family", "Business", "Property", "Traffic", "Sporting", "Petroleum", "Job", "Educational", "Electoral", "Business", "Space", "Financial", "Real Estate Management", "International", "Maritime", "Doctor", "Military", "Real Estate Management", "Criminal", "Providentiary", "Related searches", "Restroom", "Union", "Corporate", "Tax", "Urban", "Humans"};
     public static final String[] UF_ARRAY_FULL = {"UF", "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "EspiritoSanto", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"};
     public static final String[] UF_ARRAY = {"UF", "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"};
     public static final String[] UF_ARRAY_OAB = {"OAB/UF", "OAB/AC", "OAB/AL", "OAB/AP","OAB/AM", "OAB/BA", "OAB/CE", "OAB/DF", "OAB/ES","OAB/GO", "OAB/MA", "OAB/MT", "OAB/MS","OAB/MG", "OAB/PA", "OAB/PB", "OAB/PR","OAB/PE", "OAB/PI", "OAB/RJ", "OAB/RN","OAB/RS", "OAB/RO", "OAB/RR", "OAB/SC","OAB/SP","OAB/SE", "OAB/TO"};
@@ -33,7 +36,6 @@ public class Utils {
     public static final String VERIFIED = "verified";
     public static final String BRAUM_SITE = "http://www.braumsolutions.com";
     public static final String CREDITS = "credits";
-    public static final String ANSWERS = "asnwers";
     public static final String PHONE = "phone";
     public static final String OAB = "oab";
     public static final String PDF = "pdf";
@@ -49,8 +51,6 @@ public class Utils {
     public static final String LAWYER_B = "lawyer_b";
     public static final String LAWYER_C = "lawyer_c";
     public static final String LAWYER = "lawyer";
-    public static final String CASES_COMMENTS = "cases_comments";
-    public static final String COMMENT = "comment";
     public static final String MESSAGES = "messages";
     public static final String MESSAGE = "message";
     public static final String SENDER = "sender";

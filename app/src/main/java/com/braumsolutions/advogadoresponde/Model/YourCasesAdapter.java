@@ -10,11 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.braumsolutions.advogadoresponde.R;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
+
 import androidx.annotation.Nullable;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
 
 public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
 
@@ -48,7 +52,11 @@ public class YourCasesAdapter extends ArrayAdapter<CasesModel> {
 
             CasesModel casesModel = cases.get(position);
 
-            tvArea.setText(OCCUPATION_AREA_ARRAY[Integer.parseInt(casesModel.getOccupation_area())]);
+            if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
+                tvArea.setText(OCCUPATION_AREA_ARRAY_EN[Integer.parseInt(casesModel.getOccupation_area())]);
+            } else {
+                tvArea.setText(OCCUPATION_AREA_ARRAY_BR[Integer.parseInt(casesModel.getOccupation_area())]);
+            }
 
             if (casesModel.getDescription().length() > 60) {
                 tvDescription.setText(String.format(context.getString(R.string.click_to_see_more), casesModel.getDescription().substring(0, 60)));

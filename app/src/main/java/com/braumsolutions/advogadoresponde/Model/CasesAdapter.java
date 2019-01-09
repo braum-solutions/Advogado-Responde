@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.Nullable;
 
@@ -24,7 +26,8 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBo
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class CasesAdapter extends ArrayAdapter<CasesModel> {
@@ -77,7 +80,12 @@ public class CasesAdapter extends ArrayAdapter<CasesModel> {
                 }
             });
 
-            tvArea.setText(OCCUPATION_AREA_ARRAY[Integer.parseInt(casesModel.getOccupation_area())]);
+            if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
+                tvArea.setText(OCCUPATION_AREA_ARRAY_EN[Integer.parseInt(casesModel.getOccupation_area())]);
+            } else {
+                tvArea.setText(OCCUPATION_AREA_ARRAY_BR[Integer.parseInt(casesModel.getOccupation_area())]);
+            }
+
 
             if (casesModel.getDescription().length() > 60) {
                 tvDescription.setText(String.format(context.getString(R.string.click_to_see_more), casesModel.getDescription().substring(0, 60)));

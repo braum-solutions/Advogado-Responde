@@ -39,6 +39,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
@@ -57,7 +58,8 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
-import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PDF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PICTURE;
@@ -137,7 +139,12 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                     pdf = dataSnapshot.child(PDF).getValue(String.class);
                 }
 
-                tvOccupationMsg.setText(OCCUPATION_AREA_ARRAY[Integer.parseInt(area)]);
+                if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
+                    tvOccupationMsg.setText(OCCUPATION_AREA_ARRAY_EN[Integer.parseInt(area)]);
+                } else {
+                    tvOccupationMsg.setText(OCCUPATION_AREA_ARRAY_BR[Integer.parseInt(area)]);
+                }
+
                 tvDescriptionMsg.setText(description);
                 tvLawyerMsg.setText(String.format("%s/3", lawyer));
 
