@@ -30,13 +30,15 @@ import com.google.firebase.database.ValueEventListener;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OAB;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.VERIFIED;
 
 public class LawyerFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private TextView tvFindCase, tvFindCaseMsg, tvChat, tvChatMsg, tvCredit, tvCreditMsg, tvProfile, tvProfileMsg, tvYourCases, tvYourCasesMsg;
-    private String verified;
+    private String verified, phone;
     private FirebaseAuth mAuth;
 
     public LawyerFragment() {
@@ -57,11 +59,24 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getData() {
-        DatabaseReference mUser = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
-        mUser.addValueEventListener(new ValueEventListener() {
+        DatabaseReference mOab = FirebaseUtils.getDatabase().getReference().child(OAB).child(mAuth.getCurrentUser().getUid());
+        mOab.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 verified = dataSnapshot.child(VERIFIED).getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference mUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        mUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                phone = dataSnapshot.child(PHONE).getValue(String.class);
             }
 
             @Override
@@ -134,6 +149,8 @@ public class LawyerFragment extends Fragment implements View.OnClickListener {
             case R.id.cvFindCase:
                 if (verified.equals("false")) {
                     SnackWarning(getString(R.string.no_verified_acc));
+                } else if (phone == null) {
+                    SnackWarning(getString(R.string.complete_profile_lawyer));
                 } else {
                     Intent intentFindCase = new Intent(getContext(), CasesActivity.class);
                     startActivity(intentFindCase);

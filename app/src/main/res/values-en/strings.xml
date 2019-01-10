@@ -206,4 +206,7 @@
     <string name="no_phone">No phone added</string>
     <string name="no_address">No addresses added</string>
     <string name="get_case_to_see_profile">You need to pick up this case to see the user profile</string>
+    <string name="no_data_curriculum">No data on your mini curriculum</string>
+    <string name="complete_profile_lawyer">You need to complete your profile to go to the search for cases</string>
+    <string name="complete_profile_user">You need to complete your profile to create a new case</string>
 </resources>

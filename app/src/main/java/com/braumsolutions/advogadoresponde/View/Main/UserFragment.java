@@ -57,7 +57,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     private void getData() {
         DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
+        database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(PHONE).getValue(String.class) != null) {
@@ -117,7 +117,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.cvNewCase:
                 if (phone == null) {
-                    SnackWarning(getString(R.string.update_phone_msg));
+                    SnackWarning(getString(R.string.complete_profile_user));
                 } else {
                     Intent intentNewCase = new Intent(getContext(), OccupationAreaCaseActivity.class);
                     startActivity(intentNewCase);

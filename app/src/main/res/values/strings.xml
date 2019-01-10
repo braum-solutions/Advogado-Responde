@@ -212,5 +212,8 @@
     <string name="no_phone">Nenhum telefone adicionado</string>
     <string name="no_address">Nenhum endereço adicionado</string>
     <string name="get_case_to_see_profile">Você precisa pegar este caso para ver o perfil do usuário</string>
+    <string name="no_data_curriculum">Sem dados no seu mini currículo</string>
+    <string name="complete_profile_lawyer">Você precisa completar o seu perfil para ir a procura de casos</string>
+    <string name="complete_profile_user">Você precisa completar o seu perfil para criar um novo caso</string>
 
 </resources>

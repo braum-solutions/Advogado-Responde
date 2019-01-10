@@ -242,25 +242,25 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             etNeighborhood.requestFocus();
         } else {
 
-            HashMap<String, Object> user = new HashMap<>();
-            user.put(NAME, etName.getText().toString().trim());
-            user.put(LAST_NAME, etLastName.getText().toString().trim());
-            user.put(CPF, etCPF.getText().toString().trim());
-            user.put(DATE, etDate.getText().toString().trim());
-            user.put(DDD, etDDD.getText().toString().trim());
-            user.put(PHONE, etPhone.getText().toString().trim());
-            user.put(CEP, etCEP.getText().toString().trim());
-            user.put(CITY, etCity.getText().toString().trim());
-            user.put(UF, String.valueOf(spUF.getSelectedIndex()));
-            user.put(ADDRESS, etAddress.getText().toString().trim());
-            user.put(NUMBER, etNumber.getText().toString().trim());
-            user.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
-            user.put(COMPLEMENT, etComplement.getText().toString().trim());
+            HashMap<String, Object> u = new HashMap<>();
+            u.put(NAME, etName.getText().toString().trim());
+            u.put(LAST_NAME, etLastName.getText().toString().trim());
+            u.put(CPF, etCPF.getText().toString().trim());
+            u.put(DATE, etDate.getText().toString().trim());
+            u.put(DDD, etDDD.getText().toString().trim());
+            u.put(PHONE, etPhone.getText().toString().trim());
+            u.put(CEP, etCEP.getText().toString().trim());
+            u.put(CITY, etCity.getText().toString().trim());
+            u.put(UF, String.valueOf(spUF.getSelectedIndex()));
+            u.put(ADDRESS, etAddress.getText().toString().trim());
+            u.put(NUMBER, etNumber.getText().toString().trim());
+            u.put(NEIGHBORNHOOD, etNeighborhood.getText().toString().trim());
+            u.put(COMPLEMENT, etComplement.getText().toString().trim());
 
             createDialog(getString(R.string.please_wait), getString(R.string.saving));
 
-            DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-            database.updateChildren(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            DatabaseReference dbUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+            dbUser.updateChildren(u).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
