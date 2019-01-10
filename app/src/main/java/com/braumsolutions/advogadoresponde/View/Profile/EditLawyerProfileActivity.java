@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.braumsolutions.advogadoresponde.Utils.MaskEditUtils;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -120,6 +121,10 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
+
+        etCPF.addTextChangedListener(MaskEditUtils.mask(etCPF, "###.###.###-##"));
+        etPhone.addTextChangedListener(MaskEditUtils.mask(etPhone, "#####-####"));
+        etCEP.addTextChangedListener(MaskEditUtils.mask(etCEP, "#####-###"));
 
     }
 
@@ -264,11 +269,11 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
             user.put(NAME, etName.getText().toString().trim());
             user.put(DISPLAY_NAME, etDisplayName.getText().toString().trim());
             user.put(LAST_NAME, etLastName.getText().toString().trim());
-            user.put(CPF, etCPF.getText().toString().trim());
+            user.put(CPF, etCPF.getText().toString().trim().replaceAll("[^0-9]", ""));
             user.put(DATE, etDate.getText().toString().trim());
             user.put(DDD, etDDD.getText().toString().trim());
-            user.put(PHONE, etPhone.getText().toString().trim());
-            user.put(CEP, etCEP.getText().toString().trim());
+            user.put(PHONE, etPhone.getText().toString().trim().replaceAll("[^0-9]", ""));
+            user.put(CEP, etCEP.getText().toString().trim().replaceAll("[^0-9]", ""));
             user.put(CITY, etCity.getText().toString().trim());
             user.put(UF, String.valueOf(spUF.getSelectedIndex()));
             user.put(ADDRESS, etAddress.getText().toString().trim());
@@ -517,12 +522,13 @@ public class EditLawyerProfileActivity extends AppCompatActivity implements View
                     tilCEP.setError(null);
                 }
 
-                if (s.length() == 8) {
+                if (s.length() == 9) {
                     if (!haveCEP) {
+                        String cep = String.valueOf(s);
                         createDialog(getString(R.string.please_wait), getString(R.string.loading));
                         try {
                             Ion.with(getApplicationContext())
-                                    .load("http://viacep.com.br/ws/" + s + "/json/")
+                                    .load("http://viacep.com.br/ws/" + cep.replaceAll("[^0-9]", "") + "/json/")
                                     .asJsonObject()
                                     .setCallback(new FutureCallback<JsonObject>() {
                                         @Override
