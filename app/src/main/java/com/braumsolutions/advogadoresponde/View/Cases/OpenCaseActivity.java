@@ -114,7 +114,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         intent.putExtra(PICTURE, image);
         intent.putExtra(PDF, pdf);
         intent.putExtra(DESCRIPTION, description);
-        intent.putExtra(EDIT, true);
+        intent.putExtra(EDIT, "true");
         startActivity(intent);
     }
 

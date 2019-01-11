@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
@@ -34,8 +35,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
@@ -60,8 +66,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     private TextInputLayout tilDescription;
     private Button btnComplete;
     private ProgressBar loading;
-    private String key, area, image, pdf, description;
-    private Boolean edit = false;
+    private String key, area, image, pdf, description, edit;
     private FirebaseAuth mAuth;
     private KProgressHUD dialog;
 
@@ -77,7 +82,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
         setAnimation();
         getIntentBundle();
 
-        if (edit) {
+        if (Objects.equals(edit, "true")) {
             etDescription.setText(description);
             btnComplete.setText(getString(R.string.save_edition));
         }
@@ -130,12 +135,15 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
         btnComplete = findViewById(R.id.btnComplete);
         loading = findViewById(R.id.loading);
         findViewById(R.id.btnComplete).setOnClickListener(this);
+        findViewById(R.id.btnBack).setOnClickListener(this);
     }
 
     private void getIntentBundle() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            key = bundle.getString(KEY);
+            if (bundle.getString(KEY) != null) {
+                key = bundle.getString(KEY);
+            }
             if (bundle.getString(OCCUPATION_AREA) != null) {
                 area = bundle.getString(OCCUPATION_AREA);
             }
@@ -148,7 +156,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
             if (bundle.getString(DESCRIPTION) != null) {
                 description = bundle.getString(DESCRIPTION);
             }
-            edit = bundle.getBoolean(EDIT);
+            if (bundle.getString(EDIT) != null){
+                edit = bundle.getString(EDIT);
+            }
         }
     }
 
@@ -244,6 +254,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                         enableFields();
                         SnackError(e.getMessage());
                     }
@@ -253,6 +266,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 enableFields();
                 SnackError(e.getMessage());
             }
@@ -260,42 +276,51 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     }
 
     private void uploadPdf(final String key) {
+        if (pdf.substring(0, 38).equals("https://firebasestorage.googleapis.com")) {
+            dialogEditDone();
+        } else {
+            StorageReference mStoragePdf = FirebaseUtils.getStorage().getReference().child(CASES).child(key).child(String.format("%s.%s", key, "pdf"));
+            mStoragePdf.putFile(Uri.parse(pdf)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-        StorageReference mStoragePdf = FirebaseUtils.getStorage().getReference().child(CASES).child(key).child(String.format("%s.%s", key, "pdf"));
-        mStoragePdf.putFile(Uri.parse(pdf)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!urlTask.isSuccessful()) ;
+                    Uri download = urlTask.getResult();
 
-                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!urlTask.isSuccessful()) ;
-                Uri download = urlTask.getResult();
-
-                DatabaseReference databasePdf = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
-                HashMap<String, Object> pdf = new HashMap<>();
-                pdf.put(PDF, download.toString());
-                databasePdf.updateChildren(pdf).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            dialogEditDone();
+                    DatabaseReference databasePdf = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
+                    HashMap<String, Object> pdf = new HashMap<>();
+                    pdf.put(PDF, download.toString());
+                    databasePdf.updateChildren(pdf).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                dialogEditDone();
+                            }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        enableFields();
-                        SnackError(e.getMessage());
-                    }
-                });
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            enableFields();
+                            SnackError(e.getMessage());
+                        }
+                    });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                enableFields();
-                SnackError(e.getMessage());
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    enableFields();
+                    SnackError(e.getMessage());
+                }
+            });
+        }
     }
 
     private void uploadImage(final DatabaseReference database) {
@@ -324,6 +349,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                         enableFields();
                         SnackError(e.getMessage());
                     }
@@ -333,6 +361,9 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 enableFields();
                 SnackError(e.getMessage());
             }
@@ -341,45 +372,53 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
     }
 
     private void uploadImage(final String key) {
+        if (image.substring(0, 38).equals("https://firebasestorage.googleapis.com")) {
+            dialogEditDone();
+        } else {
+            StorageReference mStorageImage = FirebaseUtils.getStorage().getReference().child(CASES).child(key).child(String.format("%s.%s", key, "jpeg"));
+            mStorageImage.putFile(Uri.parse(image)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-        StorageReference mStorageImage = FirebaseUtils.getStorage().getReference().child(CASES).child(key).child(String.format("%s.%s", key, "jpeg"));
-        mStorageImage.putFile(Uri.parse(image)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!urlTask.isSuccessful()) ;
+                    Uri download = urlTask.getResult();
 
-                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!urlTask.isSuccessful()) ;
-                Uri download = urlTask.getResult();
-
-                DatabaseReference databasePicture = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
-                HashMap<String, Object> image = new HashMap<>();
-                image.put(PICTURE, download.toString());
-                databasePicture.updateChildren(image).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            if (pdf == null) {
-                                dialogEditDone();
+                    DatabaseReference databasePicture = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
+                    HashMap<String, Object> image = new HashMap<>();
+                    image.put(PICTURE, download.toString());
+                    databasePicture.updateChildren(image).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                if (pdf == null) {
+                                    dialogEditDone();
+                                }
                             }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        enableFields();
-                        SnackError(e.getMessage());
-                    }
-                });
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            enableFields();
+                            SnackError(e.getMessage());
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                enableFields();
-                SnackError(e.getMessage());
-            }
-        });
-
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    enableFields();
+                    SnackError(e.getMessage());
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }
     }
 
     private void createDialog(String title, String message) {
@@ -412,7 +451,8 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                     createDialog(getString(R.string.please_wait), getString(R.string.saving));
 
                     //Salva os dados do caso
-                    if (edit) {
+                    if (Objects.equals(edit, "true")) {
+                        Toast.makeText(getApplicationContext(), "EDIT", Toast.LENGTH_LONG).show();
 
                         DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
                         HashMap<String, Object> editCase = new HashMap<>();
@@ -446,6 +486,7 @@ public class DescriptionCaseActivity extends AppCompatActivity implements View.O
                         });
 
                     } else {
+                        Toast.makeText(getApplicationContext(), "NEW", Toast.LENGTH_LONG).show();
 
                         final DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES).push();
                         HashMap<String, String> newcase = new HashMap<>();

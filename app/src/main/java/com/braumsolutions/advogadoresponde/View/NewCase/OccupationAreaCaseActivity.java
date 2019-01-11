@@ -41,8 +41,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
     private TextView tvArea, tvAreaMsg, tvMsg;
     private MaterialSpinner spOcuppationArea;
     private Button btnNext;
-    private String key, area, image, pdf, description;
-    private Boolean edit = false;
+    private String key, area, image, pdf, description, edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
             spOcuppationArea.setItems(OCCUPATION_AREA_ARRAY_BR);
         }
 
-        if (edit) {
+        if (Objects.equals(edit, "true")) {
             spOcuppationArea.setSelectedIndex(Integer.parseInt(area));
         }
 
@@ -69,7 +68,9 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
     private void getIntentBundle() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            key = bundle.getString(KEY);
+            if (bundle.getString(KEY) != null) {
+                key = bundle.getString(KEY);
+            }
             if (bundle.getString(OCCUPATION_AREA) != null) {
                 area = bundle.getString(OCCUPATION_AREA);
             }
@@ -77,12 +78,14 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
                 image = bundle.getString(PICTURE);
             }
             if (bundle.getString(PDF) != null) {
-                pdf = bundle.getString(pdf);
+                pdf = bundle.getString(PDF);
             }
             if (bundle.getString(DESCRIPTION) != null) {
                 description = bundle.getString(DESCRIPTION);
             }
-            edit = bundle.getBoolean(EDIT);
+            if (bundle.getString(EDIT) != null){
+                edit = bundle.getString(EDIT);
+            }
         }
     }
 
@@ -127,7 +130,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
                 intent.putExtra(PICTURE, image);
                 intent.putExtra(PDF, pdf);
                 intent.putExtra(DESCRIPTION, description);
-                intent.putExtra(EDIT, true);
+                intent.putExtra(EDIT, edit);
                 startActivity(intent);
                 //}
                 break;

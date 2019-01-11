@@ -21,6 +21,8 @@ import com.chootdev.csnackbar.Type;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.Objects;
+
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1000;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn1500;
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2000;
@@ -40,9 +42,8 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView tvUpload, tvUploadMsg, tvMsg;
     private Button btnPdf, btnPicture, btnNext;
-    private String key, area, image, pdf, description;
+    private String key, area, image, pdf, description, edit;
     private Uri uriPdf, uriPicture;
-    private Boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
         setAnimation();
         getIntentBundle();
 
-        if (edit) {
+        if (Objects.equals(edit, "true")) {
             if (image != null) {
                 uriPicture = Uri.parse(image);
                 btnPicture.setBackground(getResources().getDrawable(R.drawable.corner_button_blue));
@@ -101,7 +102,9 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
     private void getIntentBundle() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            key = bundle.getString(KEY);
+            if (bundle.getString(KEY) != null) {
+                key = bundle.getString(KEY);
+            }
             if (bundle.getString(OCCUPATION_AREA) != null) {
                 area = bundle.getString(OCCUPATION_AREA);
             }
@@ -109,12 +112,14 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
                 image = bundle.getString(PICTURE);
             }
             if (bundle.getString(PDF) != null) {
-                pdf = bundle.getString(pdf);
+                pdf = bundle.getString(PDF);
             }
             if (bundle.getString(DESCRIPTION) != null) {
                 description = bundle.getString(DESCRIPTION);
             }
-            edit = bundle.getBoolean(EDIT);
+            if (bundle.getString(EDIT) != null){
+                edit = bundle.getString(EDIT);
+            }
         }
     }
 
@@ -129,7 +134,7 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
         }
         intent.putExtra(KEY, key);
         intent.putExtra(DESCRIPTION, description);
-        intent.putExtra(EDIT, true);
+        intent.putExtra(EDIT, edit);
         startActivity(intent);
     }
 
