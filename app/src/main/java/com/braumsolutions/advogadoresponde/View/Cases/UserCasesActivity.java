@@ -1,18 +1,22 @@
 package com.braumsolutions.advogadoresponde.View.Cases;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.braumsolutions.advogadoresponde.Model.CasesModel;
 import com.braumsolutions.advogadoresponde.Model.YourCasesAdapter;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
+import com.chootdev.csnackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,9 +28,11 @@ import java.util.ArrayList;
 
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
-public class YourCasesActivity extends AppCompatActivity {
+public class UserCasesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView lvCase;
@@ -37,11 +43,12 @@ public class YourCasesActivity extends AppCompatActivity {
     private ValueEventListener eventListener;
     private DatabaseReference database;
     private KProgressHUD dialog;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_cases);
+        setContentView(R.layout.activity_user_cases);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -49,6 +56,7 @@ public class YourCasesActivity extends AppCompatActivity {
 
         castWidgets();
         setTypeface();
+        getUserData();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.your_cases));
@@ -58,10 +66,32 @@ public class YourCasesActivity extends AppCompatActivity {
 
         getCases();
 
+        lvCase.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CasesModel CasesModel = arrayList.get(position);
+                DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(CASES).child(CasesModel.getKey());
+                database.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Intent intentCase = new Intent(getApplicationContext(), OpenCaseActivity.class);
+                        intentCase.putExtra(KEY, dataSnapshot.child(KEY).getValue(String.class));
+                        intentCase.putExtra(TYPE_REGISTER, type);
+                        startActivity(intentCase);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
     }
 
     private void createDialog(String title, String message) {
-        dialog = KProgressHUD.create(YourCasesActivity.this)
+        dialog = KProgressHUD.create(UserCasesActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel(title)
                 .setDetailsLabel(message)
@@ -69,6 +99,21 @@ public class YourCasesActivity extends AppCompatActivity {
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
         dialog.show();
+    }
+
+    private void getUserData() {
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                type = dataSnapshot.child(TYPE_REGISTER).getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setTypeface() {

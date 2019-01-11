@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class CasesActivity extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class CasesActivity extends AppCompatActivity {
     private ValueEventListener eventListener;
     private DatabaseReference database;
     private KProgressHUD dialog;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class CasesActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         getCases();
+        getUserData();
 
         lvCase.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,10 +67,26 @@ public class CasesActivity extends AppCompatActivity {
                 Intent intentCase = new Intent(getApplicationContext(), OpenCaseActivity.class);
                 intentCase.putExtra(KEY, casesModel.getKey());
                 intentCase.putExtra(USER, casesModel.getUser());
+                intentCase.putExtra(TYPE_REGISTER, type);
                 startActivity(intentCase);
             }
         });
 
+    }
+
+    private void getUserData() {
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                type = dataSnapshot.child(TYPE_REGISTER).getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void createDialog(String title, String message) {

@@ -28,6 +28,7 @@ import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLi
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CASES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_CASES;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class LawyerCasesActivity extends AppCompatActivity {
@@ -41,6 +42,7 @@ public class LawyerCasesActivity extends AppCompatActivity {
     private ValueEventListener eventListener;
     private DatabaseReference database;
     private KProgressHUD dialog;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class LawyerCasesActivity extends AppCompatActivity {
         castWidgets();
         setTypeface();
         getCases();
+        getUserData();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.your_cases));
@@ -72,6 +75,7 @@ public class LawyerCasesActivity extends AppCompatActivity {
                         Intent intentCase = new Intent(getApplicationContext(), OpenCaseActivity.class);
                         intentCase.putExtra(KEY, dataSnapshot.child(KEY).getValue(String.class));
                         intentCase.putExtra(USER, dataSnapshot.child(USER).getValue(String.class));
+                        intentCase.putExtra(TYPE_REGISTER, type);
                         startActivity(intentCase);
                     }
 
@@ -83,6 +87,21 @@ public class LawyerCasesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void getUserData() {
+        DatabaseReference database = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                type = dataSnapshot.child(TYPE_REGISTER).getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void createDialog(String title, String message) {

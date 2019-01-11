@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -63,13 +64,14 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_AR
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PDF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PHONE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PICTURE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class OpenCaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tvUser, tvUserMsg, tvOccupation, tvOccupationMsg, tvImage, tvImageMsg, tvPdf, tvPdfMsg, tvDescription, tvDescriptionMsg, tvLawyer, tvLawyerMsg;
     private Toolbar toolbar;
-    private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, name, last_name, phone, lawyer_name;
+    private String key, area, image, pdf, description, user, lawyer_a, lawyer_b, lawyer_c, name, last_name, phone, lawyer_name, type;
     private int credits, lawyer = 0;
     private Button btnGetCase;
     private FirebaseAuth mAuth;
@@ -95,6 +97,10 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        if (type.equals("1")) {
+            btnGetCase.setVisibility(View.GONE);
+        }
 
     }
 
@@ -133,10 +139,17 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 }
                 if (dataSnapshot.child(PICTURE).getValue(String.class) != null) {
                     image = dataSnapshot.child(PICTURE).getValue(String.class);
+                } else {
+                    if (Objects.equals(type, "1")) {
+                        tvImage.setText(R.string.no_file);
+                    }
                 }
-
                 if (dataSnapshot.child(PDF).getValue(String.class) != null) {
                     pdf = dataSnapshot.child(PDF).getValue(String.class);
+                } else {
+                    if (Objects.equals(type, "1")) {
+                        tvPdf.setText(R.string.no_file);
+                    }
                 }
 
                 if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
@@ -148,29 +161,17 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 tvDescriptionMsg.setText(description);
                 tvLawyerMsg.setText(String.format("%s/3", lawyer));
 
-                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-                    showComponentsComment();
+                if (type.equals("0")) {
+                    if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                        CheckIfHaveImageFile();
+                    } else {
+                        tvPdfMsg.setText(getString(R.string.free_link));
+                        tvImageMsg.setText(getString(R.string.free_link));
+                    }
                 } else {
-                    tvPdfMsg.setText(getString(R.string.free_link));
-                    tvImageMsg.setText(getString(R.string.free_link));
+                    CheckIfHaveImageFile();
                 }
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference mUser = FirebaseUtils.getDatabase().getReference().child(USER).child(user);
-        mUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                phone = dataSnapshot.child(PHONE).getValue(String.class);
-                name = dataSnapshot.child(NAME).getValue(String.class);
-                last_name = dataSnapshot.child(LAST_NAME).getValue(String.class);
-                tvUserMsg.setText(String.format("%s %s", name, last_name));
 
             }
 
@@ -180,39 +181,76 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        DatabaseReference mCredits = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
-        mCredits.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(CREDITS).getValue(String.class) != null) {
-                    credits = Integer.parseInt(dataSnapshot.child(CREDITS).getValue(String.class));
-                } else {
-                    credits = 0;
+        if (type.equals("1")) {
+            DatabaseReference mUser = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+            mUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    name = dataSnapshot.child(NAME).getValue(String.class);
+                    last_name = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                    tvUserMsg.setText(String.format("%s %s", name, last_name));
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference mLawyer = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
-        mLawyer.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lawyer_name = dataSnapshot.child(NAME).getValue(String.class);
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
                 }
-            }
+            });
+        } else {
+            DatabaseReference mUser = FirebaseUtils.getDatabase().getReference().child(USER).child(user);
+            mUser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    phone = dataSnapshot.child(PHONE).getValue(String.class);
+                    name = dataSnapshot.child(NAME).getValue(String.class);
+                    last_name = dataSnapshot.child(LAST_NAME).getValue(String.class);
+                    tvUserMsg.setText(String.format("%s %s", name, last_name));
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            DatabaseReference mCredits = FirebaseUtils.getDatabase().getReference().child(CREDITS).child(mAuth.getCurrentUser().getUid());
+            mCredits.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child(CREDITS).getValue(String.class) != null) {
+                        credits = Integer.parseInt(dataSnapshot.child(CREDITS).getValue(String.class));
+                    } else {
+                        credits = 0;
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            DatabaseReference mLawyer = FirebaseUtils.getDatabase().getReference().child(USER).child(mAuth.getCurrentUser().getUid());
+            mLawyer.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    lawyer_name = dataSnapshot.child(NAME).getValue(String.class);
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
     }
 
@@ -221,6 +259,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         if (bundle != null) {
             key = bundle.getString(KEY);
             user = bundle.getString(USER);
+            type = bundle.getString(TYPE_REGISTER);
         }
     }
 
@@ -255,9 +294,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
         btnGetCase = findViewById(R.id.btnGetCase);
         tvLawyer = findViewById(R.id.tvLawyer);
         tvLawyerMsg = findViewById(R.id.tvLawyerMsg);
-        fbChat = findViewById(R.id.fbChat);
         findViewById(R.id.btnGetCase).setOnClickListener(this);
-        findViewById(R.id.fbChat).setOnClickListener(this);
         findViewById(R.id.tvPdfMsg).setOnClickListener(this);
         findViewById(R.id.tvImageMsg).setOnClickListener(this);
         findViewById(R.id.tvUserMsg).setOnClickListener(this);
@@ -302,7 +339,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    showComponentsComment();
+                    CheckIfHaveImageFile();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -315,9 +352,8 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @SuppressLint("RestrictedApi")
-    private void showComponentsComment() {
+    private void CheckIfHaveImageFile() {
         btnGetCase.setVisibility(View.GONE);
-        fbChat.setVisibility(View.VISIBLE);
 
         if (pdf == null) {
             tvPdfMsg.setText(getString(R.string.no_file));
@@ -433,40 +469,55 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnGetCase:
                 catchCase();
                 break;
-            case R.id.fbChat:
-                openChat();
-                break;
             case R.id.tvPdfMsg:
-                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-                    if (pdf != null) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setDataAndType(Uri.parse(pdf), "application/pdf");
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
+                if (Objects.equals(type, "1")) {
+                    openPDF();
+                } else {
+                    if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                        openPDF();
                     }
                 }
                 break;
             case R.id.tvImageMsg:
-                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-                    if (image != null) {
-                        final ArrayList<PreviewFile> previewFiles = new ArrayList<>();
-                        previewFiles.add(new PreviewFile(image, String.format("%s: %s %s", getString(R.string.user), name, last_name)));
-                        Intent intent = new Intent(OpenCaseActivity.this, ImagePreviewActivity.class);
-                        intent.putExtra(ImagePreviewActivity.IMAGE_LIST, previewFiles);
-                        intent.putExtra(ImagePreviewActivity.CURRENT_ITEM, 0);
-                        startActivity(intent);
+                if (Objects.equals(type, "1")) {
+                    openImage();
+                } else {
+                    if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                        openImage();
                     }
                 }
                 break;
             case R.id.tvUserMsg:
-                if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-                    Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
-                    intent.putExtra(USER, user);
-                    startActivity(intent);
-                } else {
-                    SnackWarning(getString(R.string.get_case_to_see_profile));
+                if (Objects.equals(type, "0")) {
+                    if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
+                        Intent intent = new Intent(getApplicationContext(), ViewUserProfileActivity.class);
+                        intent.putExtra(USER, user);
+                        startActivity(intent);
+                    } else {
+                        SnackWarning(getString(R.string.get_case_to_see_profile));
+                    }
                 }
                 break;
+        }
+    }
+
+    private void openImage() {
+        if (image != null) {
+            final ArrayList<PreviewFile> previewFiles = new ArrayList<>();
+            previewFiles.add(new PreviewFile(image, String.format("%s: %s %s", getString(R.string.user), name, last_name)));
+            Intent intent = new Intent(OpenCaseActivity.this, ImagePreviewActivity.class);
+            intent.putExtra(ImagePreviewActivity.IMAGE_LIST, previewFiles);
+            intent.putExtra(ImagePreviewActivity.CURRENT_ITEM, 0);
+            startActivity(intent);
+        }
+    }
+
+    private void openPDF() {
+        if (pdf != null) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(Uri.parse(pdf), "application/pdf");
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         }
     }
 
@@ -477,16 +528,35 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (Objects.equals(lawyer_a, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_b, mAuth.getCurrentUser().getUid()) || Objects.equals(lawyer_c, mAuth.getCurrentUser().getUid())) {
-            getMenuInflater().inflate(R.menu.menu_case, menu);
-        }
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        DatabaseReference mCase = FirebaseUtils.getDatabase().getReference().child(CASES).child(key);
+        mCase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (Objects.equals(type, "1")) {
+                    getMenuInflater().inflate(R.menu.menu_case_user, menu);
+                } else {
+                    if (Objects.equals(dataSnapshot.child(LAWYER_A).getValue(String.class), mAuth.getCurrentUser().getUid()) || Objects.equals(dataSnapshot.child(LAWYER_B).getValue(String.class), mAuth.getCurrentUser().getUid()) || Objects.equals(dataSnapshot.child(LAWYER_C).getValue(String.class), mAuth.getCurrentUser().getUid())) {
+                        getMenuInflater().inflate(R.menu.menu_case_lawyer, menu);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_chat:
+                openChat();
+                break;
             case R.id.nav_report_case:
                 Intent intent = new Intent(getApplicationContext(), ReportCaseActivity.class);
                 startActivity(intent);

@@ -209,4 +209,6 @@
     <string name="no_data_curriculum">No data on your mini curriculum</string>
     <string name="complete_profile_lawyer">You need to complete your profile to go to the search for cases</string>
     <string name="complete_profile_user">You need to complete your profile to create a new case</string>
+    <string name="edit_case">Edit Case</string>
+    <string name="_delete_case">Delete Case</string>
 </resources>

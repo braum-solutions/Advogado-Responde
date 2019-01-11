@@ -14,8 +14,7 @@ import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.braumsolutions.advogadoresponde.View.Chat.ListChatActivity;
 import com.braumsolutions.advogadoresponde.View.NewCase.OccupationAreaCaseActivity;
-import com.braumsolutions.advogadoresponde.View.Profile.EditUserProfileActivity;
-import com.braumsolutions.advogadoresponde.View.Cases.YourCasesActivity;
+import com.braumsolutions.advogadoresponde.View.Cases.UserCasesActivity;
 import com.braumsolutions.advogadoresponde.View.Profile.UserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
@@ -124,7 +123,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.cvYourCases:
-                Intent intentYourCases = new Intent(getContext(), YourCasesActivity.class);
+                Intent intentYourCases = new Intent(getContext(), UserCasesActivity.class);
                 startActivity(intentYourCases);
                 break;
             case R.id.cvChat:

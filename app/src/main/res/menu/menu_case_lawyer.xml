@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:title="@string/chat"
+        android:id="@+id/nav_chat"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_chat_white_24dp"/>
+
+    <item
         android:title="@string/leave_case"
         android:id="@+id/nav_leave_case"
         app:showAsAction="never"/>
