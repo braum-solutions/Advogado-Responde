@@ -217,5 +217,7 @@
     <string name="complete_profile_user">Você precisa completar o seu perfil para criar um novo caso</string>
     <string name="edit_case">Editar Caso</string>
     <string name="_delete_case">Excluir Caso</string>
+    <string name="save_edition">Salvar Edição</string>
+    <string name="case_edited">Seu caso foi editado com sucesso!</string>
 
 </resources>

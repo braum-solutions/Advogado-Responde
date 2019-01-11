@@ -21,6 +21,7 @@ import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
 import com.braumsolutions.advogadoresponde.R;
 import com.braumsolutions.advogadoresponde.Utils.FirebaseUtils;
 import com.braumsolutions.advogadoresponde.View.Chat.ChatActivity;
+import com.braumsolutions.advogadoresponde.View.NewCase.OccupationAreaCaseActivity;
 import com.braumsolutions.advogadoresponde.View.Profile.ViewUserProfileActivity;
 import com.chootdev.csnackbar.Align;
 import com.chootdev.csnackbar.Duration;
@@ -50,6 +51,8 @@ import static com.braumsolutions.advogadoresponde.Utils.Utils.CATCH_CASE_VALUE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CHAT_MESSAGES;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CREDITS;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.EDIT;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAST_NAME;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.LAWYER_A;
@@ -102,6 +105,17 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
             btnGetCase.setVisibility(View.GONE);
         }
 
+    }
+
+    private void editCase() {
+        Intent intent = new Intent(getApplicationContext(), OccupationAreaCaseActivity.class);
+        intent.putExtra(KEY, key);
+        intent.putExtra(OCCUPATION_AREA, area);
+        intent.putExtra(PICTURE, image);
+        intent.putExtra(PDF, pdf);
+        intent.putExtra(DESCRIPTION, description);
+        intent.putExtra(EDIT, true);
+        startActivity(intent);
     }
 
     private void createDialog(String title, String message) {
@@ -503,21 +517,29 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
 
     private void openImage() {
         if (image != null) {
-            final ArrayList<PreviewFile> previewFiles = new ArrayList<>();
-            previewFiles.add(new PreviewFile(image, String.format("%s: %s %s", getString(R.string.user), name, last_name)));
-            Intent intent = new Intent(OpenCaseActivity.this, ImagePreviewActivity.class);
-            intent.putExtra(ImagePreviewActivity.IMAGE_LIST, previewFiles);
-            intent.putExtra(ImagePreviewActivity.CURRENT_ITEM, 0);
-            startActivity(intent);
+            try {
+                final ArrayList<PreviewFile> previewFiles = new ArrayList<>();
+                previewFiles.add(new PreviewFile(image, String.format("%s: %s %s", getString(R.string.user), name, last_name)));
+                Intent intent = new Intent(OpenCaseActivity.this, ImagePreviewActivity.class);
+                intent.putExtra(ImagePreviewActivity.IMAGE_LIST, previewFiles);
+                intent.putExtra(ImagePreviewActivity.CURRENT_ITEM, 0);
+                startActivity(intent);
+            } catch (Exception e) {
+                SnackError(e.getMessage());
+            }
         }
     }
 
     private void openPDF() {
         if (pdf != null) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setDataAndType(Uri.parse(pdf), "application/pdf");
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setDataAndType(Uri.parse(pdf), "application/pdf");
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            } catch (Exception e) {
+                SnackError(e.getMessage());
+            }
         }
     }
 
@@ -554,6 +576,9 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_edit_case:
+                editCase();
+                break;
             case R.id.nav_chat:
                 openChat();
                 break;

@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.awesomedialog.blennersilva.awesomedialoglibrary.AwesomeInfoDialog;
 import com.awesomedialog.blennersilva.awesomedialoglibrary.interfaces.Closure;
@@ -26,6 +28,10 @@ import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationF
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.CODE_PDF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.EDIT;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PDF;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.PICTURE;
@@ -34,8 +40,9 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView tvUpload, tvUploadMsg, tvMsg;
     private Button btnPdf, btnPicture, btnNext;
-    private String area;
+    private String key, area, image, pdf, description;
     private Uri uriPdf, uriPicture;
+    private Boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,17 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
         setTypeface();
         setAnimation();
         getIntentBundle();
+
+        if (edit) {
+            if (image != null) {
+                uriPicture = Uri.parse(image);
+                btnPicture.setBackground(getResources().getDrawable(R.drawable.corner_button_blue));
+            }
+            if (pdf != null) {
+                uriPdf = Uri.parse(pdf);
+                btnPdf.setBackground(getResources().getDrawable(R.drawable.corner_button_blue));
+            }
+        }
 
     }
 
@@ -83,7 +101,20 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
     private void getIntentBundle() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            area = bundle.getString(OCCUPATION_AREA);
+            key = bundle.getString(KEY);
+            if (bundle.getString(OCCUPATION_AREA) != null) {
+                area = bundle.getString(OCCUPATION_AREA);
+            }
+            if (bundle.getString(PICTURE) != null) {
+                image = bundle.getString(PICTURE);
+            }
+            if (bundle.getString(PDF) != null) {
+                pdf = bundle.getString(pdf);
+            }
+            if (bundle.getString(DESCRIPTION) != null) {
+                description = bundle.getString(DESCRIPTION);
+            }
+            edit = bundle.getBoolean(EDIT);
         }
     }
 
@@ -96,6 +127,9 @@ public class FileCaseActivity extends AppCompatActivity implements View.OnClickL
         if (uriPicture != null) {
             intent.putExtra(PICTURE, uriPicture.toString());
         }
+        intent.putExtra(KEY, key);
+        intent.putExtra(DESCRIPTION, description);
+        intent.putExtra(EDIT, true);
         startActivity(intent);
     }
 

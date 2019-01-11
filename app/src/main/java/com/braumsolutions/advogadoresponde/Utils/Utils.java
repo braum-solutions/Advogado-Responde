@@ -23,6 +23,7 @@ public class Utils {
     public static final String CPF = "cpf";
     public static final String DATE = "date";
     public static final String DDD = "ddd";
+    public static final String EDIT = "edit";
     public static final String CEP = "cep";
     public static final String CITY = "city";
     public static final String ADDRESS = "address";

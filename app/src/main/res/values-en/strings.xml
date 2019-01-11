@@ -211,4 +211,6 @@
     <string name="complete_profile_user">You need to complete your profile to create a new case</string>
     <string name="edit_case">Edit Case</string>
     <string name="_delete_case">Delete Case</string>
+    <string name="save_edition">Save Edition</string>
+    <string name="case_edited">Your case was successfully edited!</string>
 </resources>

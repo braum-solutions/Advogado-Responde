@@ -3,6 +3,7 @@ package com.braumsolutions.advogadoresponde.View.NewCase;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,15 +24,25 @@ import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationF
 import static com.braumsolutions.advogadoresponde.Utils.AnimationView.AnimationFadeIn2500;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceBold;
 import static com.braumsolutions.advogadoresponde.Utils.TypefaceUtils.TypefaceLight;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.DESCRIPTION;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.EDIT;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.IMAGE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.KEY;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_BR;
 import static com.braumsolutions.advogadoresponde.Utils.Utils.OCCUPATION_AREA_ARRAY_EN;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PDF;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.PICTURE;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.TYPE_REGISTER;
+import static com.braumsolutions.advogadoresponde.Utils.Utils.USER;
 
 public class OccupationAreaCaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tvArea, tvAreaMsg, tvMsg;
     private MaterialSpinner spOcuppationArea;
     private Button btnNext;
+    private String key, area, image, pdf, description;
+    private Boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,7 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
         castWidgets();
         setTypeface();
         setAnimation();
+        getIntentBundle();
 
         if (Objects.equals(Locale.getDefault().getDisplayLanguage(), "English")) {
             spOcuppationArea.setItems(OCCUPATION_AREA_ARRAY_EN);
@@ -48,6 +60,30 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
             spOcuppationArea.setItems(OCCUPATION_AREA_ARRAY_BR);
         }
 
+        if (edit) {
+            spOcuppationArea.setSelectedIndex(Integer.parseInt(area));
+        }
+
+    }
+
+    private void getIntentBundle() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            key = bundle.getString(KEY);
+            if (bundle.getString(OCCUPATION_AREA) != null) {
+                area = bundle.getString(OCCUPATION_AREA);
+            }
+            if (bundle.getString(PICTURE) != null) {
+                image = bundle.getString(PICTURE);
+            }
+            if (bundle.getString(PDF) != null) {
+                pdf = bundle.getString(pdf);
+            }
+            if (bundle.getString(DESCRIPTION) != null) {
+                description = bundle.getString(DESCRIPTION);
+            }
+            edit = bundle.getBoolean(EDIT);
+        }
     }
 
     private void setAnimation() {
@@ -87,6 +123,11 @@ public class OccupationAreaCaseActivity extends AppCompatActivity implements Vie
                 //} else {
                 Intent intent = new Intent(getApplicationContext(), FileCaseActivity.class);
                 intent.putExtra(OCCUPATION_AREA, String.valueOf(spOcuppationArea.getSelectedIndex()));
+                intent.putExtra(KEY, key);
+                intent.putExtra(PICTURE, image);
+                intent.putExtra(PDF, pdf);
+                intent.putExtra(DESCRIPTION, description);
+                intent.putExtra(EDIT, true);
                 startActivity(intent);
                 //}
                 break;
