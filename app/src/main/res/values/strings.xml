@@ -219,5 +219,8 @@
     <string name="_delete_case">Excluir Caso</string>
     <string name="save_edition">Salvar Edição</string>
     <string name="case_edited">Seu caso foi editado com sucesso!</string>
+    <string name="select_reason">Selecione uma Motivo</string>
+    <string name="sendind">Enviando</string>
+    <string name="send_success">Enviado com sucesso!</string>
 
 </resources>

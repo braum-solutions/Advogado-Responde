@@ -583,8 +583,7 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 openChat();
                 break;
             case R.id.nav_report_case:
-                Intent intent = new Intent(getApplicationContext(), ReportCaseActivity.class);
-                startActivity(intent);
+                reportCase();
                 break;
             case R.id.nav_leave_case:
                 new AwesomeInfoDialog(OpenCaseActivity.this)
@@ -624,6 +623,12 @@ public class OpenCaseActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void reportCase() {
+        Intent intent = new Intent(getApplicationContext(), ReportCaseActivity.class);
+        intent.putExtra(KEY, key);
+        startActivity(intent);
     }
 
     private void leaveCase(String lawyer) {

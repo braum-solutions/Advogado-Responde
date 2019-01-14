@@ -213,4 +213,7 @@
     <string name="_delete_case">Delete Case</string>
     <string name="save_edition">Save Edition</string>
     <string name="case_edited">Your case was successfully edited!</string>
+    <string name="sendind">Sending</string>
+    <string name="select_reason">Select a Reason</string>
+    <string name="send_success">Sent with success!</string>
 </resources>
